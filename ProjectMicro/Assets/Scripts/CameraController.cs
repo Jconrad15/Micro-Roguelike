@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Player player;
-    private Camera cam;
-    private int zOffset = -10;
-    private float standardSpeed = 8f;
+    private readonly int zOffset = -10;
+    private readonly float standardSpeed = 8f;
 
     private void OnEnable()
     {
-        cam = GetComponent<Camera>();
-
         WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
         worldGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -22,7 +18,6 @@ public class CameraController : MonoBehaviour
 
     private void OnPlayerCreated(Player p)
     {
-        player = p;
         StartCoroutine(MoveCamera(p.X, p.Y));
     }
 
