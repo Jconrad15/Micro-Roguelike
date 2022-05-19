@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EntityType { Player };
+public enum EntityType { Player, Dog };
 public class Entity
 {
     public int X { get; protected set; }
@@ -23,6 +23,7 @@ public class Entity
             Y = value.y;
         }
     }
+
     public EntityType type;
 
     private Action<Entity> cbOnMove;
@@ -33,7 +34,6 @@ public class Entity
         this.type = type;
         X = t.x;
         Y = t.y;
-        Debug.Log(X + " " + Y);
     }
 
     public bool TryMove(Direction d)

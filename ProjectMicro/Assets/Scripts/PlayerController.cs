@@ -1,17 +1,17 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     private Player player;
-    private float counterThreshold = 0.1f;
-    private float counter = 0;
 
-    public void Start()
+    public void OnEnable()
     {
         WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
         worldGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
+
+        TurnController.Instance.RegisterOnStartPlayerTurn(OnStartTurn);
     }
 
     private void OnPlayerCreated(Player p)
@@ -19,34 +19,37 @@ public class PlayerController : MonoBehaviour
         player = p;
     }
 
-    private void Update()
+    private void OnStartTurn()
     {
-        if (counter < counterThreshold) 
+        StartCoroutine(PlayerProcessing());
+    }
+
+    private IEnumerator PlayerProcessing()
+    {
+        bool playerMoved = false;
+
+        while (playerMoved == false)
         {
-            counter += Time.deltaTime;
-            return;
+            float hMovement = Input.GetAxisRaw("Horizontal");
+            float vMovement = Input.GetAxisRaw("Vertical");
+
+            // Move horizontal first
+            if (Mathf.Abs(hMovement) == 1f)
+            {
+                Direction d = hMovement == 1 ? Direction.E : Direction.W;
+                playerMoved = player.TryMove(d);
+            }
+            else if (Mathf.Abs(vMovement) == 1f)
+            {
+                Direction d = vMovement == 1 ? Direction.N : Direction.S;
+                playerMoved = player.TryMove(d);
+            }
+
+            yield return null;
         }
 
-        // Exit loop if no player
-        if (player == null) return;
-
-        float hMovement = Input.GetAxisRaw("Horizontal");
-        float vMovement = Input.GetAxisRaw("Vertical");
-
-        // Move horizontal first
-        if (Mathf.Abs(hMovement) == 1f)
-        {
-            Direction d = hMovement == 1 ? Direction.E : Direction.W;
-            player.TryMove(d);
-        }
-        else if (Mathf.Abs(vMovement) == 1f)
-        {
-            Direction d = vMovement == 1 ? Direction.N: Direction.S;
-            player.TryMove(d);
-        }
-
-        // Reset counter
-        counter = 0;
+        // Player's turn is done
+        TurnController.Instance.NextTurn();
     }
 
 }

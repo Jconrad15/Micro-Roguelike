@@ -33,7 +33,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void CreatePlayer()
     {
-        Tile playerTile = WorldData.Instance.MapData[width * height / 2];
+        Tile playerTile = WorldData.Instance.GetTile(width/2, height/2);
         Player player = new Player(playerTile, EntityType.Player);
         playerTile.entity = player;
         cbOnPlayerCreated?.Invoke(player);
