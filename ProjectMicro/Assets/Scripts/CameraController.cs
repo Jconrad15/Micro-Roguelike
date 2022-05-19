@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     private Player player;
     private Camera cam;
     private int zOffset = -10;
-    private float standardSpeed = 6f;
+    private float standardSpeed = 8f;
 
     private void OnEnable()
     {

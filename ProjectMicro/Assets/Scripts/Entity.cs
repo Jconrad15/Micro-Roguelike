@@ -26,7 +26,7 @@ public class Entity
 
     public EntityType type;
 
-    private Action<Entity> cbOnMove;
+    private Action<Entity, Vector2> cbOnMove;
 
     public Entity(Tile t, EntityType type)
     {
@@ -53,6 +53,8 @@ public class Entity
 
     private void Move(Tile destination)
     {
+        Vector2 startPos = new Vector2 (X, Y);
+
         // Remove self from current tile
         T.entity = null;
 
@@ -62,15 +64,15 @@ public class Entity
         // Set as new tile
         T = destination;
 
-        cbOnMove?.Invoke(this);
+        cbOnMove?.Invoke(this, startPos);
     }
 
-    public void RegisterOnMove(Action<Entity> callbackfunc)
+    public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)
     {
         cbOnMove += callbackfunc;
     }
 
-    public void UnregisterOnMove(Action<Entity> callbackfunc)
+    public void UnregisterOnMove(Action<Entity, Vector2> callbackfunc)
     {
         cbOnMove -= callbackfunc;
     }

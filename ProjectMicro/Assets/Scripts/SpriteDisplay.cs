@@ -9,6 +9,8 @@ public class SpriteDisplay : MonoBehaviour
     private GameObject tiles;
     private GameObject entities;
 
+    private float moveSpeed = 10f;
+
     private List<GameObject> placedTiles = new List<GameObject>();
 
     private Dictionary<Entity, GameObject> placedEntities =
@@ -97,12 +99,32 @@ public class SpriteDisplay : MonoBehaviour
         placedTiles.Add(newTile);
     }
 
-    private void OnEntityMove(Entity entity)
+    private void OnEntityMove(Entity entity, Vector2 startPos)
     {
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
         {
-            entity_GO.transform.position = new Vector2(entity.X, entity.Y);
+            StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
+            //entity_GO.transform.position = new Vector2(entity.X, entity.Y);
         }
+    }
+
+    private IEnumerator SmoothEntityMove(
+        Entity entity, GameObject entity_GO, Vector2 startPos)
+    {
+        Vector2 destinationLocation = new Vector2(entity.X, entity.Y);
+        Vector2 currentLocation = startPos;
+
+        while (Vector3.Distance(destinationLocation, currentLocation) > 0.001f)
+        {
+            float step = moveSpeed * Time.deltaTime;
+            currentLocation = Vector2.MoveTowards(
+                currentLocation, destinationLocation, step);
+
+            entity_GO.transform.position = currentLocation;
+            yield return null;
+        }
+
+        entity_GO.transform.position = destinationLocation;
     }
 
 }
