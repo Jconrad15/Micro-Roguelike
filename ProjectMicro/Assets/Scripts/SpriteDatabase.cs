@@ -1,0 +1,44 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class SpriteDatabase : MonoBehaviour
+{
+    public Dictionary<TileType, Sprite> TileDatabase { get; protected set; }
+    public Dictionary<EntityType, Sprite> EntityDatabase { get; protected set; }
+
+    public void CreateDatabases()
+    {
+        // Load scriptable objects from file
+        
+        // Create tile database
+        TileTypeSpriteRef[] tileReferences =
+            Resources.LoadAll("ScriptableObjects/Tiles",
+            typeof(TileTypeSpriteRef))
+            .Cast<TileTypeSpriteRef>().ToArray();
+
+        TileDatabase = new Dictionary<TileType, Sprite>();
+        // Create the database
+        for (int i = 0; i < tileReferences.Length; i++)
+        {
+            TileDatabase.Add(
+                tileReferences[i].tileType,
+                tileReferences[i].sprite);
+        }
+
+        // Create entity database
+        EntityTypeSpriteRef[] entityreferences =
+            Resources.LoadAll("ScriptableObjects/Entities",
+            typeof(EntityTypeSpriteRef))
+            .Cast<EntityTypeSpriteRef>().ToArray();
+
+        EntityDatabase = new Dictionary<EntityType, Sprite>();
+        // Create the database
+        for (int i = 0; i < entityreferences.Length; i++)
+        {
+            EntityDatabase.Add(
+                entityreferences[i].entityType,
+                entityreferences[i].sprite);
+        }
+    }
+}
