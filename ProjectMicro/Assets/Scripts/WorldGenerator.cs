@@ -14,6 +14,7 @@ public class WorldGenerator : MonoBehaviour
 
     private Action cbOnWorldGenDone;
     private Action<Player> cbOnPlayerCreated;
+    private Action<AIEntity> cbOnAIEntityCreated;
 
     void Start()
     {
@@ -22,6 +23,7 @@ public class WorldGenerator : MonoBehaviour
 
         CreateMapData();
         CreatePlayer();
+        CreateAIEntities();
 
         Random.state = oldState;
 
@@ -37,6 +39,16 @@ public class WorldGenerator : MonoBehaviour
         Player player = new Player(playerTile, EntityType.Player);
         playerTile.entity = player;
         cbOnPlayerCreated?.Invoke(player);
+    }
+
+    private void CreateAIEntities()
+    {
+        // For now generate a dog
+        Tile dogTile = WorldData.Instance.GetTile(width / 2, height / 4);
+        AIEntity dog = new AIEntity(dogTile, EntityType.Dog);
+        dogTile.entity = dog;
+
+        cbOnAIEntityCreated?.Invoke(dog);
     }
 
     private void CreateMapData()
@@ -79,5 +91,15 @@ public class WorldGenerator : MonoBehaviour
     public void UnregisterOnPlayerCreated(Action<Player> callbackfunc)
     {
         cbOnPlayerCreated -= callbackfunc;
+    }
+
+    public void RegisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityCreated += callbackfunc;
+    }
+
+    public void UnregisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityCreated -= callbackfunc;
     }
 }

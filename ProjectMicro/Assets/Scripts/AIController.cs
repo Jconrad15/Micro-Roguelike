@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private List<AIEntity> aiEntities = new List<AIEntity>();
+
     void Start()
     {
         TurnController.Instance.RegisterOnStartAITurn(OnAITurn);
+
+        WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
+        worldGenerator.RegisterOnAIEntityCreated(OnAICreated);
+    }
+
+    private void OnAICreated(AIEntity aiEntity)
+    {
+        aiEntities.Add(aiEntity);
     }
 
     private void OnAITurn()
@@ -18,6 +27,11 @@ public class AIController : MonoBehaviour
     private IEnumerator AIProcessing()
     {
         yield return new WaitForSeconds(0.1f);
+        
+        for (int i = 0; i < aiEntities.Count; i++)
+        {
+            aiEntities[i].TryMove(Utility.GetRandomEnum<Direction>());
+        }
 
         TurnController.Instance.NextTurn();
     }
