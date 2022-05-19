@@ -6,7 +6,7 @@ public class AIController : MonoBehaviour
 {
     private List<AIEntity> aiEntities = new List<AIEntity>();
 
-    void Start()
+    private void Start()
     {
         TurnController.Instance.RegisterOnStartAITurn(OnAITurn);
 

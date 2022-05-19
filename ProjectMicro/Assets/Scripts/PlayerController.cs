@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     private Player player;
 
-    public void OnEnable()
+    private Action<int, int> cbOnPlayerMoved; 
+
+    private void OnEnable()
     {
         WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
         worldGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
@@ -48,8 +51,20 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
+        cbOnPlayerMoved?.Invoke(player.X, player.Y);
+
         // Player's turn is done
         TurnController.Instance.NextTurn();
+    }
+
+    public void RegisterOnPlayerMove(Action<int, int> callbackfunc)
+    {
+        cbOnPlayerMoved += callbackfunc;
+    }
+
+    public void UnregisterOnPlayerMove(Action<int, int> callbackfunc)
+    {
+        cbOnPlayerMoved -= callbackfunc;
     }
 
 }
