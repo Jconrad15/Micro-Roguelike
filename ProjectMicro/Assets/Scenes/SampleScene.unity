@@ -483,8 +483,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1512168082}
   - component: {fileID: 1512168083}
+  - component: {fileID: 1512168084}
   m_Layer: 0
-  m_Name: WorldDisplay
+  m_Name: Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,6 +519,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 3869480886591443336, guid: b518671fc31a21545b55f9f90ba48ac1, type: 3}
   entitiesPrefab: {fileID: 5839522873765451967, guid: 0d51856916168444bb09033035b2af52, type: 3}
+--- !u!114 &1512168084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512168081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436462e0358e65f4f9e926aa176409bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1578313632
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,7 +25,7 @@ public class Entity
     }
 
     public EntityType type;
-
+    public VisibilityLevel Visibility { get; set; }
     private Action<Entity, Vector2> cbOnMove;
 
     public Entity(Tile t, EntityType type)
@@ -34,6 +34,7 @@ public class Entity
         this.type = type;
         X = t.x;
         Y = t.y;
+        Visibility = VisibilityLevel.NotVisible;
     }
 
     public bool TryMove(Direction d)

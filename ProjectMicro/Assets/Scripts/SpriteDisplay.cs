@@ -10,8 +10,10 @@ public class SpriteDisplay : MonoBehaviour
     private GameObject entities;
 
     private float moveSpeed = 10f;
+    private float alphaChangeSpeed = 0.5f;
 
-    private List<GameObject> placedTiles = new List<GameObject>();
+    private Dictionary<Tile, GameObject> placedTiles =
+        new Dictionary<Tile, GameObject>();
 
     private Dictionary<Entity, GameObject> placedEntities =
         new Dictionary<Entity, GameObject>();
@@ -78,7 +80,13 @@ public class SpriteDisplay : MonoBehaviour
 
         GameObject newTile = Instantiate(entitiesPrefab, entities.transform);
         newTile.transform.position = new Vector2(x, y);
-        newTile.GetComponent<SpriteRenderer>().sprite = s;
+
+        SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
+        sr.sprite = s;
+
+        // Visibility
+        ChangeVisibilityAlpha(entity, sr);
+
         placedEntities.Add(entity, newTile);
 
         entity.RegisterOnMove(OnEntityMove);
@@ -93,10 +101,44 @@ public class SpriteDisplay : MonoBehaviour
 
         spriteDatabase.TileDatabase.TryGetValue(tile.type, out Sprite s);
 
-        GameObject newTile = Instantiate(tilePrefab, tiles.transform);
-        newTile.transform.position = new Vector2(x, y);
-        newTile.GetComponent<SpriteRenderer>().sprite = s;
-        placedTiles.Add(newTile);
+        GameObject tile_GO = Instantiate(tilePrefab, tiles.transform);
+        tile_GO.transform.position = new Vector2(x, y);
+        SpriteRenderer sr = tile_GO.GetComponent<SpriteRenderer>();
+        sr.sprite = s;
+
+        // Visibility
+        ChangeVisibilityAlpha(tile, sr);
+
+        placedTiles.Add(tile, tile_GO);
+
+        tile.RegisterOnVisibilityChanged(OnVisiblityChanged);
+    }
+
+    private void ChangeVisibilityAlpha(Tile tile, SpriteRenderer sr)
+    {
+        StartCoroutine(LerpVisibility(sr, (int)tile.Visibility / 2f));
+    }
+
+    private void ChangeVisibilityAlpha(Entity entity, SpriteRenderer sr)
+    {
+        StartCoroutine(LerpVisibility(sr, (float)entity.Visibility / 2f));
+    }
+
+    private IEnumerator LerpVisibility(SpriteRenderer sr, float targetAlpha)
+    {
+        Color currentColor = sr.color;
+        Color targetColor = currentColor;
+        targetColor.a = targetAlpha;
+        float t = 0;
+        while (Mathf.Abs(currentColor.a - targetColor.a) > 0.01)
+        {
+            currentColor.a = Mathf.Lerp(currentColor.a, targetColor.a, t);
+            sr.color = currentColor;
+            t += alphaChangeSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = targetColor;
     }
 
     private void OnEntityMove(Entity entity, Vector2 startPos)
@@ -104,7 +146,18 @@ public class SpriteDisplay : MonoBehaviour
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
         {
             StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
-            //entity_GO.transform.position = new Vector2(entity.X, entity.Y);
+        }
+    }
+
+    private void OnVisiblityChanged(Tile t)
+    {
+        if (placedTiles.TryGetValue(t, out GameObject tile_GO))
+        {
+            ChangeVisibilityAlpha(t, tile_GO.GetComponent<SpriteRenderer>());
+        }
+        else
+        {
+            Debug.LogError("What tile is this? Not in tile-GO dictionary.");
         }
     }
 
