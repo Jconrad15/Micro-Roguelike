@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public enum TileType { OpenArea };
+public enum TileType { OpenArea, Wall };
 public enum VisibilityLevel { NotVisible, PreviouslySeen, Visible };
 public class Tile
 {
@@ -10,6 +10,8 @@ public class Tile
 
     public TileType type;
     public Entity entity;
+    public bool isWalkable = true;
+
     private VisibilityLevel visibility;
     public VisibilityLevel Visibility
     {
@@ -34,6 +36,10 @@ public class Tile
         entity = null;
         neighbors = null;
         Visibility = VisibilityLevel.NotVisible;
+        if (type == TileType.Wall)
+        {
+            isWalkable = false;
+        }
     }
 
     public void SetNeighbors(Tile[] neighbors)

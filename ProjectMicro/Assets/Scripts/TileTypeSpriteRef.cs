@@ -5,5 +5,5 @@ using UnityEngine;
 public class TileTypeSpriteRef : ScriptableObject
 {
     public TileType tileType;
-    public Sprite sprite;
+    public Sprite[] sprites;
 }

@@ -59,6 +59,9 @@ public class Entity
         // No movement if no neighbor tile
         if (neighbor == null) { return false; }
 
+        // No movement if the tile is not walkable
+        if (neighbor.isWalkable == false) { return false; }
+
         // No movement if there is entity in neighbor tile
         if (neighbor.entity != null) { return false; }
 

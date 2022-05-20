@@ -35,7 +35,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void CreatePlayer()
     {
-        Tile playerTile = WorldData.Instance.GetTile(width/2, height/2);
+        Tile playerTile = WorldData.Instance.GetTile(width/2, 0);
         Player player = new Player(playerTile, EntityType.Player);
         playerTile.entity = player;
         cbOnPlayerCreated?.Invoke(player);
@@ -44,7 +44,7 @@ public class WorldGenerator : MonoBehaviour
     private void CreateAIEntities()
     {
         // For now generate a dog
-        Tile dogTile = WorldData.Instance.GetTile(width / 2, height / 4);
+        Tile dogTile = WorldData.Instance.GetTile(1, 1);
         AIEntity dog = new AIEntity(dogTile, EntityType.Dog);
         dogTile.entity = dog;
 
@@ -57,13 +57,31 @@ public class WorldGenerator : MonoBehaviour
         WorldData.Instance.Width = width;
         WorldData.Instance.Height = height;
 
+        // Set tile types
         for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+
+            if ((x == 5 && y >= 5 && y <= 10) ||
+                y == 10 && x >= 5 && x <= 10)
+            {
+                WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
+                continue;
+            }
+
+            // Otherwise set to open tile
             WorldData.Instance.MapData[i] = new Tile(x, y, TileType.OpenArea);
         }
 
-        // Provide each tile with its neighboring tiles
+
+
+
+
+        SetTileNeighbors();
+    }
+
+    private static void SetTileNeighbors()
+    {
         for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
         {
             Tile[] neighbors =

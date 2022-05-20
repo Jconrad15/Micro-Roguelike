@@ -100,12 +100,169 @@ public class SpriteDisplay : MonoBehaviour
             Debug.LogError("No tile sprite database yet");
         }
 
-        spriteDatabase.TileDatabase.TryGetValue(tile.type, out Sprite s);
+        if (spriteDatabase.TileDatabase.TryGetValue(tile.type, out Sprite[] s) == false)
+        {
+            Debug.LogError("No sprites for this tile type");
+            return;
+        }
+        int selectedSpriteIndex = -1;
+        // Determine which sprite to use
+        if (tile.type == TileType.Wall)
+        {
+            // WALL SPRITE ORDER DETERMINED BY SCRIPTABLE OBJECT
+
+            // Need to check neighbor types to place a wall
+            bool[] isNeighborWall = new bool[4];
+            for (int i = 0; i < 4; i++)
+            {
+                if (tile.neighbors[i].type == TileType.Wall)
+                {
+                    isNeighborWall[i] = true;
+                }
+            }
+
+            // If wall to north, then selectedSpriteIndex must be:
+            // 2, 3, 4, 5, 9, 10
+            if (isNeighborWall[0])
+            {
+                // If wall to East, then selectedSpriteIndex must be:
+                // 2, 9
+                if (isNeighborWall[1])
+                {
+                    // If wall to South, then selectedSpriteIndex must be:
+                    // 9
+                    if (isNeighborWall[2])
+                    {
+                        selectedSpriteIndex = 9;
+                    }
+                    else
+                    {
+                        selectedSpriteIndex = 2;
+                    }
+                }
+                else
+                {
+                    // If wall to South, then selectedSpriteIndex must be:
+                    // 3, 4, 10
+                    if (isNeighborWall[2])
+                    {
+                        // If wall to West, then selectedSpriteIndex must be:
+                        // 10
+                        if (isNeighborWall[3])
+                        {
+                            selectedSpriteIndex = 10;
+                        }
+                        else
+                        {
+                            // Need to determine between two types of north-south walls
+                            // Check what type of wall is to the north
+                            bool isDetermined = false;
+                            Tile currentTile = tile;
+                            while (isDetermined == false)
+                            {
+                                // if northern tile is not a wall, then set this 
+                                // tile to be east west wall
+                                if (currentTile.neighbors[0].type != TileType.Wall)
+                                {
+                                    selectedSpriteIndex = 1;
+                                    isDetermined = true;
+                                }
+
+                                Tile[] neighborNeighbors =
+                                    currentTile.neighbors[0].neighbors;
+
+                                // Check northern neighbor's eastern neighbor
+                                if (neighborNeighbors[1].type == TileType.Wall)
+                                {
+                                    selectedSpriteIndex = 3;
+                                    isDetermined = true;
+                                }
+                                // Check northern neighbor's western neighbor
+                                else if (neighborNeighbors[3].type == TileType.Wall)
+                                {
+                                    selectedSpriteIndex = 4;
+                                    isDetermined = true;
+                                }
+                                else
+                                {
+                                    // Need to look north again using the
+                                    // northern neighbor as the staring point
+
+                                    // TODO: make better decision
+                                    // also check for null
+                                    if (neighborNeighbors[0] == null) 
+                                    {
+                                        // just select 3
+                                        selectedSpriteIndex = 3;
+                                    }
+
+                                    currentTile = neighborNeighbors[0];
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // If wall to West, then selectedSpriteIndex must be:
+                        // 5
+                        if (isNeighborWall[3])
+                        {
+                            selectedSpriteIndex = 5;
+                        }
+                        else
+                        {
+                            selectedSpriteIndex = 2;   
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // If wall to East, then selectedSpriteIndex must be:
+                // 0, 1
+                if (isNeighborWall[1])
+                {
+                    // If wall to South, then selectedSpriteIndex must be:
+                    // 0
+                    if (isNeighborWall[2])
+                    {
+                        selectedSpriteIndex = 0;
+                    }
+                    else
+                    {
+                        selectedSpriteIndex = 1;
+                    }
+                }
+                else
+                {
+                    // If wall to South, then the selectedSpriteIndex must be:
+                    // 6
+                    if (isNeighborWall[2])
+                    {
+                        selectedSpriteIndex = 6;
+                    }
+                    else
+                    {
+                        selectedSpriteIndex = 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            selectedSpriteIndex = 0;
+        }
 
         GameObject tile_GO = Instantiate(tilePrefab, tiles.transform);
         tile_GO.transform.position = new Vector2(x, y);
         SpriteRenderer sr = tile_GO.GetComponent<SpriteRenderer>();
-        sr.sprite = s;
+
+        if (selectedSpriteIndex == -1)
+        {
+            Debug.LogError("Why was no sprite index selected?");
+        }
+        Debug.Log(selectedSpriteIndex);
+        sr.sprite = s[selectedSpriteIndex];
 
         // Visibility
         ChangeVisibilityAlpha(tile, sr);

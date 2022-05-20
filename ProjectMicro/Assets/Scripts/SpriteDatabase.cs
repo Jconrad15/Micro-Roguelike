@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpriteDatabase : MonoBehaviour
 {
-    public Dictionary<TileType, Sprite> TileDatabase { get; protected set; }
+    public Dictionary<TileType, Sprite[]> TileDatabase { get; protected set; }
     public Dictionary<EntityType, Sprite> EntityDatabase { get; protected set; }
 
     public void CreateDatabases()
@@ -17,13 +17,13 @@ public class SpriteDatabase : MonoBehaviour
             typeof(TileTypeSpriteRef))
             .Cast<TileTypeSpriteRef>().ToArray();
 
-        TileDatabase = new Dictionary<TileType, Sprite>();
+        TileDatabase = new Dictionary<TileType, Sprite[]>();
         // Create the database
         for (int i = 0; i < tileReferences.Length; i++)
         {
             TileDatabase.Add(
                 tileReferences[i].tileType,
-                tileReferences[i].sprite);
+                tileReferences[i].sprites);
         }
 
         // Create entity database

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: OpenArea
   m_EditorClassIdentifier: 
   tileType: 0
-  sprite: {fileID: 21300000, guid: eeadf97f7bf82104da3f7efc4e2ef315, type: 3}
+  sprites:
+  - {fileID: 21300000, guid: eeadf97f7bf82104da3f7efc4e2ef315, type: 3}
