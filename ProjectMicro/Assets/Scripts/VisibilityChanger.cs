@@ -45,7 +45,7 @@ public static class VisibilityChanger
             }
             else
             {
-                // Visible changes to previously seen
+                // Visible changes to not visible for entities
                 if (e.Visibility == VisibilityLevel.Visible)
                 {
                     e.Visibility = VisibilityLevel.NotVisible;
@@ -72,7 +72,7 @@ public static class VisibilityChanger
                 // Visible changes to previously seen
                 if (f.Visibility == VisibilityLevel.Visible)
                 {
-                    f.Visibility = VisibilityLevel.NotVisible;
+                    f.Visibility = VisibilityLevel.PreviouslySeen;
                 }
             }
         }
