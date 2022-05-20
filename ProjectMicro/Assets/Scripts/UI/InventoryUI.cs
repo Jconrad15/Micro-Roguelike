@@ -12,7 +12,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField]
     private GameObject itemPrefab;
 
-    private List<GameObject> inventoryitems = new List<GameObject>();
+    private List<GameObject> inventoryItems = new List<GameObject>();
 
     // Start is called before the first frame update
     private void Start()
@@ -26,13 +26,14 @@ public class InventoryUI : MonoBehaviour
 
     private void OnInventoryToggled()
     {
+        UIModality.Instance.ToggleInventoryOpen();
         if (UIModality.Instance.IsInventoryOpen)
         {
-            Hide(inventoryArea);
+            Show(inventoryArea);
         }
         else
         {
-            Show(inventoryArea);
+            Hide(inventoryArea);
         }
     }
 
@@ -49,18 +50,21 @@ public class InventoryUI : MonoBehaviour
         foreach (Item item in items)
         {
             GameObject item_GO = Instantiate(itemPrefab, inventoryArea.transform);
-            item_GO.GetComponent<TextMeshProUGUI>().SetText(item.name);
-            inventoryitems.Add(item_GO);
+            item_GO.GetComponentInChildren<TextMeshProUGUI>().SetText(item.name);
+            inventoryItems.Add(item_GO);
         }
     }
 
     public void Hide(GameObject go)
     {
         go.SetActive(false);
-        foreach (GameObject item in inventoryitems)
+        foreach (GameObject item in inventoryItems)
         {
-            Destroy(item);
+            if (item != null)
+            {
+                Destroy(item);
+            }
         }
-        inventoryitems.Clear();
+        inventoryItems.Clear();
     }
 }

@@ -23,19 +23,9 @@ public class UIModality : MonoBehaviour
 
     public bool IsInventoryOpen { get; private set; } = false;
 
-    private void Start()
-    {
-        FindObjectOfType<PlayerController>()
-            .RegisterOnInventoryToggled(OnInventoryToggled);
-    }
-
-    private void OnInventoryToggled()
+    public void ToggleInventoryOpen()
     {
         IsInventoryOpen = !IsInventoryOpen;
     }
-
-
-
-
 
 }
