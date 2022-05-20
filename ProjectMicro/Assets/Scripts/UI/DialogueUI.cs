@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class DialogueUI : MonoBehaviour
 {
-    private PlayerController playerController;
-
     [SerializeField]
     private GameObject dialogueArea;
 
-    private void Start()
+    private void OnEnable()
     {
         FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
     }
