@@ -39,6 +39,10 @@ public class WorldGenerator : MonoBehaviour
         Tile playerTile = WorldData.Instance.GetTile(width/2, 0);
         Player player = new Player(playerTile, EntityType.Player);
         playerTile.entity = player;
+
+        // Starting player items
+        player.InventoryItems.Add(new Item("Stick", 1));
+
         cbOnPlayerCreated?.Invoke(player);
     }
 

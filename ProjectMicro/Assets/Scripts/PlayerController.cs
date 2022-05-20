@@ -91,6 +91,11 @@ public class PlayerController : MonoBehaviour
         return playerMoved;
     }
 
+    public Player GetPlayer()
+    {
+        return player;
+    }
+
     public void RegisterOnPlayerMove(Action<int, int> callbackfunc)
     {
         cbOnPlayerMoved += callbackfunc;
