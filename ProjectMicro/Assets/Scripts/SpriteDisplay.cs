@@ -160,14 +160,6 @@ public class SpriteDisplay : MonoBehaviour
                             Tile currentTile = tile;
                             while (isDetermined == false)
                             {
-                                // if northern tile is not a wall, then set this 
-                                // tile to be east west wall
-                                if (currentTile.neighbors[0].type != TileType.Wall)
-                                {
-                                    selectedSpriteIndex = 1;
-                                    isDetermined = true;
-                                }
-
                                 Tile[] neighborNeighbors =
                                     currentTile.neighbors[0].neighbors;
 
@@ -183,6 +175,14 @@ public class SpriteDisplay : MonoBehaviour
                                     selectedSpriteIndex = 4;
                                     isDetermined = true;
                                 }
+                                else if (currentTile.neighbors[0].type != TileType.Wall)
+                                {
+                                    // if northern tile is not a wall, then set this 
+                                    // tile to be east west wall
+
+                                    selectedSpriteIndex = 1;
+                                    isDetermined = true;
+                                }
                                 else
                                 {
                                     // Need to look north again using the
@@ -196,7 +196,7 @@ public class SpriteDisplay : MonoBehaviour
                                         selectedSpriteIndex = 3;
                                     }
 
-                                    currentTile = neighborNeighbors[0];
+                                    currentTile = currentTile.neighbors[0];
                                 }
                             }
                         }
@@ -261,7 +261,6 @@ public class SpriteDisplay : MonoBehaviour
         {
             Debug.LogError("Why was no sprite index selected?");
         }
-        Debug.Log(selectedSpriteIndex);
         sr.sprite = s[selectedSpriteIndex];
 
         // Visibility
