@@ -11,6 +11,7 @@ public class WorldData : MonoBehaviour
     public int Width { get; set; }
     public int Height { get; set; }
     public List<Entity> Entities { get; private set; } = new List<Entity>();
+    public List<Feature> Features { get; private set; } = new List<Feature>();
 
     public Path_TileGraph tileGraph { get; private set; }
 
@@ -37,6 +38,11 @@ public class WorldData : MonoBehaviour
     public void AddEntity(Entity e)
     {
         Entities.Add(e);
+    }
+
+    public void AddFeature(Feature f)
+    {
+        Features.Add(f);
     }
 
     public Tile[] GetNeighboringTiles(Tile t)

@@ -35,7 +35,6 @@ public class AIEntity : Entity
         // Set the next tile
         NextTile = Pathway.Dequeue();
 
-        Debug.Log("New Destination is at: " + Destination.x + "," + Destination.y);
         return true;
     }
 

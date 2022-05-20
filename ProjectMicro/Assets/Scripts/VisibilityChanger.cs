@@ -54,4 +54,28 @@ public static class VisibilityChanger
         }
     }
 
+    public static void UpdateFeatureVisibility(Player player)
+    {
+        List<Feature> features = WorldData.Instance.Features;
+        for (int i = 0; i < features.Count; i++)
+        {
+            Feature f = features[i];
+
+            if (Vector2.Distance(
+                new Vector2(f.T.x, f.T.y),
+                new Vector2(player.X, player.Y)) < visibilityDistance)
+            {
+                f.Visibility = VisibilityLevel.Visible;
+            }
+            else
+            {
+                // Visible changes to previously seen
+                if (f.Visibility == VisibilityLevel.Visible)
+                {
+                    f.Visibility = VisibilityLevel.NotVisible;
+                }
+            }
+        }
+    }
+
 }

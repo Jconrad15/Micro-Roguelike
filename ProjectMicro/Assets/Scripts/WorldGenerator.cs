@@ -22,6 +22,7 @@ public class WorldGenerator : MonoBehaviour
         Random.InitState(seed);
 
         CreateMapData();
+        CreateFeatures();
         CreatePlayer();
         CreateAIEntities();
 
@@ -62,8 +63,10 @@ public class WorldGenerator : MonoBehaviour
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
 
+            // For now just generate walls here
             if ((x == 5 && y >= 5 && y <= 10) ||
-                y == 10 && x >= 5 && x <= 10)
+                y == 10 && x >= 5 && x <= 10 ||
+                y == 10 && x >= 12 && x <= 15)
             {
                 WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
                 continue;
@@ -73,10 +76,22 @@ public class WorldGenerator : MonoBehaviour
             WorldData.Instance.MapData[i] = new Tile(x, y, TileType.OpenArea);
         }
 
-
-
         SetTileNeighbors();
         WorldData.Instance.GenerateTileGraph();
+    }
+
+    private void CreateFeatures()
+    {
+        Tile[] mapdata = WorldData.Instance.MapData;
+        for (int i = 0; i < mapdata.Length; i++)
+        {
+            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+
+            if (x == 11 && y == 10)
+            {
+                mapdata[i].feature = new Feature(FeatureType.Door, mapdata[i]);
+            }
+        }
     }
 
     private static void SetTileNeighbors()

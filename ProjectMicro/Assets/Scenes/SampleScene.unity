@@ -518,6 +518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 3869480886591443336, guid: b518671fc31a21545b55f9f90ba48ac1, type: 3}
   entitiesPrefab: {fileID: 5839522873765451967, guid: 0d51856916168444bb09033035b2af52, type: 3}
+  featurePrefab: {fileID: 5839522873765451967, guid: 886385415125a22439f5580097b28486, type: 3}
 --- !u!1 &1578313632
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,8 +549,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48efe9c22eac5e24ea77d53cfa5f5fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 20
-  height: 20
+  width: 30
+  height: 30
   seed: 0
 --- !u!4 &1578313634
 Transform:

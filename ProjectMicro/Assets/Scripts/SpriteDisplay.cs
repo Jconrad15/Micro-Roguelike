@@ -6,8 +6,9 @@ public class SpriteDisplay : MonoBehaviour
 {
     private WorldGenerator worldGenerator;
     private SpriteDatabase spriteDatabase;
-    private GameObject tiles;
-    private GameObject entities;
+    private GameObject tilesContainer;
+    private GameObject entitiesContainer;
+    private GameObject featuresContainer;
 
     private readonly float moveSpeed = 10f;
     private readonly float alphaChangeSpeed = 0.3f;
@@ -18,10 +19,15 @@ public class SpriteDisplay : MonoBehaviour
     private Dictionary<Entity, GameObject> placedEntities =
         new Dictionary<Entity, GameObject>();
 
+    private Dictionary<Feature, GameObject> placedFeatures =
+        new Dictionary<Feature, GameObject>();
+
     [SerializeField]
     private GameObject tilePrefab;
     [SerializeField]
     private GameObject entitiesPrefab;
+    [SerializeField]
+    private GameObject featurePrefab;
 
     void Start()
     {
@@ -30,11 +36,14 @@ public class SpriteDisplay : MonoBehaviour
 
         spriteDatabase = FindObjectOfType<SpriteDatabase>();
 
-        tiles = new GameObject("Tiles");
-        tiles.transform.parent = transform;
+        tilesContainer = new GameObject("Tiles");
+        tilesContainer.transform.parent = transform;
 
-        entities = new GameObject("Entities");
-        entities.transform.parent = transform;
+        entitiesContainer = new GameObject("Entities");
+        entitiesContainer.transform.parent = transform;
+
+        featuresContainer = new GameObject("Features");
+        featuresContainer.transform.parent = transform;
     }
 
     private void DisplayInitialWorld()
@@ -65,8 +74,40 @@ public class SpriteDisplay : MonoBehaviour
                 {
                     PlaceInitialEntity(mapData[i].entity, x, y);
                 }
+
+                // Place initial features
+                if (mapData[i].feature != null)
+                {
+                    PlaceInitialFeature(mapData[i].feature, x, y);
+                }
+
             }
         }
+    }
+
+    private void PlaceInitialFeature(Feature feature, int x, int y)
+    {
+        if (spriteDatabase.EntityDatabase == null)
+        {
+            Debug.LogError("No entity sprite database yet");
+        }
+
+        spriteDatabase.FeatureDatabase.TryGetValue(feature.type, out Sprite[] s);
+
+        GameObject newFeature = Instantiate(featurePrefab, featuresContainer.transform);
+        newFeature.transform.position = new Vector2(x, y);
+
+        SpriteRenderer sr = newFeature.GetComponent<SpriteRenderer>();
+        // TODO: determine which sprite to use
+        // For now just use the first sprite
+        sr.sprite = s[0];
+
+        // Visibility
+        ChangeVisibilityAlpha(feature, sr);
+
+        placedFeatures.Add(feature, newFeature);
+
+        feature.RegisterOnVisibilityChanged(OnVisiblityChanged);
     }
 
     private void PlaceInitialEntity(Entity entity, int x, int y)
@@ -78,7 +119,7 @@ public class SpriteDisplay : MonoBehaviour
 
         spriteDatabase.EntityDatabase.TryGetValue(entity.type, out Sprite s);
 
-        GameObject newTile = Instantiate(entitiesPrefab, entities.transform);
+        GameObject newTile = Instantiate(entitiesPrefab, entitiesContainer.transform);
         newTile.transform.position = new Vector2(x, y);
 
         SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
@@ -100,11 +141,36 @@ public class SpriteDisplay : MonoBehaviour
             Debug.LogError("No tile sprite database yet");
         }
 
-        if (spriteDatabase.TileDatabase.TryGetValue(tile.type, out Sprite[] s) == false)
+        if (spriteDatabase.TileDatabase
+            .TryGetValue(tile.type, out Sprite[] s) == false)
         {
             Debug.LogError("No sprites for this tile type");
             return;
         }
+
+        // Determine which sprite from the tileDatabase to use
+        int selectedSpriteIndex = DetermineSprite(tile);
+
+        GameObject tile_GO = Instantiate(tilePrefab, tilesContainer.transform);
+        tile_GO.transform.position = new Vector2(x, y);
+        SpriteRenderer sr = tile_GO.GetComponent<SpriteRenderer>();
+
+        if (selectedSpriteIndex == -1)
+        {
+            Debug.LogError("Why was no sprite index selected?");
+        }
+        sr.sprite = s[selectedSpriteIndex];
+
+        // Visibility
+        ChangeVisibilityAlpha(tile, sr);
+
+        placedTiles.Add(tile, tile_GO);
+
+        tile.RegisterOnVisibilityChanged(OnVisiblityChanged);
+    }
+
+    private static int DetermineSprite(Tile tile)
+    {
         int selectedSpriteIndex = -1;
         // Determine which sprite to use
         if (tile.type == TileType.Wall)
@@ -122,18 +188,18 @@ public class SpriteDisplay : MonoBehaviour
             }
 
             // If wall to north, then selectedSpriteIndex must be:
-            // 2, 3, 4, 5, 9, 10
+            // 2, 3, 4, 5, 7, 8
             if (isNeighborWall[0])
             {
                 // If wall to East, then selectedSpriteIndex must be:
-                // 2, 9
+                // 2, 7
                 if (isNeighborWall[1])
                 {
                     // If wall to South, then selectedSpriteIndex must be:
-                    // 9
+                    // 7
                     if (isNeighborWall[2])
                     {
-                        selectedSpriteIndex = 9;
+                        selectedSpriteIndex = 7;
                     }
                     else
                     {
@@ -143,14 +209,14 @@ public class SpriteDisplay : MonoBehaviour
                 else
                 {
                     // If wall to South, then selectedSpriteIndex must be:
-                    // 3, 4, 10
+                    // 3, 4, 8
                     if (isNeighborWall[2])
                     {
                         // If wall to West, then selectedSpriteIndex must be:
-                        // 10
+                        // 8
                         if (isNeighborWall[3])
                         {
-                            selectedSpriteIndex = 10;
+                            selectedSpriteIndex = 8;
                         }
                         else
                         {
@@ -190,7 +256,7 @@ public class SpriteDisplay : MonoBehaviour
 
                                     // TODO: make better decision
                                     // also check for null
-                                    if (neighborNeighbors[0] == null) 
+                                    if (neighborNeighbors[0] == null)
                                     {
                                         // just select 3
                                         selectedSpriteIndex = 3;
@@ -211,7 +277,7 @@ public class SpriteDisplay : MonoBehaviour
                         }
                         else
                         {
-                            selectedSpriteIndex = 2;   
+                            selectedSpriteIndex = 2;
                         }
                     }
                 }
@@ -253,22 +319,12 @@ public class SpriteDisplay : MonoBehaviour
             selectedSpriteIndex = 0;
         }
 
-        GameObject tile_GO = Instantiate(tilePrefab, tiles.transform);
-        tile_GO.transform.position = new Vector2(x, y);
-        SpriteRenderer sr = tile_GO.GetComponent<SpriteRenderer>();
+        return selectedSpriteIndex;
+    }
 
-        if (selectedSpriteIndex == -1)
-        {
-            Debug.LogError("Why was no sprite index selected?");
-        }
-        sr.sprite = s[selectedSpriteIndex];
-
-        // Visibility
-        ChangeVisibilityAlpha(tile, sr);
-
-        placedTiles.Add(tile, tile_GO);
-
-        tile.RegisterOnVisibilityChanged(OnVisiblityChanged);
+    private void ChangeVisibilityAlpha(Feature f, SpriteRenderer sr)
+    {
+        StartCoroutine(LerpVisibility(sr, (int)f.Visibility / 2f));
     }
 
     private void ChangeVisibilityAlpha(Tile tile, SpriteRenderer sr)
@@ -303,6 +359,18 @@ public class SpriteDisplay : MonoBehaviour
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
         {
             StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
+        }
+    }
+
+    private void OnVisiblityChanged(Feature f)
+    {
+        if (placedFeatures.TryGetValue(f, out GameObject tile_GO))
+        {
+            ChangeVisibilityAlpha(f, tile_GO.GetComponent<SpriteRenderer>());
+        }
+        else
+        {
+            Debug.LogError("What Entity is this? Not in entity-GO dictionary.");
         }
     }
 

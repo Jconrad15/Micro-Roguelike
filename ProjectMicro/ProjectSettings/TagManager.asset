@@ -41,6 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Tiles
+    uniqueID: 3096779353
+    locked: 0
+  - name: Features
+    uniqueID: 3394555263
+    locked: 0
   - name: Entities
     uniqueID: 2461043905
     locked: 0

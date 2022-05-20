@@ -57,8 +57,10 @@ public class PlayerController : MonoBehaviour
 
         cbOnPlayerMoved?.Invoke(player.X, player.Y);
 
+        // Update visibilities based on player position
         VisibilityChanger.UpdateTileVisibility(player);
         VisibilityChanger.UpdateEntityVisibility(player);
+        VisibilityChanger.UpdateFeatureVisibility(player);
 
         // Player's turn is done
         TurnController.Instance.NextTurn();
