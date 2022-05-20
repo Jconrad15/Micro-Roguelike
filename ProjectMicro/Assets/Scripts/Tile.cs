@@ -11,6 +11,7 @@ public class Tile
     public TileType type;
     public Entity entity;
     public Feature feature;
+    public Item item;
     public bool isWalkable = true;
 
     private VisibilityLevel visibility;
@@ -39,6 +40,7 @@ public class Tile
         entity = null;
         feature = null;
         neighbors = null;
+        item = null;
 
         Visibility = VisibilityLevel.NotVisible;
         if (type == TileType.Wall)

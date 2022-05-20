@@ -24,6 +24,8 @@ public class Entity
         }
     }
 
+    public List<Item> InventoryItems { get; protected set; }
+
     public EntityType type;
     private VisibilityLevel visibility;
     public VisibilityLevel Visibility
@@ -46,6 +48,8 @@ public class Entity
         X = t.x;
         Y = t.y;
         Visibility = VisibilityLevel.NotVisible;
+
+        InventoryItems = new List<Item>();
 
         // Add self to entity list
         WorldData.Instance.AddEntity(this);
