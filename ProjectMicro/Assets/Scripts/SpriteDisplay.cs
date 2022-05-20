@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Generates gameobjects to display sprites based on world data
+/// </summary>
 public class SpriteDisplay : MonoBehaviour
 {
     private WorldGenerator worldGenerator;
@@ -124,6 +127,9 @@ public class SpriteDisplay : MonoBehaviour
 
         SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
         sr.sprite = s;
+
+        // Set entity in the trader component in the prefabs
+        newTile.GetComponent<Trader>().SetEntity(entity);
 
         // Visibility
         ChangeVisibilityAlpha(entity, sr);

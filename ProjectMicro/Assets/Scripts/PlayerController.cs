@@ -77,6 +77,9 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     private bool TryPlayerInputMovement()
     {
+        // If dialogue is open, no movement allowed
+        if (UIModality.Instance.IsDialogueOpen) { return false; }
+
         bool playerMoved = false;
 
         float hMovement = Input.GetAxisRaw("Horizontal");

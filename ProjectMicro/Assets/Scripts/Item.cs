@@ -12,4 +12,9 @@ public class Item
         this.name = name;
         this.baseCost = baseCost;
     }
+
+    public void Use()
+    {
+
+    }
 }

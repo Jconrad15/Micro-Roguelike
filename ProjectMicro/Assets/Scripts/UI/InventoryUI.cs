@@ -21,7 +21,7 @@ public class InventoryUI : MonoBehaviour
         playerController.RegisterOnInventoryToggled(OnInventoryToggled);
 
         // Start hidden
-        Hide(inventoryArea);
+        Hide();
     }
 
     private void OnInventoryToggled()
@@ -29,18 +29,17 @@ public class InventoryUI : MonoBehaviour
         UIModality.Instance.ToggleInventoryOpen();
         if (UIModality.Instance.IsInventoryOpen)
         {
-            Show(inventoryArea);
+            Show();
         }
         else
         {
-            Hide(inventoryArea);
+            Hide();
         }
     }
 
-
-    public void Show(GameObject go)
+    public void Show()
     {
-        go.SetActive(true);
+        inventoryArea.SetActive(true);
         CreateUIItems();
     }
 
@@ -55,9 +54,9 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void Hide(GameObject go)
+    public void Hide()
     {
-        go.SetActive(false);
+        inventoryArea.SetActive(false);
         foreach (GameObject item in inventoryItems)
         {
             if (item != null)

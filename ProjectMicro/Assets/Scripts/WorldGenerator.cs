@@ -12,7 +12,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private int seed;
 
-    private Action cbOnWorldGenDone;
+    private Action cbOnWorldCreated;
     private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
@@ -28,7 +28,7 @@ public class WorldGenerator : MonoBehaviour
 
         Random.state = oldState;
 
-        cbOnWorldGenDone?.Invoke();
+        cbOnWorldCreated?.Invoke();
 
         // Destroy the world generator component
         Destroy(this);
@@ -52,8 +52,13 @@ public class WorldGenerator : MonoBehaviour
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
         AIEntity dog = new AIEntity(dogTile, EntityType.Dog);
         dogTile.entity = dog;
-
         cbOnAIEntityCreated?.Invoke(dog);
+
+        // Also create a trader
+        Tile traderTile = WorldData.Instance.GetTile(10, 7);
+        AIEntity trader = new AIEntity(traderTile, EntityType.Trader);
+        traderTile.entity = trader;
+        cbOnAIEntityCreated.Invoke(trader);
     }
 
     private void CreateMapData()
@@ -111,12 +116,12 @@ public class WorldGenerator : MonoBehaviour
 
     public void RegisterOnWorldCreated(Action callbackfunc)
     {
-        cbOnWorldGenDone += callbackfunc;
+        cbOnWorldCreated += callbackfunc;
     }
 
     public void UnregisterOnWorldCreated(Action callbackfunc)
     {
-        cbOnWorldGenDone -= callbackfunc;
+        cbOnWorldCreated -= callbackfunc;
     }
 
     public void RegisterOnPlayerCreated(Action<Player> callbackfunc)

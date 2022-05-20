@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EntityType { Player, Dog };
+public enum EntityType { Player, Trader, Dog };
 public class Entity
 {
     public int X { get; protected set; }
@@ -10,12 +10,9 @@ public class Entity
 
     // Updating T will update X and Y coordinates
     private Tile t;
-    public Tile T 
+    public Tile T
     {
-        get 
-        {
-            return t;
-        }
+        get => t;
         protected set
         {
             t = value;
@@ -40,6 +37,7 @@ public class Entity
 
     private Action<Entity> cbOnVisibilityChanged;
     private Action<Entity, Vector2> cbOnMove;
+    private Action<Entity> cbOnTraderClicked;
 
     public Entity(Tile t, EntityType type)
     {
@@ -53,6 +51,11 @@ public class Entity
 
         // Add self to entity list
         WorldData.Instance.AddEntity(this);
+    }
+
+    public void PlayerClickOnTrader()
+    {
+        cbOnTraderClicked?.Invoke(this);
     }
 
     public bool TryMove(Direction d)
@@ -122,5 +125,15 @@ public class Entity
     public void UnregisterOnVisibilityChanged(Action<Entity> callbackfunc)
     {
         cbOnVisibilityChanged -= callbackfunc;
+    }
+
+    public void RegisterOnTraderClicked(Action<Entity> callbackfunc)
+    {
+        cbOnTraderClicked += callbackfunc;
+    }
+
+    public void UnregisterOnTraderClicked(Action<Entity> callbackfunc)
+    {
+        cbOnTraderClicked -= callbackfunc;
     }
 }
