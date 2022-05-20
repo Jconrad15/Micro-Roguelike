@@ -9,8 +9,8 @@ public class SpriteDisplay : MonoBehaviour
     private GameObject tiles;
     private GameObject entities;
 
-    private float moveSpeed = 10f;
-    private float alphaChangeSpeed = 0.5f;
+    private readonly float moveSpeed = 10f;
+    private readonly float alphaChangeSpeed = 0.3f;
 
     private Dictionary<Tile, GameObject> placedTiles =
         new Dictionary<Tile, GameObject>();
@@ -90,6 +90,7 @@ public class SpriteDisplay : MonoBehaviour
         placedEntities.Add(entity, newTile);
 
         entity.RegisterOnMove(OnEntityMove);
+        entity.RegisterOnVisibilityChanged(OnVisiblityChanged);
     }
 
     private void PlaceInitialTile(Tile tile, int x, int y)
@@ -146,6 +147,18 @@ public class SpriteDisplay : MonoBehaviour
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
         {
             StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
+        }
+    }
+
+    private void OnVisiblityChanged(Entity e)
+    {
+        if (placedEntities.TryGetValue(e, out GameObject tile_GO))
+        {
+            ChangeVisibilityAlpha(e, tile_GO.GetComponent<SpriteRenderer>());
+        }
+        else
+        {
+            Debug.LogError("What Entity is this? Not in entity-GO dictionary.");
         }
     }
 

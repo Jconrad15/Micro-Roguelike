@@ -25,7 +25,18 @@ public class Entity
     }
 
     public EntityType type;
-    public VisibilityLevel Visibility { get; set; }
+    private VisibilityLevel visibility;
+    public VisibilityLevel Visibility
+    {
+        get { return visibility; }
+        set
+        {
+            visibility = value;
+            cbOnVisibilityChanged?.Invoke(this);
+        }
+    }
+
+    private Action<Entity> cbOnVisibilityChanged;
     private Action<Entity, Vector2> cbOnMove;
 
     public Entity(Tile t, EntityType type)
@@ -35,6 +46,9 @@ public class Entity
         X = t.x;
         Y = t.y;
         Visibility = VisibilityLevel.NotVisible;
+
+        // Add self to entity list
+        WorldData.Instance.AddEntity(this);
     }
 
     public bool TryMove(Direction d)
@@ -76,5 +90,15 @@ public class Entity
     public void UnregisterOnMove(Action<Entity, Vector2> callbackfunc)
     {
         cbOnMove -= callbackfunc;
+    }
+
+    public void RegisterOnVisibilityChanged(Action<Entity> callbackfunc)
+    {
+        cbOnVisibilityChanged += callbackfunc;
+    }
+
+    public void UnregisterOnVisibilityChanged(Action<Entity> callbackfunc)
+    {
+        cbOnVisibilityChanged -= callbackfunc;
     }
 }

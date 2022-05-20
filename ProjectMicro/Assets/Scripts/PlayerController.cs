@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         // Set player as visible
         p.Visibility = VisibilityLevel.Visible;
 
-        UpdateVisibility();
+        VisibilityChanger.UpdateTileVisibility(player);
     }
 
     private void OnStartTurn()
@@ -57,34 +57,11 @@ public class PlayerController : MonoBehaviour
 
         cbOnPlayerMoved?.Invoke(player.X, player.Y);
 
-        // Change tile visibility
-        UpdateVisibility();
-
+        VisibilityChanger.UpdateTileVisibility(player);
+        VisibilityChanger.UpdateEntityVisibility(player);
 
         // Player's turn is done
         TurnController.Instance.NextTurn();
-    }
-
-    private void UpdateVisibility()
-    {
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
-        {
-            Tile t = WorldData.Instance.MapData[i];
-            if (Vector2.Distance(
-                new Vector2(t.x, t.y),
-                new Vector2(player.X, player.Y)) < 5)
-            {
-                t.Visibility = VisibilityLevel.Visible;
-            }
-            else
-            {
-                // Visible changes to previously seen
-                if (t.Visibility == VisibilityLevel.Visible)
-                {
-                    t.Visibility = VisibilityLevel.PreviouslySeen;
-                }
-            }
-        }
     }
 
     public void RegisterOnPlayerMove(Action<int, int> callbackfunc)

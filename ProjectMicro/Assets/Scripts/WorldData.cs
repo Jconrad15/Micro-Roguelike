@@ -10,6 +10,7 @@ public class WorldData : MonoBehaviour
     public Tile[] MapData { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
+    public List<Entity> Entities { get; private set; } = new List<Entity>();
 
     public static WorldData Instance { get; private set; }
     private void Awake()
@@ -31,6 +32,11 @@ public class WorldData : MonoBehaviour
         MapData = mapData;
         Width = width;
         Height = height;
+    }
+
+    public void AddEntity(Entity e)
+    {
+        Entities.Add(e);
     }
 
     public Tile[] GetNeighboringTiles(Tile t)
