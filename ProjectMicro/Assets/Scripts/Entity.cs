@@ -69,6 +69,21 @@ public class Entity
         return true;
     }
 
+    public bool TryMove(Tile destTile)
+    {
+        // No movement if no neighbor tile
+        if (destTile == null) { return false; }
+
+        // No movement if the tile is not walkable
+        if (destTile.isWalkable == false) { return false; }
+
+        // No movement if there is entity in neighbor tile
+        if (destTile.entity != null) { return false; }
+
+        Move(destTile);
+        return true;
+    }
+
     private void Move(Tile destination)
     {
         Vector2 startPos = new Vector2 (X, Y);

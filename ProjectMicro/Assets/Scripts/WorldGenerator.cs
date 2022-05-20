@@ -75,9 +75,8 @@ public class WorldGenerator : MonoBehaviour
 
 
 
-
-
         SetTileNeighbors();
+        WorldData.Instance.GenerateTileGraph();
     }
 
     private static void SetTileNeighbors()

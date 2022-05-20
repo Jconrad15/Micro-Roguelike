@@ -12,6 +12,8 @@ public class WorldData : MonoBehaviour
     public int Height { get; set; }
     public List<Entity> Entities { get; private set; } = new List<Entity>();
 
+    public Path_TileGraph tileGraph { get; private set; }
+
     public static WorldData Instance { get; private set; }
     private void Awake()
     {
@@ -27,11 +29,9 @@ public class WorldData : MonoBehaviour
         }
     }
 
-    public void SetData(Tile[] mapData, int width, int height)
+    public void GenerateTileGraph()
     {
-        MapData = mapData;
-        Width = width;
-        Height = height;
+        tileGraph = new Path_TileGraph();
     }
 
     public void AddEntity(Entity e)
@@ -48,6 +48,21 @@ public class WorldData : MonoBehaviour
         }
 
         return neighbors.ToArray();
+    }
+
+    public Tile GetRandomWalkableTile()
+    {
+        Tile selectedTile = null;
+        while (selectedTile == null)
+        {
+            int randomIndex = Random.Range(0, MapData.Length);
+            if (MapData[randomIndex].isWalkable == true)
+            {
+                selectedTile = MapData[randomIndex];
+            }
+        }
+
+        return selectedTile;
     }
 
     public Tile GetNeighboringTile(Direction d, Tile t)
@@ -96,7 +111,7 @@ public class WorldData : MonoBehaviour
     public (int, int) GetCoordFromIndex(int i)
     {
         int x = i % Width;
-        int y = i / Width;
+        int y = i / Width % Height;
         return (x, y);
     }
 }

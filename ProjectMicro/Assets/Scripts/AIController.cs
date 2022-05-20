@@ -30,7 +30,14 @@ public class AIController : MonoBehaviour
         
         for (int i = 0; i < aiEntities.Count; i++)
         {
-            aiEntities[i].TryMove(Utility.GetRandomEnum<Direction>());
+            AIEntity aiEntity = aiEntities[i];
+
+            // Does ai entity need a new path from pathfinding
+            aiEntity.TryDetermineNewDestination();
+
+            bool moved = aiEntity.TryMove(aiEntity.NextTile);
+
+            if (moved) { aiEntity.Moved(); }
         }
 
         TurnController.Instance.NextTurn();
