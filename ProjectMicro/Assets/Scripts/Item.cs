@@ -5,9 +5,9 @@ using UnityEngine;
 public class Item
 {
     public string name;
-    public float baseCost;
+    public int baseCost;
 
-    public Item(string name, float baseCost)
+    public Item(string name, int baseCost)
     {
         this.name = name;
         this.baseCost = baseCost;

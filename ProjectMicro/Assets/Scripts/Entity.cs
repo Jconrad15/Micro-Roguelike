@@ -23,6 +23,9 @@ public class Entity
 
     public List<Item> InventoryItems { get; protected set; }
 
+    // TODO: for now just have everyone start with 10 money
+    public int Money { get; protected set; } = 10;
+
     public EntityType type;
     private VisibilityLevel visibility;
     public VisibilityLevel Visibility
@@ -105,6 +108,75 @@ public class Entity
         T = destination;
 
         cbOnMove?.Invoke(this, startPos);
+    }
+
+    /// <summary>
+    /// Triggered when a clicked on trader is transacted with.
+    /// </summary>
+    /// <param name="itemToTransfer"></param>
+    /// <param name="player"></param>
+    /// <param name="clickedEntity"></param>
+    /// <param name="isPlayerItem"></param>
+    /// <returns></returns>
+    public bool TryTransferItem(Item itemToTransfer, Player player,
+        Entity clickedEntity, bool isPlayerItem)
+    {
+        // Transfer to the trader if possible
+        if (isPlayerItem)
+        {
+            // If the trader has enough money
+            if (itemToTransfer.baseCost <= clickedEntity.Money)
+            {
+                clickedEntity.AddPurchasedItem(itemToTransfer);
+                player.RemoveSoldItem(itemToTransfer);
+                return true;
+            }
+            // The trader does not have enough money
+            else
+            {
+                return false;
+            }
+        }
+        // Trasfer to the player if possible
+        else
+        {
+            // If the player has enough money
+            if (itemToTransfer.baseCost <= player.Money)
+            {
+                player.AddPurchasedItem(itemToTransfer);
+                clickedEntity.RemoveSoldItem(itemToTransfer);
+                return true;
+            }
+            // The trader does not have enough money
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds the purchased item to the inventory list and removes money.
+    /// </summary>
+    /// <param name="item"></param>
+    public void AddPurchasedItem(Item item)
+    {
+        Money -= item.baseCost;
+        InventoryItems.Add(item);
+
+        Debug.Log("Item: " + item.name + " transfered to " + type.ToString());
+    }
+
+    /// <summary>
+    /// Removes the sold item from the inventory list and adds money.
+    /// </summary>
+    /// <param name="item"></param>
+    public void RemoveSoldItem(Item item)
+    {
+        Money += item.baseCost;
+        _ = InventoryItems.Remove(item);
+
+        Debug.Log("Item: " + item.name + " removed from " + type.ToString());
     }
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)
