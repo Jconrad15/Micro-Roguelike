@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -19,6 +19,8 @@ public class TradeItemUI : MonoBehaviour
     private Player player;
     private Item item;
     private bool isPlayerItem;
+
+    private Action<Player, Entity> onItemTransfered;
 
     public void Setup(Item item, Player player,
         Entity clickedEntity, bool isPlayerItem)
@@ -45,7 +47,17 @@ public class TradeItemUI : MonoBehaviour
         {
             // Do something if the item is transferred
             // Need to update the UI list
-
+            onItemTransfered?.Invoke(player, clickedEntity);
         }
+    }
+
+    public void RegisterOnItemTransfered(Action<Player, Entity> callbackfunc)
+    {
+        onItemTransfered += callbackfunc;
+    }
+
+    public void UnregisterOnItemTransfered(Action<Player, Entity> callbackfunc)
+    {
+        onItemTransfered -= callbackfunc;
     }
 }

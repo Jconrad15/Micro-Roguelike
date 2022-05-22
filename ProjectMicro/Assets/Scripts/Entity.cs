@@ -163,8 +163,6 @@ public class Entity
     {
         Money -= item.baseCost;
         InventoryItems.Add(item);
-
-        Debug.Log("Item: " + item.name + " transfered to " + type.ToString());
     }
 
     /// <summary>
@@ -175,8 +173,6 @@ public class Entity
     {
         Money += item.baseCost;
         _ = InventoryItems.Remove(item);
-
-        Debug.Log("Item: " + item.name + " removed from " + type.ToString());
     }
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)

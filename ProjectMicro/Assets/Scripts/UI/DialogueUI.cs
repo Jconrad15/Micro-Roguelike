@@ -59,6 +59,16 @@ public class DialogueUI : MonoBehaviour
     {
         UIModality.Instance.IsDialogueOpen = true;
 
+        UpdateTraderPlayerItems(clickedEntity);
+
+        // Show player and trader money
+        UpdateShownMoney(clickedEntity);
+
+        dialogueArea.SetActive(true);
+    }
+
+    private void UpdateTraderPlayerItems(Entity clickedEntity)
+    {
         // Create player items
         List<Item> playerItems = player.InventoryItems;
         createdPlayerItems = new GameObject[playerItems.Count];
@@ -66,8 +76,9 @@ public class DialogueUI : MonoBehaviour
         {
             GameObject newItem_GO =
                 Instantiate(tradeItemPrefab, playerItemsContainer.transform);
-            newItem_GO.GetComponent<TradeItemUI>()
-                .Setup(playerItems[i], player, clickedEntity, true);
+            TradeItemUI tradeItemUI = newItem_GO.GetComponent<TradeItemUI>();
+            tradeItemUI.Setup(playerItems[i], player, clickedEntity, true);
+            tradeItemUI.RegisterOnItemTransfered(OnItemTransfered);
             createdPlayerItems[i] = newItem_GO;
         }
 
@@ -78,21 +89,42 @@ public class DialogueUI : MonoBehaviour
         {
             GameObject newItem_GO =
                 Instantiate(tradeItemPrefab, traderItemsContainer.transform);
-            newItem_GO.AddComponent<TradeItemUI>()
-                .Setup(traderItems[i], player, clickedEntity, false);
+            TradeItemUI tradeItemUI = newItem_GO.GetComponent<TradeItemUI>();
+            tradeItemUI.Setup(traderItems[i], player, clickedEntity, false);
+            tradeItemUI.RegisterOnItemTransfered(OnItemTransfered);
             createdTraderItems[i] = newItem_GO;
         }
+    }
 
-        // Show player and trader money
-        
+    /// <summary>
+    /// When an item is transfered, update the money,
+    /// and replace the shown items
+    /// </summary>
+    /// <param name="p"></param>
+    /// <param name="clickedEntity"></param>
+    private void OnItemTransfered(Player p, Entity clickedEntity)
+    {
+        UpdateShownMoney(clickedEntity);
+        DestroyItems();
+        UpdateTraderPlayerItems(clickedEntity);
+    }
 
-        dialogueArea.SetActive(true);
+    private void UpdateShownMoney(Entity clickedEntity)
+    {
+        playerMoneyText.SetText("$" + player.Money.ToString());
+        traderMoneyText.SetText("$" + clickedEntity.Money.ToString());
     }
 
     public void Hide()
     {
         UIModality.Instance.IsDialogueOpen = false;
+        DestroyItems();
 
+        dialogueArea.SetActive(false);
+    }
+
+    private void DestroyItems()
+    {
         // Destroy player items
         if (createdPlayerItems != null)
         {
@@ -112,8 +144,5 @@ public class DialogueUI : MonoBehaviour
             }
             createdTraderItems = null;
         }
-
-        dialogueArea.SetActive(false);
     }
-
 }
