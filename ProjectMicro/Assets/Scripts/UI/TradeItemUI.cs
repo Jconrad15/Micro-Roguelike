@@ -30,7 +30,7 @@ public class TradeItemUI : MonoBehaviour
         this.player = player;
         this.isPlayerItem = isPlayerItem;
 
-        itemNameText.SetText(item.name);
+        itemNameText.SetText(item.itemName);
         buttonText.SetText("$" + item.baseCost.ToString());
 
         // Setup the button

@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ItemCategory { RawMaterial };
 public class Item
 {
-    public string name;
+    public string itemName;
     public int baseCost;
+    public ItemCategory category;
 
-    public Item(string name, int baseCost)
+    public Item(string itemName, int baseCost, ItemCategory category)
     {
-        this.name = name;
+        this.itemName = itemName;
         this.baseCost = baseCost;
-    }
-
-    public void Use()
-    {
-
+        this.category = category;
     }
 }

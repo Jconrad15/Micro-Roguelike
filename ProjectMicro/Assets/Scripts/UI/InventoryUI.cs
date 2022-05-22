@@ -49,7 +49,7 @@ public class InventoryUI : MonoBehaviour
         foreach (Item item in items)
         {
             GameObject item_GO = Instantiate(itemPrefab, inventoryArea.transform);
-            item_GO.GetComponentInChildren<TextMeshProUGUI>().SetText(item.name);
+            item_GO.GetComponentInChildren<TextMeshProUGUI>().SetText(item.itemName);
             inventoryItems.Add(item_GO);
         }
     }

@@ -16,10 +16,14 @@ public class WorldGenerator : MonoBehaviour
     private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
+    private ItemDatabase itemDB;
+
     void Start()
     {
         Random.State oldState = Random.state;
         Random.InitState(seed);
+
+        InitializeItemDatabase();
 
         CreateMapData();
         CreateFeatures();
@@ -34,16 +38,29 @@ public class WorldGenerator : MonoBehaviour
         Destroy(this);
     }
 
+    private void InitializeItemDatabase()
+    {
+        itemDB = FindObjectOfType<ItemDatabase>();
+        itemDB.CreateDatabase();
+    }
+
     private void CreatePlayer()
     {
-        Tile playerTile = WorldData.Instance.GetTile(width/2, 0);
+        Tile playerTile = WorldData.Instance.GetTile(width / 2, 0);
         Player player = new Player(playerTile, EntityType.Player);
         playerTile.entity = player;
 
         // Starting player items
-        player.InventoryItems.Add(new Item("Stick", 1));
+        player.InventoryItems.Add(GenerateRandomItem());
 
         cbOnPlayerCreated?.Invoke(player);
+    }
+
+    private Item GenerateRandomItem()
+    {
+        // TODO: store this items list? so that it isn't created each time
+        List<Item> items = new List<Item>(itemDB.ItemRefDatabase.Values);
+        return items[Random.Range(0, items.Count)];
     }
 
     private void CreateAIEntities()
@@ -52,12 +69,14 @@ public class WorldGenerator : MonoBehaviour
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
         AIEntity dog = new AIEntity(dogTile, EntityType.Dog);
         dogTile.entity = dog;
+        dog.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated?.Invoke(dog);
 
         // Also create a trader
         Tile traderTile = WorldData.Instance.GetTile(10, 7);
         AIEntity trader = new AIEntity(traderTile, EntityType.Trader);
         traderTile.entity = trader;
+        trader.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated.Invoke(trader);
     }
 
