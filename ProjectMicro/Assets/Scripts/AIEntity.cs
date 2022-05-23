@@ -10,14 +10,18 @@ public class AIEntity : Entity
 
     public AIEntity(Tile t, EntityType type) : base(t, type) { }
 
+    private readonly int maxTurnsNotMoved = 5;
+
     // TODO: Better destination determination logic
     public bool TryDetermineNewDestination()
     {
-        // If pathway exists and
-        // not at end tile, return false, no new destination
+        // If pathway exists 
         if (Pathway != null)
         {
-            if (Pathway.Length() > 0)
+            // and not at end tile,
+            // and not yet at max turns of not moving
+            // return false, no new destination
+            if (Pathway.Length() > 0 && turnsNotMoved <= maxTurnsNotMoved)
             {
                 return false;
             }

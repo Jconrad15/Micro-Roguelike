@@ -42,6 +42,8 @@ public class Entity
     private Action<Entity, Vector2> cbOnMove;
     private Action<Entity> cbOnTraderClicked;
 
+    public int turnsNotMoved = 0;
+
     public Entity(Tile t, EntityType type)
     {
         T = t;
@@ -67,13 +69,25 @@ public class Entity
         Tile neighbor = T.neighbors[(int)d];
 
         // No movement if no neighbor tile
-        if (neighbor == null) { return false; }
+        if (neighbor == null) 
+        {
+            turnsNotMoved++;
+            return false; 
+        }
 
         // No movement if the tile is not walkable
-        if (neighbor.isWalkable == false) { return false; }
+        if (neighbor.isWalkable == false) 
+        {
+            turnsNotMoved++;
+            return false;
+        }
 
         // No movement if there is entity in neighbor tile
-        if (neighbor.entity != null) { return false; }
+        if (neighbor.entity != null)
+        {
+            turnsNotMoved++;
+            return false;
+        }
 
         Move(neighbor);
         return true;
@@ -84,11 +98,11 @@ public class Entity
         // No movement if no neighbor tile
         if (destTile == null) { return false; }
 
-        // No movement if the tile is not walkable
-        if (destTile.isWalkable == false) { return false; }
-
         // No movement if there is entity in neighbor tile
         if (destTile.entity != null) { return false; }
+
+        // No movement if the tile is not walkable
+        if (destTile.isWalkable == false) { return false; }
 
         Move(destTile);
         return true;
