@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum EntityType { Player, Trader, Dog };
+
+[Serializable]
+public class SerializableEntity
+{
+    public int x;
+    public int y;
+    public List<Item> inventoryItems;
+    public int money;
+    public EntityType type;
+    public VisibilityLevel visibility;
+}
+
 public class Entity
 {
     public int X { get; protected set; }
@@ -44,12 +56,21 @@ public class Entity
 
     public int TurnsNotMoved { get; protected set; } = 0;
 
+    public void SetTile(Tile tile)
+    {
+        if (tile == null) { return; }
+        T = tile;
+    }
+
     public Entity(Tile t, EntityType type)
     {
+        if (t == null) { return; }
         T = t;
-        this.type = type;
         X = t.x;
         Y = t.y;
+
+        this.type = type;
+
         Visibility = VisibilityLevel.NotVisible;
 
         InventoryItems = new List<Item>();

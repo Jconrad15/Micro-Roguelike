@@ -1,8 +1,10 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public enum ItemCategory { RawMaterial, FinalGoods };
+[Serializable]
 public class Item
 {
     public string itemName;

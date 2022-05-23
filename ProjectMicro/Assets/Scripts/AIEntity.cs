@@ -1,7 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
+[Serializable]
 public class AIEntity : Entity
 {
     private Path_AStar Pathway { get; set; }
@@ -9,6 +9,16 @@ public class AIEntity : Entity
     public Tile NextTile { get; private set; }
 
     public AIEntity(Tile t, EntityType type) : base(t, type) { }
+
+    // Constructor for loaded AIEntity
+    public AIEntity(EntityType type, List<Item> inventoryItems,
+        int money, VisibilityLevel visibility, Tile t = null) : base(t, type)
+    {
+        base.type = type;
+        InventoryItems = inventoryItems;
+        Money = money;
+        Visibility = visibility;
+    }
 
     private readonly int maxTurnsNotMoved = 5;
 

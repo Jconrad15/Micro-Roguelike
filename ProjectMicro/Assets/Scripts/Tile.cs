@@ -2,7 +2,22 @@ using System;
 
 [Serializable]
 public enum TileType { OpenArea, Wall };
+[Serializable]
 public enum VisibilityLevel { NotVisible, PreviouslySeen, Visible };
+[Serializable]
+public class SerializableTile
+{
+    public int x;
+    public int y;
+
+    public TileType type;
+    public SerializableEntity entity;
+    public SerialziableFeature feature;
+    public Item item;
+    public bool isWalkable;
+    public VisibilityLevel visibility;
+}
+
 public class Tile
 {
     public int x;
@@ -30,6 +45,7 @@ public class Tile
 
     private Action<Tile> cbOnVisibilityChanged;
 
+    // Constructor for creating initial tiles
     public Tile(int x, int y, TileType type)
     {
         this.x = x;
@@ -47,6 +63,20 @@ public class Tile
         {
             isWalkable = false;
         }
+    }
+
+    // Constructor for loading tile data from save file
+    public Tile(int x, int y, TileType type, Entity entity,
+        Feature feature, Item item, bool isWalkable, VisibilityLevel visibility)
+    {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.entity = entity;
+        this.feature = feature;
+        this.item = item;
+        this.isWalkable = isWalkable;
+        visibility = Visibility;
     }
 
     public void SetNeighbors(Tile[] neighbors)

@@ -2,7 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public enum FeatureType { Door };
+[Serializable]
+public class SerialziableFeature
+{
+    public FeatureType type;
+    public VisibilityLevel visibility;
+}
+
 public class Feature
 {
     public FeatureType type;
@@ -21,6 +29,11 @@ public class Feature
         }
     }
 
+    /// <summary>
+    /// Constructor for initial generation
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="t"></param>
     public Feature(FeatureType type, Tile t)
     {
         this.type = type;
@@ -29,6 +42,21 @@ public class Feature
 
         // Add self to feature list
         WorldData.Instance.AddFeature(this);
+    }
+
+    /// <summary>
+    /// Contructor for loading saved data
+    /// </summary>
+    public Feature(FeatureType featureType, VisibilityLevel visibility)
+    {
+        type = featureType;
+        this.visibility = visibility;
+    }
+
+    public void SetTile(Tile tile)
+    {
+        if (tile == null) { return; }
+        T = tile;
     }
 
     public void RegisterOnVisibilityChanged(Action<Feature> callbackfunc)
