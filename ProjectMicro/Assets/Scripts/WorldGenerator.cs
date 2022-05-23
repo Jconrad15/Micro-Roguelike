@@ -111,12 +111,15 @@ public class WorldGenerator : MonoBehaviour
     {
         TileType[] rawMap = new TileType[width * height];
 
+        SimplexNoise.Seed = seed;
+        float scale = 0.1f;
+
         for (int i = 0; i < rawMap.Length; i++)
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
 
-            float sample = Random.Range(0f, 1f);
-            if (sample <= 0.1f)
+            float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
+            if (sample <= 0.2f)
             {
                 rawMap[i] = TileType.Water;
             }
