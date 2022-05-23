@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemCategory { RawMaterial };
+public enum ItemCategory { RawMaterial, FinalGoods };
 public class Item
 {
     public string itemName;

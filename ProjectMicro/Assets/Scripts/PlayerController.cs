@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     private Action<int, int> cbOnPlayerMoved;
     private Action cbOnInventoryToggled;
-    private bool isPlayerTurn = false;
+    //private bool isPlayerTurn = false;
 
     private void OnEnable()
     {
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnStartTurn()
     {
-        isPlayerTurn = true;
+        //isPlayerTurn = true;
         StartCoroutine(PlayerProcessing());
     }
 
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         // Player's turn is done
         TurnController.Instance.NextTurn();
-        isPlayerTurn = false;
+        //isPlayerTurn = false;
     }
 
     private void Update()
