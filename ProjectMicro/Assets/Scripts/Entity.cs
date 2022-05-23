@@ -56,6 +56,7 @@ public class Entity
     private Action<Entity> cbOnVisibilityChanged;
     private Action<Entity, Vector2> cbOnMove;
     private Action<Entity> cbOnTraderClicked;
+    private Action<Entity> cbOnPlayerClicked;
 
     public int TurnsNotMoved { get; protected set; } = 0;
 
@@ -85,6 +86,11 @@ public class Entity
     public void PlayerClickOnTrader()
     {
         cbOnTraderClicked?.Invoke(this);
+    }
+
+    public void PlayerClickOnPlayer()
+    {
+        cbOnPlayerClicked?.Invoke(this);
     }
 
     public bool TryMove(Direction d)
@@ -259,5 +265,15 @@ public class Entity
     public void UnregisterOnTraderClicked(Action<Entity> callbackfunc)
     {
         cbOnTraderClicked -= callbackfunc;
+    }
+
+    public void RegisterOnPlayerClicked(Action<Entity> callbackfunc)
+    {
+        cbOnPlayerClicked += callbackfunc;
+    }
+
+    public void UnregisterOnPlayerClicked(Action<Entity> callbackfunc)
+    {
+        cbOnPlayerClicked -= callbackfunc;
     }
 }

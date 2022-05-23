@@ -83,6 +83,8 @@ public class WorldGenerator : MonoBehaviour
         WorldData.Instance.Width = width;
         WorldData.Instance.Height = height;
 
+        TileType[] rawMap = CreateRawMapData();
+
         // Set tile types
         for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
         {
@@ -98,11 +100,33 @@ public class WorldGenerator : MonoBehaviour
             }
 
             // Otherwise set to open tile
-            WorldData.Instance.MapData[i] = new Tile(x, y, TileType.OpenArea);
+            WorldData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
         }
 
         SetTileNeighbors();
         WorldData.Instance.GenerateTileGraph();
+    }
+
+    private TileType[] CreateRawMapData()
+    {
+        TileType[] rawMap = new TileType[width * height];
+
+        for (int i = 0; i < rawMap.Length; i++)
+        {
+            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+
+            float sample = Random.Range(0f, 1f);
+            if (sample <= 0.1f)
+            {
+                rawMap[i] = TileType.Water;
+            }
+            else
+            {
+                rawMap[i] = TileType.OpenArea;
+            }
+        }
+
+        return rawMap;
     }
 
     private void CreateFeatures()

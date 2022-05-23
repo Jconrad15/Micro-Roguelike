@@ -44,6 +44,7 @@ public class DialogueUI : MonoBehaviour
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].RegisterOnTraderClicked(OnTraderClicked);
+            player.RegisterOnPlayerClicked(OnPlayerClicked);
         }
 
         // Start hidden
@@ -53,6 +54,11 @@ public class DialogueUI : MonoBehaviour
     private void OnTraderClicked(Entity clickedEntity)
     {
         Show(clickedEntity);
+    }
+
+    private void OnPlayerClicked(Entity playerEntity)
+    {
+        Debug.Log("ClickedOnPlayer");
     }
 
     public void Show(Entity clickedEntity)

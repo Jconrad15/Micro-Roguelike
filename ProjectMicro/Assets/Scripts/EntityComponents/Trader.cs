@@ -25,6 +25,13 @@ public class Trader : MonoBehaviour
         // If a dialogue is already open, don't trigger click on trader
         if (UIModality.Instance.IsDialogueOpen == true) { return; }
 
-        entity.PlayerClickOnTrader();
+        if (entity.type == EntityType.Player)
+        {
+            entity.PlayerClickOnPlayer();
+        }
+        else
+        {
+            entity.PlayerClickOnTrader();
+        }
     }
 }
