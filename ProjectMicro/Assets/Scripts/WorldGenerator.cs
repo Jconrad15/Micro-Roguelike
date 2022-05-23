@@ -73,7 +73,7 @@ public class WorldGenerator : MonoBehaviour
         cbOnAIEntityCreated?.Invoke(dog);
 
         // Also create a trader
-        Tile traderTile = WorldData.Instance.GetTile(10, 7);
+        Tile traderTile = WorldData.Instance.GetTile(2, 1);
         AIEntity trader = new AIEntity(traderTile, EntityType.Trader);
         traderTile.entity = trader;
         trader.InventoryItems.Add(GenerateRandomItem());
@@ -93,8 +93,8 @@ public class WorldGenerator : MonoBehaviour
 
             // For now just generate walls here
             if ((x == 5 && y >= 5 && y <= 10) ||
-                y == 10 && x >= 5 && x <= 10 ||
-                y == 10 && x >= 12 && x <= 15)
+                y == 10 && x >= 0 && x <= 10 ||
+                y == 10 && x >= 12 && x <= 30)
             {
                 WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
                 continue;

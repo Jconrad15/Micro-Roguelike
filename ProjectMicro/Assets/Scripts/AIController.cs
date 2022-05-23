@@ -36,7 +36,7 @@ public class AIController : MonoBehaviour
             aiEntity.TryDetermineNewDestination();
 
             bool moved = aiEntity.TryMove(aiEntity.NextTile);
-
+            if (moved == false) { Debug.Log("turnsNotMove: " + aiEntity.TurnsNotMoved); }
             if (moved) { aiEntity.Moved(); }
         }
 

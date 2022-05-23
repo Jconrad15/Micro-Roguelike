@@ -187,9 +187,12 @@ public class SpriteDisplay : MonoBehaviour
             bool[] isNeighborWall = new bool[4];
             for (int i = 0; i < 4; i++)
             {
-                if (tile.neighbors[i].type == TileType.Wall)
+                if (tile.neighbors[i] != null)
                 {
-                    isNeighborWall[i] = true;
+                    if (tile.neighbors[i].type == TileType.Wall)
+                    {
+                        isNeighborWall[i] = true;
+                    }
                 }
             }
 

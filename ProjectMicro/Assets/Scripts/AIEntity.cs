@@ -21,7 +21,7 @@ public class AIEntity : Entity
             // and not at end tile,
             // and not yet at max turns of not moving
             // return false, no new destination
-            if (Pathway.Length() > 0 && turnsNotMoved <= maxTurnsNotMoved)
+            if (Pathway.Length() > 0 && TurnsNotMoved <= maxTurnsNotMoved)
             {
                 return false;
             }
@@ -44,6 +44,7 @@ public class AIEntity : Entity
 
     public void Moved()
     {
+        TurnsNotMoved = 0;
         if (Pathway.Length() == 0)
         {
             NextTile = null;
