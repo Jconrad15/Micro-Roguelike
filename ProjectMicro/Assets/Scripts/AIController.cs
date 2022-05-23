@@ -24,6 +24,11 @@ public class AIController : MonoBehaviour
         StartCoroutine(AIProcessing()); 
     }
 
+    public void ClearAll()
+    {
+        aiEntities.Clear();
+    }
+
     private IEnumerator AIProcessing()
     {
         yield return new WaitForSeconds(0.1f);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Generates gameobjects to display sprites based on world data
@@ -83,7 +84,6 @@ public class SpriteDisplay : MonoBehaviour
                 {
                     PlaceInitialFeature(mapData[i].feature, x, y);
                 }
-
             }
         }
     }
@@ -405,6 +405,37 @@ public class SpriteDisplay : MonoBehaviour
         {
             Debug.LogError("What tile is this? Not in tile-GO dictionary.");
         }
+    }
+
+    public void ClearAll()
+    {
+        List<GameObject> currentGOs = new List<GameObject>();
+        // Get single list of all placed gameobjects
+        foreach (GameObject go in placedEntities.Values)
+        {
+            currentGOs.Add(go);
+        }
+        foreach (GameObject go in placedFeatures.Values)
+        {
+            currentGOs.Add(go);
+        }
+        foreach (GameObject go in placedTiles.Values)
+        {
+            currentGOs.Add(go);
+        }
+
+        // Destroy all placed gameobjects
+        foreach (GameObject go in currentGOs)
+        {
+            Destroy(go);
+        }
+        StopAllCoroutines();
+
+        // Clear dictionaries
+        placedTiles.Clear();
+        placedEntities.Clear();
+        placedFeatures.Clear();
+
     }
 
     private IEnumerator SmoothEntityMove(

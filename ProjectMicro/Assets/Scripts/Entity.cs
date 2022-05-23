@@ -28,8 +28,11 @@ public class Entity
         protected set
         {
             t = value;
-            X = value.x;
-            Y = value.y;
+            if (value != null)
+            {
+                X = value.x;
+                Y = value.y;
+            }
         }
     }
 
@@ -220,6 +223,12 @@ public class Entity
     {
         Money += item.baseCost;
         _ = InventoryItems.Remove(item);
+    }
+
+    public void Destroy()
+    {
+        InventoryItems.Clear();
+        T = null;
     }
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)

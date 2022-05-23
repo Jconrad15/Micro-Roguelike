@@ -33,9 +33,6 @@ public class WorldGenerator : MonoBehaviour
         Random.state = oldState;
 
         cbOnWorldCreated?.Invoke();
-
-        // Destroy the world generator component
-        Destroy(this);
     }
 
     private void InitializeItemDatabase()
@@ -131,6 +128,25 @@ public class WorldGenerator : MonoBehaviour
                     WorldData.Instance.MapData[i]);
             WorldData.Instance.MapData[i].SetNeighbors(neighbors);
         }
+    }
+
+    public void OnDataLoaded(List<Entity> loadedEntities)
+    {
+        SetTileNeighbors();
+
+        for (int i = 0; i < loadedEntities.Count; i++)
+        {
+            if (loadedEntities[i].type == EntityType.Player)
+            {
+                cbOnPlayerCreated?.Invoke(loadedEntities[i] as Player);
+            }
+            else
+            {
+                cbOnAIEntityCreated?.Invoke(loadedEntities[i] as AIEntity);
+            }
+        }
+
+        cbOnWorldCreated?.Invoke();
     }
 
     public void RegisterOnWorldCreated(Action callbackfunc)

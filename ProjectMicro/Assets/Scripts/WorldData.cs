@@ -28,6 +28,8 @@ public class WorldData : MonoBehaviour
         {
             Instance = this;
         }
+
+        SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
     }
 
     public void GenerateTileGraph()
@@ -119,5 +121,31 @@ public class WorldData : MonoBehaviour
         int x = i % Width;
         int y = i / Width % Height;
         return (x, y);
+    }
+
+    private void OnDataLoaded(LoadedWorldData loadedWorldData)
+    {
+        ClearOldData();
+
+        Width = loadedWorldData.Width;
+        Height = loadedWorldData.Height;
+
+        MapData = loadedWorldData.MapData;
+
+        Entities = loadedWorldData.Entities;
+        Features = loadedWorldData.Features;
+
+        FindObjectOfType<WorldGenerator>().OnDataLoaded(Entities);
+        GenerateTileGraph();
+    }
+
+    private void ClearOldData()
+    {
+        foreach (Entity entity in Entities)
+        {
+            entity.Destroy();
+        }
+        FindObjectOfType<AIController>().ClearAll();
+        FindObjectOfType<SpriteDisplay>().ClearAll();
     }
 }
