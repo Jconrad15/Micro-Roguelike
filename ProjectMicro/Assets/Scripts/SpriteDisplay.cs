@@ -331,19 +331,40 @@ public class SpriteDisplay : MonoBehaviour
         return selectedSpriteIndex;
     }
 
-    private void ChangeVisibilityAlpha(Feature f, SpriteRenderer sr)
+    private Dictionary<SpriteRenderer, Coroutine> currentlyLerpingSRs =
+        new Dictionary<SpriteRenderer, Coroutine>();
+
+    private void ChangeVisibilityAlpha(Feature feature, SpriteRenderer sr)
     {
-        StartCoroutine(LerpVisibility(sr, (int)f.Visibility / 2f));
+        ChangeVisibilityAlpha(sr, (int)feature.Visibility / 2f);
+
     }
 
     private void ChangeVisibilityAlpha(Tile tile, SpriteRenderer sr)
     {
-        StartCoroutine(LerpVisibility(sr, (int)tile.Visibility / 2f));
+        ChangeVisibilityAlpha(sr, (int)tile.Visibility / 2f);
+
     }
 
     private void ChangeVisibilityAlpha(Entity entity, SpriteRenderer sr)
     {
-        StartCoroutine(LerpVisibility(sr, (float)entity.Visibility / 2f));
+        ChangeVisibilityAlpha(sr, (int)entity.Visibility / 2f);
+    }
+
+    private void ChangeVisibilityAlpha(SpriteRenderer sr, float targetAlpha)
+    {
+        if (currentlyLerpingSRs.ContainsKey(sr))
+        {
+            currentlyLerpingSRs.TryGetValue(sr, out Coroutine runningCR);
+            if (runningCR != null)
+            {
+                StopCoroutine(runningCR);
+            }
+            currentlyLerpingSRs.Remove(sr);
+        }
+
+        Coroutine cr = StartCoroutine(LerpVisibility(sr, targetAlpha));
+        currentlyLerpingSRs.Add(sr, cr);
     }
 
     private IEnumerator LerpVisibility(SpriteRenderer sr, float targetAlpha)
@@ -360,6 +381,7 @@ public class SpriteDisplay : MonoBehaviour
             yield return null;
         }
 
+        currentlyLerpingSRs.Remove(sr);
         sr.color = targetColor;
     }
 
