@@ -122,19 +122,20 @@ public class SpriteDisplay : MonoBehaviour
 
         spriteDatabase.EntityDatabase.TryGetValue(entity.entityName, out Sprite[] s);
 
-        GameObject newTile = Instantiate(entitiesPrefab, entitiesContainer.transform);
-        newTile.transform.position = new Vector2(x, y);
+        GameObject newEntity_GO = Instantiate(entitiesPrefab, entitiesContainer.transform);
+        newEntity_GO.transform.position = new Vector2(x, y);
 
-        SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
+        SpriteRenderer sr = newEntity_GO.GetComponent<SpriteRenderer>();
         sr.sprite = s[0];
 
-        // Set entity in the entity clicker component in the prefabs
-        newTile.GetComponent<EntityClicker>().SetEntity(entity);
+        // Set entity in the entity prefab components
+        newEntity_GO.GetComponent<EntityClicker>().SetEntity(entity);
+        newEntity_GO.GetComponent<EntityMouseOver>().SetEntity(entity);
 
         // Visibility
         ChangeVisibilityAlpha(entity, sr);
 
-        placedEntities.Add(entity, newTile);
+        placedEntities.Add(entity, newEntity_GO);
 
         entity.RegisterOnMove(OnEntityMove);
         entity.RegisterOnVisibilityChanged(OnVisiblityChanged);
