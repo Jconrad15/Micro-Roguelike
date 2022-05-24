@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Animal : AIEntity
 {
-    public Animal(Tile t, EntityType type) : base(t, type) 
+    public Animal(Tile t, EntityType type, int startingMoney)
+        : base(t, type, startingMoney) 
     {
         entityName = "animal";
     }

@@ -44,7 +44,7 @@ public class WorldGenerator : MonoBehaviour
     private void CreatePlayer()
     {
         Tile playerTile = WorldData.Instance.GetTile(width / 2, 0);
-        Player player = new Player(playerTile, EntityType.Player);
+        Player player = new Player(playerTile, EntityType.Player, 10);
         playerTile.entity = player;
 
         // Starting player items
@@ -64,14 +64,13 @@ public class WorldGenerator : MonoBehaviour
     {
         // For now generate a dog
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
-        Dog dog = new Dog(dogTile, EntityType.AI);
+        Dog dog = new Dog(dogTile, EntityType.AI, 0);
         dogTile.entity = dog;
-        dog.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated?.Invoke(dog);
 
         // Also create a Merchant
         Tile merchantTile = WorldData.Instance.GetTile(2, 1);
-        Merchant merchant = new Merchant(merchantTile, EntityType.AI);
+        Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
         merchantTile.entity = merchant;
         merchant.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated.Invoke(merchant);

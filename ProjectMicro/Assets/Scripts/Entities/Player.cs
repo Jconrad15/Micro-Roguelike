@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Player : Entity
 {
     // Contructor for new player
-    public Player(Tile t, EntityType type) : base(t, type)
+    public Player(Tile t, EntityType type, int startingMoney)
+        : base(t, type, startingMoney)
     {
         entityName = "player";
     }

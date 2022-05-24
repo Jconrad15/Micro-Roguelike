@@ -8,7 +8,8 @@ public class AIEntity : Entity
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
 
-    public AIEntity(Tile t, EntityType type) : base(t, type) { }
+    public AIEntity(Tile t, EntityType type, int startingMoney)
+        : base(t, type, startingMoney) { }
 
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,

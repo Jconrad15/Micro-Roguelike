@@ -41,7 +41,7 @@ public class Entity
     public List<Item> InventoryItems { get; protected set; }
 
     // TODO: for now just have everyone start with 10 money
-    public int Money { get; protected set; } = 10;
+    public int Money { get; protected set; }
 
     public EntityType type;
     protected VisibilityLevel visibility;
@@ -68,12 +68,13 @@ public class Entity
         T = tile;
     }
 
-    public Entity(Tile t, EntityType type)
+    public Entity(Tile t, EntityType type, int startingMoney)
     {
         if (t == null) { return; }
         T = t;
         X = t.x;
         Y = t.y;
+        Money = startingMoney;
 
         this.type = type;
 
@@ -83,6 +84,12 @@ public class Entity
 
         // Add self to entity list
         WorldData.Instance.AddEntity(this);
+    }
+
+    public Entity(Tile t, EntityType type)
+    {
+        this.t = t;
+        this.type = type;
     }
 
     public void PlayerClickOnTrader()

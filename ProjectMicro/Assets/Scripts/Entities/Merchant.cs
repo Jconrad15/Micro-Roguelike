@@ -6,7 +6,8 @@ public class Merchant : AIEntity
 {
     protected int waitAtTileTurns;
 
-    public Merchant(Tile t, EntityType type) : base(t, type) 
+    public Merchant(Tile t, EntityType type, int startingMoney)
+        : base(t, type, startingMoney) 
     {
         entityName = "merchant";
     }

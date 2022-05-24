@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42dcefe7731f9245b4397fef48205cf, type: 3}
   m_Name: Pottery
   m_EditorClassIdentifier: 
-  itemName: Potery
+  itemName: Pottery
   baseCost: 6
   category: 1
