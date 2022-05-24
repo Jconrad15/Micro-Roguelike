@@ -55,6 +55,11 @@ public class AIEntity : Entity
         return true;
     }
 
+    /// <summary>
+    /// Determine if the entity should not move. 
+    /// Returns false to not move.
+    /// </summary>
+    /// <returns></returns>
     protected virtual bool TryDetermineNewDestinationBreak()
     {
         // Any early breaks for the AIEntity can be placed in here.

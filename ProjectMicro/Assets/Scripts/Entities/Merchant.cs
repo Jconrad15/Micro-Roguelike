@@ -13,10 +13,10 @@ public class Merchant : AIEntity
 
     protected override bool TryDetermineNewDestinationBreak()
     {
+        // Merchant entity determines to wait at tile before moving
         if (waitAtTileTurns > 0)
         {
             waitAtTileTurns--;
-            Debug.Log("Merchant wait");
             return false;
         }
 
@@ -27,6 +27,7 @@ public class Merchant : AIEntity
     protected override void DetermineNewDestination()
     {
         base.DetermineNewDestination();
+        // Determine wait at tile length
         waitAtTileTurns = Random.Range(4, 6);
     }
 }
