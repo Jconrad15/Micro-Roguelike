@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Trader
   m_EditorClassIdentifier: 
   entityType: 1
-  sprite: {fileID: 21300000, guid: 1e6ba221c98fd484487ca33837b521d2, type: 3}
+  sprites:
+  - {fileID: 21300000, guid: 1e6ba221c98fd484487ca33837b521d2, type: 3}
