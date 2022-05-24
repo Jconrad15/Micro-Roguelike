@@ -7,7 +7,7 @@ public class Player : Entity
     // Contructor for new player
     public Player(Tile t, EntityType type) : base(t, type)
     {
-
+        entityName = "player";
     }
 
     // Constructor for loaded player

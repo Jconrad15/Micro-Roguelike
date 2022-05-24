@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpriteDatabase : MonoBehaviour
 {
     public Dictionary<TileType, Sprite[]> TileDatabase { get; protected set; }
-    public Dictionary<EntityType, Sprite[]> EntityDatabase { get; protected set; }
+    public Dictionary<string, Sprite[]> EntityDatabase { get; protected set; }
     public Dictionary<FeatureType, Sprite[]> FeatureDatabase { get; protected set; }
 
     public void CreateDatabases()
@@ -33,12 +33,12 @@ public class SpriteDatabase : MonoBehaviour
             typeof(EntityTypeSpriteRef))
             .Cast<EntityTypeSpriteRef>().ToArray();
 
-        EntityDatabase = new Dictionary<EntityType, Sprite[]>();
+        EntityDatabase = new Dictionary<string, Sprite[]>();
         // Create the database
         for (int i = 0; i < entityreferences.Length; i++)
         {
             EntityDatabase.Add(
-                entityreferences[i].entityType,
+                entityreferences[i].entityName,
                 entityreferences[i].sprites);
         }
 

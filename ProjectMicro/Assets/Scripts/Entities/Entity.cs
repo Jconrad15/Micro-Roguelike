@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EntityType { Player, Trader, Animal };
+public enum EntityType { Player, AI };
 
 [Serializable]
 public class SerializableEntity
@@ -17,6 +17,8 @@ public class SerializableEntity
 
 public class Entity
 {
+    public string entityName;
+
     public int X { get; protected set; }
     public int Y { get; protected set; }
 
@@ -42,7 +44,7 @@ public class Entity
     public int Money { get; protected set; } = 10;
 
     public EntityType type;
-    private VisibilityLevel visibility;
+    protected VisibilityLevel visibility;
     public VisibilityLevel Visibility
     {
         get { return visibility; }
@@ -53,12 +55,12 @@ public class Entity
         }
     }
 
-    private Action<Entity> cbOnVisibilityChanged;
-    private Action<Entity, Vector2> cbOnMove;
-    private Action<Entity> cbOnTraderClicked;
-    private Action<Entity> cbOnPlayerClicked;
+    protected Action<Entity> cbOnVisibilityChanged;
+    protected Action<Entity, Vector2> cbOnMove;
+    protected Action<Entity> cbOnTraderClicked;
+    protected Action<Entity> cbOnPlayerClicked;
 
-    public int TurnsNotMoved { get; protected set; } = 0;
+    public int TurnsNotMovedStuck { get; protected set; } = 0;
 
     public void SetTile(Tile tile)
     {
@@ -101,21 +103,21 @@ public class Entity
         // No movement if no neighbor tile
         if (neighbor == null) 
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false; 
         }
 
         // No movement if the tile is not walkable
         if (neighbor.isWalkable == false) 
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false;
         }
 
         // No movement if there is entity in neighbor tile
         if (neighbor.entity != null)
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false;
         }
 
@@ -128,21 +130,21 @@ public class Entity
         // No movement if no neighbor tile
         if (destTile == null)
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false;
         }
 
         // No movement if there is entity in neighbor tile
         if (destTile.entity != null)
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false;
         }
 
         // No movement if the tile is not walkable
         if (destTile.isWalkable == false)
         {
-            TurnsNotMoved++;
+            TurnsNotMovedStuck++;
             return false;
         }
 
@@ -150,7 +152,7 @@ public class Entity
         return true;
     }
 
-    private void Move(Tile destination)
+    protected void Move(Tile destination)
     {
         Vector2 startPos = new Vector2 (X, Y);
 

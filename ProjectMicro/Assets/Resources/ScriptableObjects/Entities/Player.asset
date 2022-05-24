@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b7c3a0d88862334dabb673b1e686ba2, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  entityType: 0
+  entityName: player
   sprites:
   - {fileID: 21300000, guid: 4e3e6b250ea087f4aae2ab416572a24b, type: 3}

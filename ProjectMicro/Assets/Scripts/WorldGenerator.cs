@@ -64,17 +64,17 @@ public class WorldGenerator : MonoBehaviour
     {
         // For now generate a dog
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
-        AIEntity dog = new AIEntity(dogTile, EntityType.Animal);
+        Dog dog = new Dog(dogTile, EntityType.AI);
         dogTile.entity = dog;
         dog.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated?.Invoke(dog);
 
-        // Also create a trader
-        Tile traderTile = WorldData.Instance.GetTile(2, 1);
-        AIEntity trader = new AIEntity(traderTile, EntityType.Trader);
-        traderTile.entity = trader;
-        trader.InventoryItems.Add(GenerateRandomItem());
-        cbOnAIEntityCreated.Invoke(trader);
+        // Also create a Merchant
+        Tile merchantTile = WorldData.Instance.GetTile(2, 1);
+        Merchant merchant = new Merchant(merchantTile, EntityType.AI);
+        merchantTile.entity = merchant;
+        merchant.InventoryItems.Add(GenerateRandomItem());
+        cbOnAIEntityCreated.Invoke(merchant);
     }
 
     private void CreateMapData()

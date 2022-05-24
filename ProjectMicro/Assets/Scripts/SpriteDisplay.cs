@@ -120,7 +120,7 @@ public class SpriteDisplay : MonoBehaviour
             Debug.LogError("No entity sprite database yet");
         }
 
-        spriteDatabase.EntityDatabase.TryGetValue(entity.type, out Sprite[] s);
+        spriteDatabase.EntityDatabase.TryGetValue(entity.entityName, out Sprite[] s);
 
         GameObject newTile = Instantiate(entitiesPrefab, entitiesContainer.transform);
         newTile.transform.position = new Vector2(x, y);

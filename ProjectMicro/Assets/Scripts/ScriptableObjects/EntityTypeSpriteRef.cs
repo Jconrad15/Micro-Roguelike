@@ -4,6 +4,6 @@ using UnityEngine;
     menuName = "ScriptableObjects/EntityTypeSpriteRef", order = 2)]
 public class EntityTypeSpriteRef : ScriptableObject
 {
-    public EntityType entityType;
+    public string entityName;
     public Sprite[] sprites;
 }
