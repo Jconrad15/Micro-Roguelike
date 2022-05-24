@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EntityType { Player, Trader, Dog };
+public enum EntityType { Player, Trader, Animal };
 
 [Serializable]
 public class SerializableEntity

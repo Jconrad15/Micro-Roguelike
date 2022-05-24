@@ -5,5 +5,5 @@ using UnityEngine;
 public class EntityTypeSpriteRef : ScriptableObject
 {
     public EntityType entityType;
-    public Sprite sprite;
+    public Sprite[] sprites;
 }

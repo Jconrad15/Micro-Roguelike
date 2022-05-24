@@ -5,13 +5,13 @@ using UnityEngine;
 public class SpriteDatabase : MonoBehaviour
 {
     public Dictionary<TileType, Sprite[]> TileDatabase { get; protected set; }
-    public Dictionary<EntityType, Sprite> EntityDatabase { get; protected set; }
+    public Dictionary<EntityType, Sprite[]> EntityDatabase { get; protected set; }
     public Dictionary<FeatureType, Sprite[]> FeatureDatabase { get; protected set; }
 
     public void CreateDatabases()
     {
         // Load scriptable objects from file
-        
+
         // Create tile database
         TileTypeSpriteRef[] tileReferences =
             Resources.LoadAll("ScriptableObjects/Tiles",
@@ -33,13 +33,13 @@ public class SpriteDatabase : MonoBehaviour
             typeof(EntityTypeSpriteRef))
             .Cast<EntityTypeSpriteRef>().ToArray();
 
-        EntityDatabase = new Dictionary<EntityType, Sprite>();
+        EntityDatabase = new Dictionary<EntityType, Sprite[]>();
         // Create the database
         for (int i = 0; i < entityreferences.Length; i++)
         {
             EntityDatabase.Add(
                 entityreferences[i].entityType,
-                entityreferences[i].sprite);
+                entityreferences[i].sprites);
         }
 
         // Create entity database

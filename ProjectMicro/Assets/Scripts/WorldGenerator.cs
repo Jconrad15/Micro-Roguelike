@@ -64,7 +64,7 @@ public class WorldGenerator : MonoBehaviour
     {
         // For now generate a dog
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
-        AIEntity dog = new AIEntity(dogTile, EntityType.Dog);
+        AIEntity dog = new AIEntity(dogTile, EntityType.Animal);
         dogTile.entity = dog;
         dog.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated?.Invoke(dog);
@@ -83,6 +83,7 @@ public class WorldGenerator : MonoBehaviour
         WorldData.Instance.Width = width;
         WorldData.Instance.Height = height;
 
+        // Create base tile type map
         TileType[] rawMap = CreateRawMapData();
 
         // Set tile types
@@ -90,10 +91,11 @@ public class WorldGenerator : MonoBehaviour
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
 
+            // Create walls
             // For now just generate walls here
             if ((x == 5 && y >= 5 && y <= 10) ||
-                y == 10 && x >= 0 && x <= 10 ||
-                y == 10 && x >= 12 && x <= 30)
+                (y == 10 && x >= 0 && x <= 10) ||
+                (y == 10 && x >= 12 && x <= 30))
             {
                 WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
                 continue;

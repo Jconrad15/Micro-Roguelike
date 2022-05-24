@@ -120,13 +120,13 @@ public class SpriteDisplay : MonoBehaviour
             Debug.LogError("No entity sprite database yet");
         }
 
-        spriteDatabase.EntityDatabase.TryGetValue(entity.type, out Sprite s);
+        spriteDatabase.EntityDatabase.TryGetValue(entity.type, out Sprite[] s);
 
         GameObject newTile = Instantiate(entitiesPrefab, entitiesContainer.transform);
         newTile.transform.position = new Vector2(x, y);
 
         SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
-        sr.sprite = s;
+        sr.sprite = s[0];
 
         // Set entity in the trader component in the prefabs
         newTile.GetComponent<Trader>().SetEntity(entity);
