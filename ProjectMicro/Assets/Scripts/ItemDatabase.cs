@@ -2,11 +2,11 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemDatabase : MonoBehaviour
+public static class ItemDatabase
 {
-    public Dictionary<string, Item> ItemRefDatabase { get; protected set; }
+    public static Dictionary<string, Item> ItemRefDatabase { get; private set; }
 
-    public void CreateDatabase()
+    public static void CreateDatabase()
     {
         // Load scriptable objects from file
 
@@ -23,5 +23,22 @@ public class ItemDatabase : MonoBehaviour
             ItemRefDatabase.Add(itemRefs[i].itemName, new Item(
                 itemRefs[i].itemName, itemRefs[i].baseCost,itemRefs[i].category));
         }
+    }
+
+    public static Item GetRandomItem()
+    {
+        // TODO: store this items list? so that it isn't created each time
+        List<Item> items = new List<Item>(ItemRefDatabase.Values);
+        return items[Random.Range(0, items.Count)];
+    }
+
+    public static Item GetItemByName(string name)
+    {
+        if (ItemRefDatabase.TryGetValue(name, out Item item))
+        {
+            return item;
+        }
+
+        return null;
     }
 }

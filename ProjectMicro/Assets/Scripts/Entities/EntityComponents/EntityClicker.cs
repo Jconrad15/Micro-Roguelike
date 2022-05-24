@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Trader : MonoBehaviour
+public class EntityClicker : MonoBehaviour
 {
     public Entity entity;
 
@@ -31,7 +31,12 @@ public class Trader : MonoBehaviour
         }
         else
         {
-            entity.PlayerClickOnTrader();
+            // If the entity is a merchant, then click on merchant
+            if (entity.GetType() == typeof(Merchant))
+            {
+                Merchant m = entity as Merchant;
+                m.PlayerClickOnMerchant();
+            }
         }
     }
 }

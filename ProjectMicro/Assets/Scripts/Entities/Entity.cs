@@ -57,7 +57,7 @@ public class Entity
 
     protected Action<Entity> cbOnVisibilityChanged;
     protected Action<Entity, Vector2> cbOnMove;
-    protected Action<Entity> cbOnTraderClicked;
+    protected Action<Entity> cbOnMerchantClicked;
     protected Action<Entity> cbOnPlayerClicked;
 
     public int TurnsNotMovedStuck { get; protected set; } = 0;
@@ -90,11 +90,6 @@ public class Entity
     {
         this.t = t;
         this.type = type;
-    }
-
-    public void PlayerClickOnTrader()
-    {
-        cbOnTraderClicked?.Invoke(this);
     }
 
     public void PlayerClickOnPlayer()
@@ -266,14 +261,14 @@ public class Entity
         cbOnVisibilityChanged -= callbackfunc;
     }
 
-    public void RegisterOnTraderClicked(Action<Entity> callbackfunc)
+    public void RegisterOnMerchantClicked(Action<Entity> callbackfunc)
     {
-        cbOnTraderClicked += callbackfunc;
+        cbOnMerchantClicked += callbackfunc;
     }
 
-    public void UnregisterOnTraderClicked(Action<Entity> callbackfunc)
+    public void UnregisterOnMerchantClicked(Action<Entity> callbackfunc)
     {
-        cbOnTraderClicked -= callbackfunc;
+        cbOnMerchantClicked -= callbackfunc;
     }
 
     public void RegisterOnPlayerClicked(Action<Entity> callbackfunc)

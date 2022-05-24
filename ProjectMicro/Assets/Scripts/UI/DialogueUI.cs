@@ -39,19 +39,22 @@ public class DialogueUI : MonoBehaviour
 
     private void OnWorldCreated()
     {
-        // Register to all traders
+        // Register to all merchants
         List<Entity> entities = WorldData.Instance.Entities;
         for (int i = 0; i < entities.Count; i++)
         {
-            entities[i].RegisterOnTraderClicked(OnTraderClicked);
-            player.RegisterOnPlayerClicked(OnPlayerClicked);
+            if (entities[i].GetType() == typeof(Merchant))
+            {
+                entities[i].RegisterOnMerchantClicked(OnMerchantClicked);
+            }
         }
+        player.RegisterOnPlayerClicked(OnPlayerClicked);
 
         // Start hidden
         Hide();
     }
 
-    private void OnTraderClicked(Entity clickedEntity)
+    private void OnMerchantClicked(Entity clickedEntity)
     {
         Show(clickedEntity);
     }

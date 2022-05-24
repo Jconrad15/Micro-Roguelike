@@ -128,8 +128,8 @@ public class SpriteDisplay : MonoBehaviour
         SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
         sr.sprite = s[0];
 
-        // Set entity in the trader component in the prefabs
-        newTile.GetComponent<Trader>().SetEntity(entity);
+        // Set entity in the entity clicker component in the prefabs
+        newTile.GetComponent<EntityClicker>().SetEntity(entity);
 
         // Visibility
         ChangeVisibilityAlpha(entity, sr);

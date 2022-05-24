@@ -27,4 +27,11 @@ public static class Utility
 
         return dr + dg + db + da;
     }
+
+    public static bool IsSameOrSubclass(Type potentialBase, Type potentialDescendant)
+    {
+        return potentialDescendant.IsSubclassOf(potentialBase)
+               || potentialDescendant == potentialBase;
+    }
+
 }

@@ -16,8 +16,6 @@ public class WorldGenerator : MonoBehaviour
     private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
-    private ItemDatabase itemDB;
-
     void Start()
     {
         Random.State oldState = Random.state;
@@ -37,8 +35,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void InitializeItemDatabase()
     {
-        itemDB = FindObjectOfType<ItemDatabase>();
-        itemDB.CreateDatabase();
+        ItemDatabase.CreateDatabase();
     }
 
     private void CreatePlayer()
@@ -48,16 +45,9 @@ public class WorldGenerator : MonoBehaviour
         playerTile.entity = player;
 
         // Starting player items
-        player.InventoryItems.Add(GenerateRandomItem());
+        player.InventoryItems.Add(ItemDatabase.GetRandomItem());
 
         cbOnPlayerCreated?.Invoke(player);
-    }
-
-    private Item GenerateRandomItem()
-    {
-        // TODO: store this items list? so that it isn't created each time
-        List<Item> items = new List<Item>(itemDB.ItemRefDatabase.Values);
-        return items[Random.Range(0, items.Count)];
     }
 
     private void CreateAIEntities()
@@ -72,7 +62,6 @@ public class WorldGenerator : MonoBehaviour
         Tile merchantTile = WorldData.Instance.GetTile(2, 1);
         Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
         merchantTile.entity = merchant;
-        merchant.InventoryItems.Add(GenerateRandomItem());
         cbOnAIEntityCreated.Invoke(merchant);
     }
 
