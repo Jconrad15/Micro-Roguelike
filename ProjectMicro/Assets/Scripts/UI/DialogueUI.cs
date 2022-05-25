@@ -30,6 +30,9 @@ public class DialogueUI : MonoBehaviour
         LocationGenerator wg = FindObjectOfType<LocationGenerator>();
         wg.RegisterOnLocationCreated(OnLocationCreated);
         wg.RegisterOnPlayerCreated(OnPlayerCreated);
+
+        // Start hidden
+        Hide();
     }
 
     private void OnPlayerCreated(Player p)
@@ -49,9 +52,6 @@ public class DialogueUI : MonoBehaviour
             }
         }
         player.RegisterOnPlayerClicked(OnPlayerClicked);
-
-        // Start hidden
-        Hide();
     }
 
     private void OnMerchantClicked(Entity clickedEntity)

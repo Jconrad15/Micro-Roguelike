@@ -5,23 +5,26 @@ using Random = UnityEngine.Random;
 
 public class LocationGenerator : MonoBehaviour
 {
-    [SerializeField]
     private int width;
-    [SerializeField]
     private int height;
-    [SerializeField]
     private int seed;
 
     private Action cbOnLocationCreated;
     private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
-    void Start()
+    /// <summary>
+    /// Initiate generation of this location.
+    /// </summary>
+    /// <param name="seed"></param>
+    public void StartGenerateLocation(int seed, int width, int height,
+        int worldX, int worldY)
     {
         Random.State oldState = Random.state;
-        Random.InitState(seed);
-
-        InitializeItemDatabase();
+        Random.InitState(seed + worldX + worldY);
+        this.seed = seed;
+        this.width = width;
+        this.height = height;
 
         CreateMapData();
         CreateFeatures();
@@ -33,23 +36,28 @@ public class LocationGenerator : MonoBehaviour
         cbOnLocationCreated?.Invoke();
     }
 
-    private void InitializeItemDatabase()
-    {
-        ItemDatabase.CreateDatabase();
-    }
-
     private void CreatePlayer()
     {
-        Tile playerTile = LocationData.Instance.GetTile(width / 2, 0);
+        // First determine where the player will go
+        int playerStartX = width / 2;
+        int playerStartY = 0;
+
+        // Get the tile at the location
+        Tile playerTile = LocationData.Instance.GetTile(playerStartX, playerStartY);
+        
+        // Place the player at the tile, and the tile to the player
         Player player = new Player(playerTile, EntityType.Player, 10);
         playerTile.entity = player;
 
-        // Starting player items
+        // TODO: Starting player items
         player.InventoryItems.Add(ItemDatabase.GetRandomItem());
 
         cbOnPlayerCreated?.Invoke(player);
     }
 
+    /// <summary>
+    /// Creates the AI entities in the location.
+    /// </summary>
     private void CreateAIEntities()
     {
         // For now generate a dog
@@ -93,7 +101,7 @@ public class LocationGenerator : MonoBehaviour
             LocationData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
         }
 
-        SetTileNeighbors();
+        LocationData.SetTileNeighbors();
         LocationData.Instance.GenerateTileGraph();
     }
 
@@ -122,6 +130,9 @@ public class LocationGenerator : MonoBehaviour
         return rawMap;
     }
 
+    /// <summary>
+    /// Creates the features in the location.
+    /// </summary>
     private void CreateFeatures()
     {
         Tile[] mapdata = LocationData.Instance.MapData;
@@ -136,20 +147,9 @@ public class LocationGenerator : MonoBehaviour
         }
     }
 
-    private static void SetTileNeighbors()
-    {
-        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
-        {
-            Tile[] neighbors =
-                LocationData.Instance.GetNeighboringTiles(
-                    LocationData.Instance.MapData[i]);
-            LocationData.Instance.MapData[i].SetNeighbors(neighbors);
-        }
-    }
-
     public void OnDataLoaded(List<Entity> loadedEntities)
     {
-        SetTileNeighbors();
+        LocationData.SetTileNeighbors();
 
         for (int i = 0; i < loadedEntities.Count; i++)
         {
