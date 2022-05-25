@@ -248,7 +248,7 @@ public class Entity
         CharacterName = "Character name!";
     }
 
-    public void Destroy()
+    public void ClearData()
     {
         InventoryItems.Clear();
         T = null;

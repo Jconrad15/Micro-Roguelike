@@ -17,6 +17,12 @@ public class Path_AStar
     /// <param name="tileEnd"></param>
     public Path_AStar(Tile tileStart, Tile tileEnd)
     {
+        if (tileStart == null || tileEnd == null)
+        {
+            Debug.Log("tile Start or End is null");
+            return;
+        }
+
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         // Get map data from areaData

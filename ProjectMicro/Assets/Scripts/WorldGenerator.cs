@@ -83,12 +83,14 @@ public class WorldGenerator : MonoBehaviour
         int playerX = p.X;
         int playerY = p.Y;
 
+        TileType tileType = p.T.type;
+
         // First need to destroy all current info
         DataLoader.ClearAllOldData();
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, width, height, playerX, playerY);
+            seed, width, height, playerX, playerY, tileType);
     }
 
     private void CreateWorldMapData()
@@ -98,58 +100,19 @@ public class WorldGenerator : MonoBehaviour
         WorldData.Instance.Height = height;
 
         // Create base tile type map
-        TileType[] rawMap = CreateRawMapData();
+        RawMapData rawMapData = new RawMapData(width, height, seed);
 
         // Set tile types
         for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
 
-/*            // Create walls
-            // For now just generate walls here
-            if ((x == 5 && y >= 5 && y <= 10) ||
-                (y == 10 && x >= 0 && x <= 10) ||
-                (y == 10 && x >= 12 && x <= 30))
-            {
-                WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
-                continue;
-            }*/
-
             // Otherwise set to open tile
-            WorldData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
+            WorldData.Instance.MapData[i] = new Tile(x, y, rawMapData.rawMap[i]);
         }
 
         WorldData.Instance.SetTileNeighbors();
         WorldData.Instance.GenerateTileGraph();
-    }
-
-    private TileType[] CreateRawMapData()
-    {
-        TileType[] rawMap = new TileType[width * height];
-
-        SimplexNoise.Seed = seed;
-        float scale = 0.03f;
-
-        for (int i = 0; i < rawMap.Length; i++)
-        {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
-
-            float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= 0.3f)
-            {
-                rawMap[i] = TileType.Water;
-            }
-            else if (sample <= 0.5f)
-            {
-                rawMap[i] = TileType.Grass;
-            }
-            else
-            {
-                rawMap[i] = TileType.OpenArea;
-            }
-        }
-
-        return rawMap;
     }
 
     public void OnDataLoaded()

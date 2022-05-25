@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public static class AIEntityInstantiation
 {
@@ -24,9 +25,37 @@ public static class AIEntityInstantiation
         cbOnAIEntityCreated?.Invoke(merchant);
     }
 
-    public static void LoadEntity(AIEntity loadedEntity)
+    public static void LoadEntity(Entity loadedEntity)
     {
-        cbOnAIEntityCreated?.Invoke(loadedEntity);
+        // TODO: Need a better way to convert loaded entity
+        // to specific type of ai entity
+        if (loadedEntity.EntityName == "dog")
+        {
+            Dog dog = new Dog(
+                loadedEntity.type, loadedEntity.InventoryItems,
+                loadedEntity.Money, loadedEntity.Visibility,
+                loadedEntity.EntityName, loadedEntity.CharacterName);
+            dog.SetTile(loadedEntity.T);
+
+            AreaData.GetAreaDataForCurrentType().AddEntity(dog);
+            cbOnAIEntityCreated?.Invoke(dog);
+        }
+        else if (loadedEntity.EntityName == "merchant")
+        {
+            Merchant merchant = new Merchant(
+                loadedEntity.type, loadedEntity.InventoryItems,
+                loadedEntity.Money, loadedEntity.Visibility,
+                loadedEntity.EntityName, loadedEntity.CharacterName);
+            merchant.SetTile(loadedEntity.T);
+
+            AreaData.GetAreaDataForCurrentType().AddEntity(merchant);
+            cbOnAIEntityCreated?.Invoke(merchant);
+        }
+        else
+        {
+            Debug.Log("Missing entity name of: " +
+                loadedEntity.EntityName);
+        }
     }
 
     public static void RegisterOnAIEntityCreated(

@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public enum TileType { OpenArea, Wall, Water, Grass };
+public enum TileType { OpenArea, Wall, Water, Grass, Forest };
 [Serializable]
 public enum VisibilityLevel { NotVisible, PreviouslySeen, Visible };
 [Serializable]

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DataLoader : MonoBehaviour
 {
@@ -16,26 +17,31 @@ public class DataLoader : MonoBehaviour
 
         areaData.Width = loadedAreaData.Width;
         areaData.Height = loadedAreaData.Height;
-
         areaData.MapData = loadedAreaData.MapData;
 
-        areaData.SetEntityList(loadedAreaData.Entities);
         areaData.SetFeatureList(loadedAreaData.Features);
         areaData.SetTileNeighbors();
 
         Entity playerEntity = null;
+        List<Entity> AIEntitiesToLoad = new List<Entity>();
         // Load entities
-        for (int i = 0; i < areaData.Entities.Count; i++)
+        for (int i = 0; i < loadedAreaData.Entities.Count; i++)
         {
-            if (areaData.Entities[i].type == EntityType.Player)
+            if (loadedAreaData.Entities[i].type == EntityType.Player)
             {
-                playerEntity = areaData.Entities[i];
+                playerEntity = loadedAreaData.Entities[i];
             }
             else
             {
-                AIEntityInstantiation.LoadEntity(
-                    areaData.Entities[i] as AIEntity);
+                // Determine which type of AIEntity is loaded
+                AIEntitiesToLoad.Add(loadedAreaData.Entities[i]);
             }
+        }
+
+        // Load the entities
+        for (int i = 0; i < AIEntitiesToLoad.Count; i++)
+        {
+            AIEntityInstantiation.LoadEntity(AIEntitiesToLoad[i]);
         }
 
         PlayerInstantiation.LoadPlayer(playerEntity);
@@ -59,9 +65,13 @@ public class DataLoader : MonoBehaviour
 
         foreach (Entity entity in areaData.Entities)
         {
-            entity.Destroy();
+            entity.ClearData();
         }
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
+
+        //Clear old Area data from both world and location
+        WorldData.Instance.ClearAll();
+        LocationData.Instance.ClearAll();
     }
 }

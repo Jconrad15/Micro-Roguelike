@@ -45,6 +45,7 @@ public static class PlayerInstantiation
             entityToLoad.Visibility, entityToLoad.EntityName, entityToLoad.CharacterName, playerTile);
         playerTile.entity = player;
 
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
         cbOnPlayerCreated?.Invoke(player);
     }
 

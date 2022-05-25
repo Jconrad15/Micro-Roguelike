@@ -16,7 +16,7 @@ public class LocationGenerator : MonoBehaviour
     /// </summary>
     /// <param name="seed"></param>
     public void StartGenerateLocation(int seed, int width, int height,
-        int worldX, int worldY)
+        int worldX, int worldY, TileType locationTileType)
     {
         CurrentMapType.SetCurrentMapType(MapType.Location);
 
@@ -27,7 +27,7 @@ public class LocationGenerator : MonoBehaviour
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        CreateMapData();
+        CreateMapData(locationTileType);
         CreateFeatures();
         PlayerInstantiation.CreatePlayer(width / 2, 0);
         AIEntityInstantiation.CreateAIEntities(width, height);
@@ -37,14 +37,15 @@ public class LocationGenerator : MonoBehaviour
         cbOnLocationCreated?.Invoke();
     }
 
-    private void CreateMapData()
+    private void CreateMapData(TileType locationTileType)
     {
         LocationData.Instance.MapData = new Tile[width * height];
         LocationData.Instance.Width = width;
         LocationData.Instance.Height = height;
 
         // Create base tile type map
-        TileType[] rawMap = CreateRawMapData();
+        RawMapData rawMapData =
+            new RawMapData(width, height, seed,locationTileType);
 
         // Set tile types
         for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
@@ -57,45 +58,18 @@ public class LocationGenerator : MonoBehaviour
                 (y == 10 && x >= 0 && x <= 10) ||
                 (y == 10 && x >= 12 && x <= width))
             {
-                LocationData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
+                LocationData.Instance.MapData[i] =
+                    new Tile(x, y, TileType.Wall);
                 continue;
             }
 
             // Otherwise set to open tile
-            LocationData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
+            LocationData.Instance.MapData[i] =
+                new Tile(x, y, rawMapData.rawMap[i]);
         }
 
         LocationData.Instance.SetTileNeighbors();
         LocationData.Instance.GenerateTileGraph();
-    }
-
-    private TileType[] CreateRawMapData()
-    {
-        TileType[] rawMap = new TileType[width * height];
-
-        SimplexNoise.Seed = seed;
-        float scale = 0.6f;
-
-        for (int i = 0; i < rawMap.Length; i++)
-        {
-            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
-
-            float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= 0.1f)
-            {
-                rawMap[i] = TileType.Water;
-            }
-            else if (sample <= 0.5f)
-            {
-                rawMap[i] = TileType.Grass;
-            }
-            else
-            {
-                rawMap[i] = TileType.OpenArea;
-            }
-        }
-
-        return rawMap;
     }
 
     /// <summary>
@@ -110,7 +84,8 @@ public class LocationGenerator : MonoBehaviour
 
             if (x == 11 && y == 10)
             {
-                mapdata[i].feature = new Feature(FeatureType.Door, mapdata[i]);
+                mapdata[i].feature =
+                    new Feature(FeatureType.Door, mapdata[i]);
             }
         }
     }

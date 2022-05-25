@@ -160,4 +160,12 @@ public class AreaData : MonoBehaviour
             areaData.MapData[i].SetNeighbors(neighbors);
         }
     }
+
+    public void ClearAll()
+    {
+        MapData = null;
+        Entities.Clear();
+        Features.Clear();
+        TileGraph = null;
+    }
 }

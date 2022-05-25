@@ -30,6 +30,18 @@ public class Merchant : AIEntity
         CreateMerchantStartingInventory();
     }
 
+    // Constructor for loaded Merchant
+    public Merchant(EntityType type, List<Item> inventoryItems,
+        int money, VisibilityLevel visibility, string entityName,
+        string characterName, Tile t = null) : base(t, type, money)
+    {
+        base.type = type;
+        InventoryItems = inventoryItems;
+        Visibility = visibility;
+        EntityName = entityName;
+        CharacterName = characterName;
+    }
+
     private void LoadMerchantTypeRef()
     {
         if (MerchantTypeDatabase.database == null)
