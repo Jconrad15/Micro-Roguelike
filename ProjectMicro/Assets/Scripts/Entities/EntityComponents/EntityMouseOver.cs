@@ -46,4 +46,10 @@ public class EntityMouseOver: MonoBehaviour
         ToolTipUI toolTipUI = FindObjectOfType<ToolTipUI>();
         toolTipUI.Hide(entity);
     }
+
+    public void ForceMouseOff()
+    {
+        OnMouseExit();
+    }
+
 }

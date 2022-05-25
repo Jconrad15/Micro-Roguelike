@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ToolTipUI : MonoBehaviour
 {
     [SerializeField]
     private GameObject toolTipArea;
+    [SerializeField]
+    private TextMeshProUGUI entityText;
+    [SerializeField]
+    private TextMeshProUGUI nameText;
+
     private RectTransform rect;
     private Vector3 min, max;
     private readonly float offset = 10f;
@@ -21,6 +27,10 @@ public class ToolTipUI : MonoBehaviour
 
     public void Show(Entity e)
     {
+        if (e == null) return;
+
+        entityText.SetText(e.GetType().ToString());
+        nameText.SetText(e.CharacterName);
 
         Show();
     }

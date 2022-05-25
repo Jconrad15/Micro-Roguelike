@@ -120,7 +120,7 @@ public class SpriteDisplay : MonoBehaviour
             Debug.LogError("No entity sprite database yet");
         }
 
-        spriteDatabase.EntityDatabase.TryGetValue(entity.entityName, out Sprite[] s);
+        spriteDatabase.EntityDatabase.TryGetValue(entity.EntityName, out Sprite[] s);
 
         GameObject newEntity_GO = Instantiate(entitiesPrefab, entitiesContainer.transform);
         newEntity_GO.transform.position = new Vector2(x, y);

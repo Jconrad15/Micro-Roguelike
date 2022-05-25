@@ -7,7 +7,7 @@ public class Dog : AIEntity
     public Dog(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
-        entityName = "dog";
+        EntityName = "dog";
     }
 
 }

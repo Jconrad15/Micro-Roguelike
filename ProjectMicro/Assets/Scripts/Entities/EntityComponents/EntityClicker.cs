@@ -34,6 +34,8 @@ public class EntityClicker : MonoBehaviour
             // If the entity is a merchant, then click on merchant
             if (entity.GetType() == typeof(Merchant))
             {
+                gameObject.GetComponent<EntityMouseOver>().ForceMouseOff();
+
                 Merchant m = entity as Merchant;
                 m.PlayerClickOnMerchant();
             }

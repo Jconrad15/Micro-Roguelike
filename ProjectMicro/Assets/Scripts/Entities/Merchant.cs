@@ -25,7 +25,7 @@ public class Merchant : AIEntity
     public Merchant(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
-        entityName = "merchant";
+        EntityName = "merchant";
         LoadMerchantTypeRef();
         CreateMerchantStartingInventory();
     }

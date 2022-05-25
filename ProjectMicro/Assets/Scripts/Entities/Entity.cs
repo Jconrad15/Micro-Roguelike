@@ -17,8 +17,11 @@ public class SerializableEntity
 
 public class Entity
 {
-    public string entityName;
-
+    /// <summary>
+    /// Helps indicate the type of entity
+    /// </summary>
+    public string EntityName { get; protected set; }
+    public string CharacterName { get; protected set; }
     public int X { get; protected set; }
     public int Y { get; protected set; }
 
@@ -68,6 +71,12 @@ public class Entity
         T = tile;
     }
 
+    /// <summary>
+    /// Constructor to create new entity.
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="type"></param>
+    /// <param name="startingMoney"></param>
     public Entity(Tile t, EntityType type, int startingMoney)
     {
         if (t == null) { return; }
@@ -82,14 +91,10 @@ public class Entity
 
         InventoryItems = new List<Item>();
 
+        CreateCharacterName();
+
         // Add self to entity list
         WorldData.Instance.AddEntity(this);
-    }
-
-    public Entity(Tile t, EntityType type)
-    {
-        this.t = t;
-        this.type = type;
     }
 
     public void PlayerClickOnPlayer()
@@ -233,6 +238,11 @@ public class Entity
     {
         Money += item.baseCost;
         _ = InventoryItems.Remove(item);
+    }
+
+    protected void CreateCharacterName()
+    {
+        CharacterName = "Character name!";
     }
 
     public void Destroy()
