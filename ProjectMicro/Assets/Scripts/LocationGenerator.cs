@@ -128,7 +128,7 @@ public class LocationGenerator : MonoBehaviour
             }
             else
             {
-                cbOnAIEntityCreated?.Invoke(loadedEntities[i] as AIEntity);
+                AIEntityInstantiation.LoadEntity(loadedEntities[i] as AIEntity);
             }
         }
 

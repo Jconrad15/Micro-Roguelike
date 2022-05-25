@@ -1,7 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public enum MapType { World, Location };
 
 /// <summary>
@@ -26,7 +27,7 @@ public class WorldData : AreaData
 
     private void Start()
     {
-        //SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
+        SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
     }
 
     /// <summary>
@@ -43,19 +44,4 @@ public class WorldData : AreaData
         }
     }
 
-    private void OnDataLoaded(LoadedLocationData loadedLocationData)
-    {
-        ClearAllOldData();
-
-        Width = loadedLocationData.Width;
-        Height = loadedLocationData.Height;
-
-        MapData = loadedLocationData.MapData;
-
-        Entities = loadedLocationData.Entities;
-        Features = loadedLocationData.Features;
-
-        FindObjectOfType<LocationGenerator>().OnDataLoaded(Entities);
-        GenerateTileGraph();
-    }
 }

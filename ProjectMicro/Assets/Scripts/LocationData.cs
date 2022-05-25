@@ -40,19 +40,5 @@ public class LocationData : AreaData
         }
     }
 
-    private void OnDataLoaded(LoadedLocationData loadedLocationData)
-    {
-        ClearAllOldData();
 
-        Width = loadedLocationData.Width;
-        Height = loadedLocationData.Height;
-
-        MapData = loadedLocationData.MapData;
-
-        Entities = loadedLocationData.Entities;
-        Features = loadedLocationData.Features;
-
-        FindObjectOfType<LocationGenerator>().OnDataLoaded(Entities);
-        GenerateTileGraph();
-    }
 }

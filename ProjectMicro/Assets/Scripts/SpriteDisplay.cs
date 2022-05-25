@@ -56,16 +56,7 @@ public class SpriteDisplay : MonoBehaviour
 
     private void DisplayInitialMap()
     {
-        AreaData areaData;
-        // Check if world or location
-        if (CurrentMapType.Type == MapType.World) 
-        {
-            areaData = WorldData.Instance;
-        }
-        else
-        {
-            areaData = LocationData.Instance;
-        }
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||

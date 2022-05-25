@@ -9,6 +9,8 @@ public class SerializableEntity
 {
     public int x;
     public int y;
+    public string entityName;
+    public string characterName;
     public List<Item> inventoryItems;
     public int money;
     public EntityType type;

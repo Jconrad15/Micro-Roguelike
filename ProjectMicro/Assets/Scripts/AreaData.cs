@@ -136,6 +136,39 @@ public class AreaData : MonoBehaviour
         return (x, y);
     }
 
+    protected static void OnDataLoaded(LoadedAreaData loadedAreaData)
+    {
+        AreaData areaData;
+        if (loadedAreaData.MapType == MapType.World)
+        {
+            areaData = WorldData.Instance;
+        }
+        else
+        {
+            areaData = LocationData.Instance;
+        }
+        
+        areaData.ClearAllOldData();
+
+        areaData.Width = loadedAreaData.Width;
+        areaData.Height = loadedAreaData.Height;
+
+        areaData.MapData = loadedAreaData.MapData;
+
+        areaData.Entities = loadedAreaData.Entities;
+        areaData.Features = loadedAreaData.Features;
+
+        if (loadedAreaData.MapType == MapType.World)
+        {
+            FindObjectOfType<WorldGenerator>().OnDataLoaded(areaData.Entities);
+        }
+        else
+        {
+            FindObjectOfType<LocationGenerator>().OnDataLoaded(areaData.Entities);
+        }
+        areaData.GenerateTileGraph();
+    }
+
     public void ClearAllOldData()
     {
         foreach (Entity entity in Entities)

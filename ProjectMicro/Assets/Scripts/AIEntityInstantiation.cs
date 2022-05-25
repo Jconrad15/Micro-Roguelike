@@ -7,15 +7,7 @@ public static class AIEntityInstantiation
     public static void CreateAIEntities(int width, int height)
     {
         // Get the area data
-        AreaData areaData;
-        if (CurrentMapType.Type == MapType.Location)
-        {
-            areaData = LocationData.Instance;
-        }
-        else
-        {
-            areaData = WorldData.Instance;
-        }
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         // For now generate a dog
         Tile dogTile = areaData.GetTile(1, 1);
@@ -28,6 +20,11 @@ public static class AIEntityInstantiation
         Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
         merchantTile.entity = merchant;
         cbOnAIEntityCreated?.Invoke(merchant);
+    }
+
+    public static void LoadEntity(AIEntity loadedEntity)
+    {
+        cbOnAIEntityCreated?.Invoke(loadedEntity);
     }
 
     public static void RegisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
