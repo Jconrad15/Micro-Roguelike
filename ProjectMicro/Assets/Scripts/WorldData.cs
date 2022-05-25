@@ -45,7 +45,7 @@ public class WorldData : AreaData
 
     private void OnDataLoaded(LoadedLocationData loadedLocationData)
     {
-        ClearOldData();
+        ClearAllOldData();
 
         Width = loadedLocationData.Width;
         Height = loadedLocationData.Height;
@@ -57,15 +57,5 @@ public class WorldData : AreaData
 
         FindObjectOfType<LocationGenerator>().OnDataLoaded(Entities);
         GenerateTileGraph();
-    }
-
-    private void ClearOldData()
-    {
-        foreach (Entity entity in Entities)
-        {
-            entity.Destroy();
-        }
-        FindObjectOfType<AIController>().ClearAll();
-        FindObjectOfType<SpriteDisplay>().ClearAll();
     }
 }

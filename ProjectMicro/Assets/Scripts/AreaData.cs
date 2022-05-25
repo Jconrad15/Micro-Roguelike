@@ -135,4 +135,14 @@ public class AreaData : MonoBehaviour
         int y = i / Width % Height;
         return (x, y);
     }
+
+    public void ClearAllOldData()
+    {
+        foreach (Entity entity in Entities)
+        {
+            entity.Destroy();
+        }
+        FindObjectOfType<AIController>().ClearAll();
+        FindObjectOfType<SpriteDisplay>().ClearAll();
+    }
 }

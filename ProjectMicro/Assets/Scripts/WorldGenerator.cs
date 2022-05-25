@@ -69,11 +69,26 @@ public class WorldGenerator : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // If on world map
+        if (CurrentMapType.Type == MapType.World)
         {
-            locationGenerator.StartGenerateLocation(
-                seed, width, height, worldX, worldY);
+            // If hit space bar
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                EnterLocation();
+            }
         }
+    }
+
+    private void EnterLocation()
+    {
+        // First need to destroy all current info
+        WorldData.Instance.ClearAllOldData();
+
+
+        // Then load the location
+        locationGenerator.StartGenerateLocation(
+            seed, width, height, worldX, worldY);
     }
 
     private void CreateWorldMapData()
@@ -113,7 +128,7 @@ public class WorldGenerator : MonoBehaviour
         TileType[] rawMap = new TileType[width * height];
 
         SimplexNoise.Seed = seed;
-        float scale = 0.1f;
+        float scale = 0.03f;
 
         for (int i = 0; i < rawMap.Length; i++)
         {
