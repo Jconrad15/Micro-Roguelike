@@ -139,6 +139,10 @@ public class WorldGenerator : MonoBehaviour
             {
                 rawMap[i] = TileType.Water;
             }
+            else if (sample <= 0.5f)
+            {
+                rawMap[i] = TileType.Grass;
+            }
             else
             {
                 rawMap[i] = TileType.OpenArea;

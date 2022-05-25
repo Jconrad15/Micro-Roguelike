@@ -55,7 +55,7 @@ public class LocationGenerator : MonoBehaviour
             // For now just generate walls here
             if ((x == 5 && y >= 5 && y <= 10) ||
                 (y == 10 && x >= 0 && x <= 10) ||
-                (y == 10 && x >= 12 && x <= 30))
+                (y == 10 && x >= 12 && x <= width))
             {
                 LocationData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
                 continue;
@@ -74,16 +74,20 @@ public class LocationGenerator : MonoBehaviour
         TileType[] rawMap = new TileType[width * height];
 
         SimplexNoise.Seed = seed;
-        float scale = 0.1f;
+        float scale = 0.6f;
 
         for (int i = 0; i < rawMap.Length; i++)
         {
             (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
 
             float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= 0.2f)
+            if (sample <= 0.1f)
             {
                 rawMap[i] = TileType.Water;
+            }
+            else if (sample <= 0.5f)
+            {
+                rawMap[i] = TileType.Grass;
             }
             else
             {
