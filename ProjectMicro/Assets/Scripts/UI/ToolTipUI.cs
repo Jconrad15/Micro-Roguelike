@@ -12,15 +12,16 @@ public class ToolTipUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI nameText;
 
-    private RectTransform rect;
-    private Vector3 min, max;
-    private readonly float offset = 10f;
+    private RectTransform rt;
+    private Vector3 minScreenSize, maxScreenSize;
+    private readonly float yOffset = 20f;
+    private readonly float xOffset = 20f;
 
     void Start()
     {
-        rect = toolTipArea.GetComponent<RectTransform>();
-        min = new Vector3(0, 0, 0);
-        max = new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0);
+        rt = toolTipArea.GetComponent<RectTransform>();
+        minScreenSize = new Vector2(0, 0);
+        maxScreenSize = new Vector2(Screen.width, Screen.height);
 
         Hide();
     }
@@ -45,18 +46,19 @@ public class ToolTipUI : MonoBehaviour
     {
         // Position the tooltip
         // Get the tooltip position with offset
-        Vector3 position = new Vector3(
-            Input.mousePosition.x + rect.rect.width,
-            Input.mousePosition.y - (rect.rect.height / 2 + offset),
-            0f);
+        Vector2 position = new Vector2(
+            Input.mousePosition.x + xOffset,
+            Input.mousePosition.y - rt.rect.height - yOffset);
 
+        Debug.Log("Position" + position);
+        
         // Clamp it to the screen size so it doesn't go outside
-        transform.position = new Vector3(
-            Mathf.Clamp(position.x, min.x + rect.rect.width / 2,
-                        max.x - rect.rect.width / 2), 
-            Mathf.Clamp(position.y, min.y + rect.rect.height / 2,
-                        max.y - rect.rect.height / 2),
-            transform.position.z);
+        rt.anchoredPosition = new Vector2(
+            Mathf.Clamp(position.x, minScreenSize.x + (rt.rect.width / 2),
+                        maxScreenSize.x - rt.rect.width / 2), 
+            Mathf.Clamp(position.y, minScreenSize.y + (rt.rect.height / 2),
+                        maxScreenSize.y - rt.rect.height / 2));
+        Debug.Log("AnchoredPosition" + rt.anchoredPosition);
 
         toolTipArea.SetActive(true);
     }
