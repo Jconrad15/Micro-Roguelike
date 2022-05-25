@@ -7,9 +7,9 @@ public static class VisibilityChanger
     private static int visibilityDistance = 8;
     public static void UpdateTileVisibility(Player player)
     {
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
+        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
         {
-            Tile t = WorldData.Instance.MapData[i];
+            Tile t = LocationData.Instance.MapData[i];
             if (Vector2.Distance(
                 new Vector2(t.x, t.y),
                 new Vector2(player.X, player.Y)) < visibilityDistance)
@@ -29,7 +29,7 @@ public static class VisibilityChanger
 
     public static void UpdateEntityVisibility(Player player)
     {
-        List<Entity> entities = WorldData.Instance.Entities;
+        List<Entity> entities = LocationData.Instance.Entities;
         for (int i = 0; i < entities.Count; i++)
         {
             Entity e = entities[i];
@@ -56,7 +56,7 @@ public static class VisibilityChanger
 
     public static void UpdateFeatureVisibility(Player player)
     {
-        List<Feature> features = WorldData.Instance.Features;
+        List<Feature> features = LocationData.Instance.Features;
         for (int i = 0; i < features.Count; i++)
         {
             Feature f = features[i];

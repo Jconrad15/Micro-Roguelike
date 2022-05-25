@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadedWorldData
+public class LoadedLocationData
 {
     public Tile[] MapData { get; set; }
     public int Width { get; set; }
@@ -10,7 +10,7 @@ public class LoadedWorldData
     public List<Entity> Entities { get; set; }
     public List<Feature> Features { get; set; }
 
-    public LoadedWorldData(Tile[] mapData, int width, int height, List<Entity> entities, List<Feature> features)
+    public LoadedLocationData(Tile[] mapData, int width, int height, List<Entity> entities, List<Feature> features)
     {
         MapData = mapData;
         Width = width;

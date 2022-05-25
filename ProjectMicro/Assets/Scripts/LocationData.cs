@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Singleton holding world data
+/// Singleton holding location data
 /// </summary>
-public class WorldData : MonoBehaviour
+public class LocationData : MonoBehaviour
 {
     public Tile[] MapData { get; set; }
     public int Width { get; set; }
@@ -13,9 +13,9 @@ public class WorldData : MonoBehaviour
     public List<Entity> Entities { get; private set; } = new List<Entity>();
     public List<Feature> Features { get; private set; } = new List<Feature>();
 
-    public Path_TileGraph tileGraph { get; private set; }
+    public Path_TileGraph TileGraph { get; private set; }
 
-    public static WorldData Instance { get; private set; }
+    public static LocationData Instance { get; private set; }
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -28,13 +28,16 @@ public class WorldData : MonoBehaviour
         {
             Instance = this;
         }
+    }
 
+    private void Start()
+    {
         SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
     }
 
     public void GenerateTileGraph()
     {
-        tileGraph = new Path_TileGraph();
+        TileGraph = new Path_TileGraph();
     }
 
     public void AddEntity(Entity e)
@@ -123,19 +126,19 @@ public class WorldData : MonoBehaviour
         return (x, y);
     }
 
-    private void OnDataLoaded(LoadedWorldData loadedWorldData)
+    private void OnDataLoaded(LoadedLocationData loadedLocationData)
     {
         ClearOldData();
 
-        Width = loadedWorldData.Width;
-        Height = loadedWorldData.Height;
+        Width = loadedLocationData.Width;
+        Height = loadedLocationData.Height;
 
-        MapData = loadedWorldData.MapData;
+        MapData = loadedLocationData.MapData;
 
-        Entities = loadedWorldData.Entities;
-        Features = loadedWorldData.Features;
+        Entities = loadedLocationData.Entities;
+        Features = loadedLocationData.Features;
 
-        FindObjectOfType<WorldGenerator>().OnDataLoaded(Entities);
+        FindObjectOfType<LocationGenerator>().OnDataLoaded(Entities);
         GenerateTileGraph();
     }
 

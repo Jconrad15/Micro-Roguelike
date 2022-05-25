@@ -30,7 +30,7 @@ public class NotificationUI : MonoBehaviour
         canvasGroup.alpha = 0;
     }
 
-    private void OnDataLoaded(LoadedWorldData obj)
+    private void OnDataLoaded(LoadedLocationData obj)
     {
         SetText("Data Loaded Successfully.");
     }

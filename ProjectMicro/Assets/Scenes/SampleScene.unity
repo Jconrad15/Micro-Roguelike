@@ -3546,10 +3546,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1578313634}
-  - component: {fileID: 1578313633}
   - component: {fileID: 1578313635}
+  - component: {fileID: 1578313633}
   m_Layer: 0
-  m_Name: World
+  m_Name: Location
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3564,12 +3564,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1578313632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48efe9c22eac5e24ea77d53cfa5f5fd1, type: 3}
+  m_Script: {fileID: 11500000, guid: 279e887323c51564ca3103577027050e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   width: 30
   height: 30
-  seed: 20
+  seed: 10
 --- !u!4 &1578313634
 Transform:
   m_ObjectHideFlags: 0
@@ -3593,7 +3593,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1578313632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0633afac88ca024d838df36c3f9b688, type: 3}
+  m_Script: {fileID: 11500000, guid: b42546e6522101d4986b390b9face786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1740874807

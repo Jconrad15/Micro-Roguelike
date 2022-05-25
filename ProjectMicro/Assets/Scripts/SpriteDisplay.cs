@@ -4,11 +4,11 @@ using UnityEngine;
 using System.Linq;
 
 /// <summary>
-/// Generates gameobjects to display sprites based on world data
+/// Generates gameobjects to display sprites based on location data
 /// </summary>
 public class SpriteDisplay : MonoBehaviour
 {
-    private WorldGenerator worldGenerator;
+    private LocationGenerator locationGenerator;
     private SpriteDatabase spriteDatabase;
     private GameObject tilesContainer;
     private GameObject entitiesContainer;
@@ -33,13 +33,15 @@ public class SpriteDisplay : MonoBehaviour
     [SerializeField]
     private GameObject featurePrefab;
 
-    void Start()
+    private void Awake()
     {
-        worldGenerator = FindObjectOfType<WorldGenerator>();
-        worldGenerator.RegisterOnWorldCreated(DisplayInitialWorld);
-
+        locationGenerator = FindObjectOfType<LocationGenerator>();
+        locationGenerator.RegisterOnLocationCreated(DisplayInitialLocation);
         spriteDatabase = FindObjectOfType<SpriteDatabase>();
+    }
 
+    private void OnEnable()
+    {
         tilesContainer = new GameObject("Tiles");
         tilesContainer.transform.parent = transform;
 
@@ -50,11 +52,11 @@ public class SpriteDisplay : MonoBehaviour
         featuresContainer.transform.parent = transform;
     }
 
-    private void DisplayInitialWorld()
+    private void DisplayInitialLocation()
     {
-        Tile[] mapData = WorldData.Instance.MapData;
-        int width = WorldData.Instance.Width;
-        int height = WorldData.Instance.Height;
+        Tile[] mapData = LocationData.Instance.MapData;
+        int width = LocationData.Instance.Width;
+        int height = LocationData.Instance.Height;
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
@@ -68,7 +70,7 @@ public class SpriteDisplay : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                int i = WorldData.Instance.GetIndexFromCoord(x, y);
+                int i = LocationData.Instance.GetIndexFromCoord(x, y);
 
                 // Place initial tiles
                 PlaceInitialTile(mapData[i], x, y);

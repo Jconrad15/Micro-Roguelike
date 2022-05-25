@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class WorldGenerator : MonoBehaviour
+public class LocationGenerator : MonoBehaviour
 {
     [SerializeField]
     private int width;
@@ -12,7 +12,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private int seed;
 
-    private Action cbOnWorldCreated;
+    private Action cbOnLocationCreated;
     private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
@@ -30,7 +30,7 @@ public class WorldGenerator : MonoBehaviour
 
         Random.state = oldState;
 
-        cbOnWorldCreated?.Invoke();
+        cbOnLocationCreated?.Invoke();
     }
 
     private void InitializeItemDatabase()
@@ -40,7 +40,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void CreatePlayer()
     {
-        Tile playerTile = WorldData.Instance.GetTile(width / 2, 0);
+        Tile playerTile = LocationData.Instance.GetTile(width / 2, 0);
         Player player = new Player(playerTile, EntityType.Player, 10);
         playerTile.entity = player;
 
@@ -53,31 +53,31 @@ public class WorldGenerator : MonoBehaviour
     private void CreateAIEntities()
     {
         // For now generate a dog
-        Tile dogTile = WorldData.Instance.GetTile(1, 1);
+        Tile dogTile = LocationData.Instance.GetTile(1, 1);
         Dog dog = new Dog(dogTile, EntityType.AI, 0);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
         // Also create a Merchant
-        Tile merchantTile = WorldData.Instance.GetTile(2, 1);
+        Tile merchantTile = LocationData.Instance.GetTile(2, 1);
         Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
         merchantTile.entity = merchant;
-        cbOnAIEntityCreated.Invoke(merchant);
+        cbOnAIEntityCreated?.Invoke(merchant);
     }
 
     private void CreateMapData()
     {
-        WorldData.Instance.MapData = new Tile[width * height];
-        WorldData.Instance.Width = width;
-        WorldData.Instance.Height = height;
+        LocationData.Instance.MapData = new Tile[width * height];
+        LocationData.Instance.Width = width;
+        LocationData.Instance.Height = height;
 
         // Create base tile type map
         TileType[] rawMap = CreateRawMapData();
 
         // Set tile types
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
+        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
         {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
 
             // Create walls
             // For now just generate walls here
@@ -85,16 +85,16 @@ public class WorldGenerator : MonoBehaviour
                 (y == 10 && x >= 0 && x <= 10) ||
                 (y == 10 && x >= 12 && x <= 30))
             {
-                WorldData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
+                LocationData.Instance.MapData[i] = new Tile(x, y, TileType.Wall);
                 continue;
             }
 
             // Otherwise set to open tile
-            WorldData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
+            LocationData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
         }
 
         SetTileNeighbors();
-        WorldData.Instance.GenerateTileGraph();
+        LocationData.Instance.GenerateTileGraph();
     }
 
     private TileType[] CreateRawMapData()
@@ -106,7 +106,7 @@ public class WorldGenerator : MonoBehaviour
 
         for (int i = 0; i < rawMap.Length; i++)
         {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
 
             float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
             if (sample <= 0.2f)
@@ -124,10 +124,10 @@ public class WorldGenerator : MonoBehaviour
 
     private void CreateFeatures()
     {
-        Tile[] mapdata = WorldData.Instance.MapData;
+        Tile[] mapdata = LocationData.Instance.MapData;
         for (int i = 0; i < mapdata.Length; i++)
         {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
 
             if (x == 11 && y == 10)
             {
@@ -138,12 +138,12 @@ public class WorldGenerator : MonoBehaviour
 
     private static void SetTileNeighbors()
     {
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
+        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
         {
             Tile[] neighbors =
-                WorldData.Instance.GetNeighboringTiles(
-                    WorldData.Instance.MapData[i]);
-            WorldData.Instance.MapData[i].SetNeighbors(neighbors);
+                LocationData.Instance.GetNeighboringTiles(
+                    LocationData.Instance.MapData[i]);
+            LocationData.Instance.MapData[i].SetNeighbors(neighbors);
         }
     }
 
@@ -163,17 +163,17 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        cbOnWorldCreated?.Invoke();
+        cbOnLocationCreated?.Invoke();
     }
 
-    public void RegisterOnWorldCreated(Action callbackfunc)
+    public void RegisterOnLocationCreated(Action callbackfunc)
     {
-        cbOnWorldCreated += callbackfunc;
+        cbOnLocationCreated += callbackfunc;
     }
 
-    public void UnregisterOnWorldCreated(Action callbackfunc)
+    public void UnregisterOnLocationCreated(Action callbackfunc)
     {
-        cbOnWorldCreated -= callbackfunc;
+        cbOnLocationCreated -= callbackfunc;
     }
 
     public void RegisterOnPlayerCreated(Action<Player> callbackfunc)

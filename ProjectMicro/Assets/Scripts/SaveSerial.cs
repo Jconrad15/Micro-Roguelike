@@ -20,7 +20,7 @@ public struct SaveData
 /// </summary>
 public class SaveSerial : MonoBehaviour
 {
-    private Action<LoadedWorldData> cbOnDataLoadedFromFile;
+    private Action<LoadedLocationData> cbOnDataLoadedFromFile;
     private Action cbDataSaved;
 
     // Make singleton
@@ -53,7 +53,7 @@ public class SaveSerial : MonoBehaviour
     /// <returns></returns>
     private SaveData GetDataToSave()
     {
-        Tile[] mapData = WorldData.Instance.MapData;
+        Tile[] mapData = LocationData.Instance.MapData;
 
 
         SerializableTile[] serializedTileData =
@@ -106,8 +106,8 @@ public class SaveSerial : MonoBehaviour
         SaveData data = new SaveData
         {
             mapData = serializedTileData,
-            width = WorldData.Instance.Width,
-            height = WorldData.Instance.Height,
+            width = LocationData.Instance.Width,
+            height = LocationData.Instance.Height,
         };
 
         return data;
@@ -230,9 +230,9 @@ public class SaveSerial : MonoBehaviour
                 }
             }
 
-            // Create loaded world data container for all loaded data
-            LoadedWorldData loadedWorldData =
-                new LoadedWorldData
+            // Create loaded location data container for all loaded data
+            LoadedLocationData loadedLocationData =
+                new LoadedLocationData
                 (
                     loadedMapData,
                     loadedData.width,
@@ -241,7 +241,7 @@ public class SaveSerial : MonoBehaviour
                     features
                 );
 
-            cbOnDataLoadedFromFile?.Invoke(loadedWorldData);
+            cbOnDataLoadedFromFile?.Invoke(loadedLocationData);
         }
         else
         {
@@ -249,12 +249,12 @@ public class SaveSerial : MonoBehaviour
         }
     }
 
-    public void RegisterOnDataLoaded(Action<LoadedWorldData> callbackFunc)
+    public void RegisterOnDataLoaded(Action<LoadedLocationData> callbackFunc)
     {
         cbOnDataLoadedFromFile += callbackFunc;
     }
 
-    public void UnregisterOnDataLoaded(Action<LoadedWorldData> callbackFunc)
+    public void UnregisterOnDataLoaded(Action<LoadedLocationData> callbackFunc)
     {
         cbOnDataLoadedFromFile -= callbackFunc;
     }

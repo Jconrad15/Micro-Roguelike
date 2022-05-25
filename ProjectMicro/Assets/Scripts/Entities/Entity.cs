@@ -94,7 +94,7 @@ public class Entity
         CreateCharacterName();
 
         // Add self to entity list
-        WorldData.Instance.AddEntity(this);
+        LocationData.Instance.AddEntity(this);
     }
 
     public void PlayerClickOnPlayer()

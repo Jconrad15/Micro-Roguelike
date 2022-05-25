@@ -13,8 +13,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
-        worldGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
+        LocationGenerator locationGenerator = FindObjectOfType<LocationGenerator>();
+        locationGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
 
         TurnController.Instance.RegisterOnStartPlayerTurn(OnStartTurn);
     }

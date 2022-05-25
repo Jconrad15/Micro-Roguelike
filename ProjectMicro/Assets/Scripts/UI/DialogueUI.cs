@@ -27,8 +27,8 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        WorldGenerator wg = FindObjectOfType<WorldGenerator>();
-        wg.RegisterOnWorldCreated(OnWorldCreated);
+        LocationGenerator wg = FindObjectOfType<LocationGenerator>();
+        wg.RegisterOnLocationCreated(OnLocationCreated);
         wg.RegisterOnPlayerCreated(OnPlayerCreated);
     }
 
@@ -37,10 +37,10 @@ public class DialogueUI : MonoBehaviour
         player = p;
     }
 
-    private void OnWorldCreated()
+    private void OnLocationCreated()
     {
         // Register to all merchants
-        List<Entity> entities = WorldData.Instance.Entities;
+        List<Entity> entities = LocationData.Instance.Entities;
         for (int i = 0; i < entities.Count; i++)
         {
             if (entities[i].GetType() == typeof(Merchant))
