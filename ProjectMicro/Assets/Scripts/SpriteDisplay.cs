@@ -523,6 +523,10 @@ public class SpriteDisplay : MonoBehaviour
         {
             StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
         }
+        else
+        {
+            Debug.Log("The entity's gameObject is missing");
+        }
     }
 
     private void OnVisiblityChanged(Feature f)

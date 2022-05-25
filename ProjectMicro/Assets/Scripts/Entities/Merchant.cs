@@ -40,6 +40,11 @@ public class Merchant : AIEntity
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+
+        if (t != null)
+        {
+            T = t;
+        }
     }
 
     private void LoadMerchantTypeRef()

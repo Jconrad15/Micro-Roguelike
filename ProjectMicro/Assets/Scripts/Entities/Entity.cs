@@ -248,11 +248,11 @@ public class Entity
         CharacterName = "Character name!";
     }
 
-    public void ClearData()
+/*    public void ClearData()
     {
         InventoryItems.Clear();
         T = null;
-    }
+    }*/
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)
     {

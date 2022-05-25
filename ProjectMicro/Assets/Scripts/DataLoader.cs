@@ -10,7 +10,15 @@ public class DataLoader : MonoBehaviour
 
     protected static void OnDataLoaded(LoadedAreaData loadedAreaData)
     {
-        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        AreaData areaData;
+        if (loadedAreaData.MapType == MapType.World)
+        {
+            areaData = WorldData.Instance;
+        }
+        else
+        {
+            areaData = LocationData.Instance;
+        }
 
         ClearAllOldData();
         CurrentMapType.SetCurrentMapType(loadedAreaData.MapType);
@@ -63,10 +71,10 @@ public class DataLoader : MonoBehaviour
     {
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
-        foreach (Entity entity in areaData.Entities)
+/*        foreach (Entity entity in areaData.Entities)
         {
-            entity.ClearData();
-        }
+            //entity.ClearData();
+        }*/
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
 

@@ -21,5 +21,10 @@ public class Dog : Animal
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+
+        if (t != null)
+        {
+            T = t;
+        }
     }
 }

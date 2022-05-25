@@ -21,5 +21,10 @@ public class Player : Entity
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+
+        if (t != null)
+        {
+            T = t;
+        }
     }
 }

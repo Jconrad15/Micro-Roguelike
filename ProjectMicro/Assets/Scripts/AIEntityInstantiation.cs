@@ -36,6 +36,7 @@ public static class AIEntityInstantiation
                 loadedEntity.Money, loadedEntity.Visibility,
                 loadedEntity.EntityName, loadedEntity.CharacterName);
             dog.SetTile(loadedEntity.T);
+            loadedEntity.T.entity = dog;
 
             AreaData.GetAreaDataForCurrentType().AddEntity(dog);
             cbOnAIEntityCreated?.Invoke(dog);
@@ -47,6 +48,7 @@ public static class AIEntityInstantiation
                 loadedEntity.Money, loadedEntity.Visibility,
                 loadedEntity.EntityName, loadedEntity.CharacterName);
             merchant.SetTile(loadedEntity.T);
+            loadedEntity.T.entity = merchant;
 
             AreaData.GetAreaDataForCurrentType().AddEntity(merchant);
             cbOnAIEntityCreated?.Invoke(merchant);
