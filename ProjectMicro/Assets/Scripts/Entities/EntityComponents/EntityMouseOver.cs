@@ -19,6 +19,9 @@ public class EntityMouseOver: MonoBehaviour
             return;
         }
 
+        // No mouse over in escape menu
+        if (UIModality.Instance.IsEscapeMenuOpen) { return; }
+
         // If the entity is not visible, return
         if (entity.Visibility != VisibilityLevel.Visible) { return; }
 

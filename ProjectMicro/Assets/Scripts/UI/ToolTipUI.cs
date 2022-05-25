@@ -23,6 +23,13 @@ public class ToolTipUI : MonoBehaviour
         minScreenSize = new Vector2(0, 0);
         maxScreenSize = new Vector2(Screen.width, Screen.height);
 
+        UIModality.Instance.RegisterOnEscapeMenuOpened(OnEscapeMenuOpened);
+
+        Hide();
+    }
+
+    private void OnEscapeMenuOpened()
+    {
         Hide();
     }
 

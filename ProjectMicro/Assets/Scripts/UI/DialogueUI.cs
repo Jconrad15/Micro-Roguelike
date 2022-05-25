@@ -27,8 +27,9 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        LocationGenerator wg = FindObjectOfType<LocationGenerator>();
-        wg.RegisterOnLocationCreated(OnLocationCreated);
+        FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
+        FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
+
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
         // Start hidden
@@ -40,10 +41,30 @@ public class DialogueUI : MonoBehaviour
         player = p;
     }
 
+    private void OnWorldCreated()
+    {
+        RegisterToClicksOnEntities(MapType.World);
+    }
+
     private void OnLocationCreated()
     {
+        RegisterToClicksOnEntities(MapType.Location);
+    }
+
+    private void RegisterToClicksOnEntities(MapType mapType)
+    {
+        // Determine entities using maptype
+        List<Entity> entities;
+        if (mapType == MapType.World)
+        {
+            entities = WorldData.Instance.Entities;
+        }
+        else
+        {
+            entities = LocationData.Instance.Entities;
+        }
+
         // Register to all merchants
-        List<Entity> entities = LocationData.Instance.Entities;
         for (int i = 0; i < entities.Count; i++)
         {
             if (entities[i].GetType() == typeof(Merchant))
@@ -51,6 +72,8 @@ public class DialogueUI : MonoBehaviour
                 entities[i].RegisterOnMerchantClicked(OnMerchantClicked);
             }
         }
+
+        // Register to player
         player.RegisterOnPlayerClicked(OnPlayerClicked);
     }
 
