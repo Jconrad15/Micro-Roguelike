@@ -12,6 +12,7 @@ public class DataLoader : MonoBehaviour
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         ClearAllOldData();
+        CurrentMapType.SetCurrentMapType(loadedAreaData.MapType);
 
         areaData.Width = loadedAreaData.Width;
         areaData.Height = loadedAreaData.Height;
@@ -32,9 +33,11 @@ public class DataLoader : MonoBehaviour
             }
             else
             {
-                AIEntityInstantiation.LoadEntity(areaData.Entities[i] as AIEntity);
+                AIEntityInstantiation.LoadEntity(
+                    areaData.Entities[i] as AIEntity);
             }
         }
+
         PlayerInstantiation.LoadPlayer(playerEntity);
 
         areaData.GenerateTileGraph();
@@ -43,7 +46,6 @@ public class DataLoader : MonoBehaviour
         if (loadedAreaData.MapType == MapType.World)
         {
             FindObjectOfType<WorldGenerator>().OnDataLoaded();
-
         }
         else
         {
@@ -62,5 +64,4 @@ public class DataLoader : MonoBehaviour
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
     }
-
 }

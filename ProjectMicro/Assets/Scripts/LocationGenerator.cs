@@ -10,7 +10,6 @@ public class LocationGenerator : MonoBehaviour
     private int seed;
 
     private Action cbOnLocationCreated;
-    private Action<AIEntity> cbOnAIEntityCreated;
 
     /// <summary>
     /// Initiate generation of this location.
@@ -21,11 +20,12 @@ public class LocationGenerator : MonoBehaviour
     {
         CurrentMapType.SetCurrentMapType(MapType.Location);
 
-        Random.State oldState = Random.state;
-        Random.InitState(seed + worldX + worldY);
-        this.seed = seed;
+        this.seed = seed + worldX + worldY;
         this.width = width;
         this.height = height;
+
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
 
         CreateMapData();
         CreateFeatures();

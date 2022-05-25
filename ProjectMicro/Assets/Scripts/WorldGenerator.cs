@@ -16,10 +16,6 @@ public class WorldGenerator : MonoBehaviour
 
     private Action cbOnWorldCreated;
 
-    // TODO: make these be determine based on player location in the world
-    private int worldX = 1;
-    private int worldY = 1;
-
     public static WorldGenerator Instance { get; private set; }
     private void Awake()
     {
@@ -82,12 +78,17 @@ public class WorldGenerator : MonoBehaviour
 
     private void EnterLocation()
     {
+        // Get player location
+        Player p = FindObjectOfType<PlayerController>().GetPlayer();
+        int playerX = p.X;
+        int playerY = p.Y;
+
         // First need to destroy all current info
         DataLoader.ClearAllOldData();
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, width, height, worldX, worldY);
+            seed, width, height, playerX, playerY);
     }
 
     private void CreateWorldMapData()
@@ -165,5 +166,4 @@ public class WorldGenerator : MonoBehaviour
     {
         cbOnWorldCreated -= callbackfunc;
     }
-
 }

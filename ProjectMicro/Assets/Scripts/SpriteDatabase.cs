@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class SpriteDatabase : MonoBehaviour
 {
-    public Dictionary<TileType, Sprite[]> TileDatabase { get; protected set; }
-    public Dictionary<string, Sprite[]> EntityDatabase { get; protected set; }
-    public Dictionary<FeatureType, Sprite[]> FeatureDatabase { get; protected set; }
+    public Dictionary<TileType, Sprite[]> TileDatabase
+    { get; protected set; }
+    public Dictionary<string, Sprite[]> EntityDatabase
+    { get; protected set; }
+    public Dictionary<FeatureType, Sprite[]> FeatureDatabase
+    { get; protected set; }
 
     public void CreateDatabases()
     {
@@ -56,6 +59,5 @@ public class SpriteDatabase : MonoBehaviour
                 featureTypeSpriteRef[i].featureType,
                 featureTypeSpriteRef[i].sprites);
         }
-
     }
 }

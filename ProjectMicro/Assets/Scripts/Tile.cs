@@ -42,7 +42,6 @@ public class Tile
 
     // NESW
     public Tile[] neighbors;
-
     private Action<Tile> cbOnVisibilityChanged;
 
     // Constructor for creating initial tiles
@@ -93,6 +92,4 @@ public class Tile
     {
         cbOnVisibilityChanged -= callbackfunc;
     }
-
-
 }

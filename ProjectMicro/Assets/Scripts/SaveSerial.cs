@@ -159,7 +159,8 @@ public class SaveSerial : MonoBehaviour
             FileStream file =
                        File.Open(fileName, FileMode.Open);
 
-            SerializableSaveData ssd = (SerializableSaveData)bf.Deserialize(file);
+            SerializableSaveData ssd =
+                (SerializableSaveData)bf.Deserialize(file);
             file.Close();
 
             SaveData loadedData = new SaveData

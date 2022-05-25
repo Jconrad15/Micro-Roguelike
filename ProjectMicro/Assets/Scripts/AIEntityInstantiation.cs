@@ -17,7 +17,9 @@ public static class AIEntityInstantiation
 
         // Also create a Merchant
         Tile merchantTile = areaData.GetTile(2, 1);
-        Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
+        Merchant merchant =
+            new Merchant(merchantTile, EntityType.AI, 10);
+
         merchantTile.entity = merchant;
         cbOnAIEntityCreated?.Invoke(merchant);
     }
@@ -27,12 +29,14 @@ public static class AIEntityInstantiation
         cbOnAIEntityCreated?.Invoke(loadedEntity);
     }
 
-    public static void RegisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
+    public static void RegisterOnAIEntityCreated(
+        Action<AIEntity> callbackfunc)
     {
         cbOnAIEntityCreated += callbackfunc;
     }
 
-    public static void UnregisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
+    public static void UnregisterOnAIEntityCreated(
+        Action<AIEntity> callbackfunc)
     {
         cbOnAIEntityCreated -= callbackfunc;
     }
