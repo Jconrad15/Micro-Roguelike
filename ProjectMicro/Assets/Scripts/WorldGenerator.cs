@@ -79,18 +79,18 @@ public class WorldGenerator : MonoBehaviour
     private void EnterLocation()
     {
         // Get player location
-        Player p = FindObjectOfType<PlayerController>().GetPlayer();
-        int playerX = p.X;
-        int playerY = p.Y;
+        Player player = FindObjectOfType<PlayerController>().GetPlayer();
+        int playerX = player.X;
+        int playerY = player.Y;
 
-        TileType tileType = p.T.type;
+        TileType tileType = player.T.type;
 
         // First need to destroy all current info
         DataLoader.ClearAllOldData();
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, width, height, playerX, playerY, tileType);
+            seed, width, height, playerX, playerY, tileType, player);
     }
 
     private void CreateWorldMapData()

@@ -4,6 +4,29 @@ public static class PlayerInstantiation
 {
     private static Action<Player> cbOnPlayerCreated;
 
+    public static void TransitionPlayerToMap(
+        Player player, int playerStartX, int playerStartY)
+    {
+        // Get the tile at the new player location
+        Tile playerTile;
+        if (CurrentMapType.Type == MapType.Location)
+        {
+            playerTile =
+                LocationData.Instance.GetTile(playerStartX, playerStartY);
+        }
+        else
+        {
+            playerTile =
+                WorldData.Instance.GetTile(playerStartX, playerStartY);
+        }
+
+        // Place the player at the tile, and the tile to the player
+        playerTile.entity = player;
+        player.SetTile(playerTile);
+
+        cbOnPlayerCreated?.Invoke(player);
+    }
+
     public static void CreatePlayer(int playerStartX, int playerStartY)
     {
         // Get the tile at the location

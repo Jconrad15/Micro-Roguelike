@@ -552,8 +552,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogError("What Entity is this?" +
-                "Not in entity-GO dictionary.");
+/*            Debug.LogError("What Entity is this?" +
+                "Not in entity-GO dictionary.");*/
         }
     }
 

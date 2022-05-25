@@ -16,7 +16,7 @@ public class LocationGenerator : MonoBehaviour
     /// </summary>
     /// <param name="seed"></param>
     public void StartGenerateLocation(int seed, int width, int height,
-        int worldX, int worldY, TileType locationTileType)
+        int worldX, int worldY, TileType locationTileType, Player player)
     {
         CurrentMapType.SetCurrentMapType(MapType.Location);
 
@@ -29,7 +29,7 @@ public class LocationGenerator : MonoBehaviour
 
         CreateMapData(locationTileType);
         CreateFeatures();
-        PlayerInstantiation.CreatePlayer(width / 2, 0);
+        PlayerInstantiation.TransitionPlayerToMap(player, width/2, 0);
         AIEntityInstantiation.CreateAIEntities(width, height);
 
         Random.state = oldState;
