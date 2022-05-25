@@ -29,7 +29,7 @@ public class DialogueUI : MonoBehaviour
     {
         LocationGenerator wg = FindObjectOfType<LocationGenerator>();
         wg.RegisterOnLocationCreated(OnLocationCreated);
-        wg.RegisterOnPlayerCreated(OnPlayerCreated);
+        PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
         // Start hidden
         Hide();

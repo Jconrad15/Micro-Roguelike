@@ -8,7 +8,7 @@ using System.Linq;
 /// </summary>
 public class SpriteDisplay : MonoBehaviour
 {
-    private LocationGenerator locationGenerator;
+    //private LocationGenerator locationGenerator;
     private SpriteDatabase spriteDatabase;
     private GameObject tilesContainer;
     private GameObject entitiesContainer;
@@ -35,8 +35,10 @@ public class SpriteDisplay : MonoBehaviour
 
     private void Awake()
     {
-        locationGenerator = FindObjectOfType<LocationGenerator>();
-        locationGenerator.RegisterOnLocationCreated(DisplayInitialLocation);
+        FindObjectOfType<WorldGenerator>()
+            .RegisterOnWorldCreated(DisplayInitialMap);
+        FindObjectOfType<LocationGenerator>()
+            .RegisterOnLocationCreated(DisplayInitialMap);
         spriteDatabase = FindObjectOfType<SpriteDatabase>();
     }
 
@@ -52,11 +54,18 @@ public class SpriteDisplay : MonoBehaviour
         featuresContainer.transform.parent = transform;
     }
 
-    private void DisplayInitialLocation()
+    private void DisplayInitialMap()
     {
-        Tile[] mapData = LocationData.Instance.MapData;
-        int width = LocationData.Instance.Width;
-        int height = LocationData.Instance.Height;
+        AreaData areaData;
+        // Check if world or location
+        if (CurrentMapType.Type == MapType.World) 
+        {
+            areaData = WorldData.Instance;
+        }
+        else
+        {
+            areaData = LocationData.Instance;
+        }
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
@@ -66,25 +75,25 @@ public class SpriteDisplay : MonoBehaviour
         }
 
         // Loop through all tiles in the mapData by x,y
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < areaData.Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < areaData.Height; y++)
             {
-                int i = LocationData.Instance.GetIndexFromCoord(x, y);
+                int i = areaData.GetIndexFromCoord(x, y);
 
                 // Place initial tiles
-                PlaceInitialTile(mapData[i], x, y);
+                PlaceInitialTile(areaData.MapData[i], x, y);
 
                 // Place initial entities
-                if (mapData[i].entity != null)
+                if (areaData.MapData[i].entity != null)
                 {
-                    PlaceInitialEntity(mapData[i].entity, x, y);
+                    PlaceInitialEntity(areaData.MapData[i].entity, x, y);
                 }
 
                 // Place initial features
-                if (mapData[i].feature != null)
+                if (areaData.MapData[i].feature != null)
                 {
-                    PlaceInitialFeature(mapData[i].feature, x, y);
+                    PlaceInitialFeature(areaData.MapData[i].feature, x, y);
                 }
             }
         }

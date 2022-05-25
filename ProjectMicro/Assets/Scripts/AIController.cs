@@ -8,9 +8,7 @@ public class AIController : MonoBehaviour
 
     private void Awake()
     {
-        LocationGenerator locationGenerator = FindObjectOfType<LocationGenerator>();
-        locationGenerator.RegisterOnAIEntityCreated(OnAICreated);
-
+        AIEntityInstantiation.RegisterOnAIEntityCreated(OnAICreated);
     }
 
     private void OnEnable()

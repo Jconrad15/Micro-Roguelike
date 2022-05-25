@@ -5,11 +5,14 @@ using UnityEngine;
 public static class VisibilityChanger
 {
     private static int visibilityDistance = 8;
+
     public static void UpdateTileVisibility(Player player)
     {
-        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
+        Tile[] mapData = AreaData.GetMapDataForCurrentType();
+        
+        for (int i = 0; i < mapData.Length; i++)
         {
-            Tile t = LocationData.Instance.MapData[i];
+            Tile t = mapData[i];
             if (Vector2.Distance(
                 new Vector2(t.x, t.y),
                 new Vector2(player.X, player.Y)) < visibilityDistance)
@@ -29,7 +32,8 @@ public static class VisibilityChanger
 
     public static void UpdateEntityVisibility(Player player)
     {
-        List<Entity> entities = LocationData.Instance.Entities;
+        List<Entity> entities = AreaData.GetEntitiesForCurrentType();
+
         for (int i = 0; i < entities.Count; i++)
         {
             Entity e = entities[i];
@@ -56,7 +60,8 @@ public static class VisibilityChanger
 
     public static void UpdateFeatureVisibility(Player player)
     {
-        List<Feature> features = LocationData.Instance.Features;
+        List<Feature> features = AreaData.GetFeaturesForCurrentType();
+
         for (int i = 0; i < features.Count; i++)
         {
             Feature f = features[i];

@@ -69,7 +69,9 @@ public class AIEntity : Entity
 
     protected virtual void DetermineNewDestination()
     {
-        Destination = LocationData.Instance.GetRandomWalkableTile();
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+
+        Destination = areaData.GetRandomWalkableTile();
     }
 
     public void Moved()

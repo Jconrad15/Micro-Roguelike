@@ -17,8 +17,10 @@ public class Path_AStar
     /// <param name="tileEnd"></param>
     public Path_AStar(Tile tileStart, Tile tileEnd)
     {
-        // Get map data from LocationData
-        Path_TileGraph tileGraph = LocationData.Instance.TileGraph;
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+
+        // Get map data from areaData
+        Path_TileGraph tileGraph = areaData.TileGraph;
 
         // If tileEnd is null, then scan for the nearest objectType. 
         // Can do this by ignoring the heuristic component of aStar, which basically
@@ -27,8 +29,8 @@ public class Path_AStar
         // Check to see if there is a valid tile graph
         if (tileGraph == null) 
         {
-            LocationData.Instance.GenerateTileGraph();
-            tileGraph = LocationData.Instance.TileGraph;
+            areaData.GenerateTileGraph();
+            tileGraph = areaData.TileGraph;
         }
 
         // Get a dictionary of all valid, walkable nodes.

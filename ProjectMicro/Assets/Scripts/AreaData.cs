@@ -38,18 +38,37 @@ public class AreaData : MonoBehaviour
         return neighbors.ToArray();
     }
 
-    /// <summary>
-    /// Sets each tile's list of neighbors. Used when create the tile array.
-    /// </summary>
-    public static void SetTileNeighbors()
+    public static AreaData GetAreaDataForCurrentType()
     {
-        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
+        if (CurrentMapType.Type == MapType.World)
         {
-            Tile[] neighbors =
-                LocationData.Instance.GetNeighboringTiles(
-                    LocationData.Instance.MapData[i]);
-            LocationData.Instance.MapData[i].SetNeighbors(neighbors);
+            return WorldData.Instance;
         }
+        else
+        {
+            return LocationData.Instance;
+        }
+    }
+
+    public static Tile[] GetMapDataForCurrentType()
+    {
+        return CurrentMapType.Type == MapType.World ?
+            WorldData.Instance.MapData :
+            LocationData.Instance.MapData;
+    }
+
+    public static List<Entity> GetEntitiesForCurrentType()
+    {
+        return CurrentMapType.Type == MapType.World ?
+            WorldData.Instance.Entities :
+            LocationData.Instance.Entities;
+    }
+
+    public static List<Feature> GetFeaturesForCurrentType()
+    {
+        return CurrentMapType.Type == MapType.World ?
+            WorldData.Instance.Features :
+            LocationData.Instance.Features;
     }
 
     public Tile GetRandomWalkableTile()

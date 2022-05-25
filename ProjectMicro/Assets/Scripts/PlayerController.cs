@@ -13,9 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        LocationGenerator locationGenerator = FindObjectOfType<LocationGenerator>();
-        locationGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
-
+        PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
         TurnController.Instance.RegisterOnStartPlayerTurn(OnStartTurn);
     }
 

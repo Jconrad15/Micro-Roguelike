@@ -94,7 +94,8 @@ public class Entity
         CreateCharacterName();
 
         // Add self to entity list
-        LocationData.Instance.AddEntity(this);
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        areaData.AddEntity(this);
     }
 
     public void PlayerClickOnPlayer()

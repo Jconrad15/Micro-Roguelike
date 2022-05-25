@@ -5,29 +5,27 @@ using UnityEngine;
 public class Path_TileGraph
 {
     // This class constructs a simple path-finding compatible graph
-    // of the Location. Each tile is a node. Each walkable neighbour
+    // of the area. Each tile is a node. Each walkable neighbour
     // from a tile is linked via an edge connection.
 
     public Dictionary<Tile, Path_Node<Tile>> NodesDict { get; protected set; }
 
     public Path_TileGraph()
     {
-        // Get map data from LocationData
-        Tile[] tiles = LocationData.Instance.MapData;
-        int width = LocationData.Instance.Width;
-        int height = LocationData.Instance.Height;
+        // Get map data from areaData
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
-        // Loop through all tiles of the location
+        // Loop through all tiles of the areaData
         // For each tile, create a node
 
         // Instantiate dictionary map
         NodesDict = new Dictionary<Tile, Path_Node<Tile>>();
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < areaData.Width; x++)
         {
-            for (int z = 0; z < height; z++)
+            for (int z = 0; z < areaData.Height; z++)
             {
-                Tile t = tiles[LocationData.Instance.GetIndexFromCoord(x,z)];
+                Tile t = areaData.MapData[areaData.GetIndexFromCoord(x,z)];
 
                 Path_Node<Tile> n = new Path_Node<Tile>
                 {

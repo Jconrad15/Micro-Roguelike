@@ -10,7 +10,6 @@ public class LocationGenerator : MonoBehaviour
     private int seed;
 
     private Action cbOnLocationCreated;
-    private Action<Player> cbOnPlayerCreated;
     private Action<AIEntity> cbOnAIEntityCreated;
 
     /// <summary>
@@ -20,6 +19,8 @@ public class LocationGenerator : MonoBehaviour
     public void StartGenerateLocation(int seed, int width, int height,
         int worldX, int worldY)
     {
+        CurrentMapType.SetCurrentMapType(MapType.Location);
+
         Random.State oldState = Random.state;
         Random.InitState(seed + worldX + worldY);
         this.seed = seed;
@@ -28,49 +29,12 @@ public class LocationGenerator : MonoBehaviour
 
         CreateMapData();
         CreateFeatures();
-        CreatePlayer();
-        CreateAIEntities();
+        PlayerInstantiation.CreatePlayer(width / 2, 0);
+        AIEntityInstantiation.CreateAIEntities(width, height);
 
         Random.state = oldState;
 
         cbOnLocationCreated?.Invoke();
-    }
-
-    private void CreatePlayer()
-    {
-        // First determine where the player will go
-        int playerStartX = width / 2;
-        int playerStartY = 0;
-
-        // Get the tile at the location
-        Tile playerTile = LocationData.Instance.GetTile(playerStartX, playerStartY);
-        
-        // Place the player at the tile, and the tile to the player
-        Player player = new Player(playerTile, EntityType.Player, 10);
-        playerTile.entity = player;
-
-        // TODO: Starting player items
-        player.InventoryItems.Add(ItemDatabase.GetRandomItem());
-
-        cbOnPlayerCreated?.Invoke(player);
-    }
-
-    /// <summary>
-    /// Creates the AI entities in the location.
-    /// </summary>
-    private void CreateAIEntities()
-    {
-        // For now generate a dog
-        Tile dogTile = LocationData.Instance.GetTile(1, 1);
-        Dog dog = new Dog(dogTile, EntityType.AI, 0);
-        dogTile.entity = dog;
-        cbOnAIEntityCreated?.Invoke(dog);
-
-        // Also create a Merchant
-        Tile merchantTile = LocationData.Instance.GetTile(2, 1);
-        Merchant merchant = new Merchant(merchantTile, EntityType.AI, 10);
-        merchantTile.entity = merchant;
-        cbOnAIEntityCreated?.Invoke(merchant);
     }
 
     private void CreateMapData()
@@ -101,7 +65,7 @@ public class LocationGenerator : MonoBehaviour
             LocationData.Instance.MapData[i] = new Tile(x, y, rawMap[i]);
         }
 
-        LocationData.SetTileNeighbors();
+        LocationData.Instance.SetTileNeighbors();
         LocationData.Instance.GenerateTileGraph();
     }
 
@@ -149,13 +113,14 @@ public class LocationGenerator : MonoBehaviour
 
     public void OnDataLoaded(List<Entity> loadedEntities)
     {
-        LocationData.SetTileNeighbors();
+        LocationData.Instance.SetTileNeighbors();
 
         for (int i = 0; i < loadedEntities.Count; i++)
         {
             if (loadedEntities[i].type == EntityType.Player)
             {
-                cbOnPlayerCreated?.Invoke(loadedEntities[i] as Player);
+                // TODO how to load player
+                //cbOnPlayerCreated?.Invoke(loadedEntities[i] as Player);
             }
             else
             {
@@ -174,25 +139,5 @@ public class LocationGenerator : MonoBehaviour
     public void UnregisterOnLocationCreated(Action callbackfunc)
     {
         cbOnLocationCreated -= callbackfunc;
-    }
-
-    public void RegisterOnPlayerCreated(Action<Player> callbackfunc)
-    {
-        cbOnPlayerCreated += callbackfunc;
-    }
-
-    public void UnregisterOnPlayerCreated(Action<Player> callbackfunc)
-    {
-        cbOnPlayerCreated -= callbackfunc;
-    }
-
-    public void RegisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
-    {
-        cbOnAIEntityCreated += callbackfunc;
-    }
-
-    public void UnregisterOnAIEntityCreated(Action<AIEntity> callbackfunc)
-    {
-        cbOnAIEntityCreated -= callbackfunc;
     }
 }
