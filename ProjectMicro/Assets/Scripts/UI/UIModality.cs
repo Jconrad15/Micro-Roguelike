@@ -21,6 +21,7 @@ public class UIModality : MonoBehaviour
         }
     }
 
+    public bool IsEscapeMenuOpen { get; set; } = false;
     public bool IsDialogueOpen { get; set; } = false;
     public bool IsInventoryOpen { get; private set; } = false;
 

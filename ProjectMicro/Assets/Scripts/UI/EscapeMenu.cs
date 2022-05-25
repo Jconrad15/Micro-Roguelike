@@ -36,11 +36,13 @@ public class EscapeMenu : MonoBehaviour
 
     public void Show()
     {
+        UIModality.Instance.IsEscapeMenuOpen = true;
         escapeMenuArea.SetActive(true);
     }
 
     public void Hide()
     {
+        UIModality.Instance.IsEscapeMenuOpen = false;
         escapeMenuArea.SetActive(false);
     }
 }

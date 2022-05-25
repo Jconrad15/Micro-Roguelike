@@ -75,8 +75,12 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     private bool TryPlayerInputMovement()
     {
-        // If dialogue is open, no movement allowed
-        if (UIModality.Instance.IsDialogueOpen) { return false; }
+        // If dialogue or escape menu is open, no movement allowed
+        if (UIModality.Instance.IsDialogueOpen ||
+            UIModality.Instance.IsEscapeMenuOpen ) 
+        { 
+            return false; 
+        }
 
         bool playerMoved = false;
 
