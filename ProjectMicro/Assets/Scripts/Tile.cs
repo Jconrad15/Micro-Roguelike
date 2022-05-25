@@ -76,7 +76,7 @@ public class Tile
         this.feature = feature;
         this.item = item;
         this.isWalkable = isWalkable;
-        visibility = Visibility;
+        Visibility = visibility;
     }
 
     public void SetNeighbors(Tile[] neighbors)

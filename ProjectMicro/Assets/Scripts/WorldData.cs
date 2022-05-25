@@ -24,24 +24,4 @@ public class WorldData : AreaData
             Instance = this;
         }
     }
-
-    private void Start()
-    {
-        SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
-    }
-
-    /// <summary>
-    /// Sets each tile's list of neighbors. Used when create the tile array.
-    /// </summary>
-    public void SetTileNeighbors()
-    {
-        for (int i = 0; i < Instance.MapData.Length; i++)
-        {
-            Tile[] neighbors =
-                Instance.GetNeighboringTiles(
-                    Instance.MapData[i]);
-            Instance.MapData[i].SetNeighbors(neighbors);
-        }
-    }
-
 }

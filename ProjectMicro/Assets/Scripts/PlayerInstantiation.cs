@@ -27,6 +27,27 @@ public static class PlayerInstantiation
         cbOnPlayerCreated?.Invoke(player);
     }
 
+    public static void LoadPlayer(Entity entityToLoad)
+    {
+        // Get the tile at the location
+        Tile playerTile;
+        if (CurrentMapType.Type == MapType.Location)
+        {
+            playerTile = LocationData.Instance.GetTile(entityToLoad.X, entityToLoad.Y);
+        }
+        else
+        {
+            playerTile = WorldData.Instance.GetTile(entityToLoad.X, entityToLoad.Y);
+        }
+
+        // Place the player at the tile, and the tile to the player
+        Player player = new Player(EntityType.Player, entityToLoad.InventoryItems, entityToLoad.Money,
+            entityToLoad.Visibility, entityToLoad.EntityName, entityToLoad.CharacterName, playerTile);
+        playerTile.entity = player;
+
+        cbOnPlayerCreated?.Invoke(player);
+    }
+
     public static void RegisterOnPlayerCreated(Action<Player> callbackfunc)
     {
         cbOnPlayerCreated += callbackfunc;

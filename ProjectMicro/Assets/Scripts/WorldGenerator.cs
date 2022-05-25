@@ -83,8 +83,7 @@ public class WorldGenerator : MonoBehaviour
     private void EnterLocation()
     {
         // First need to destroy all current info
-        WorldData.Instance.ClearAllOldData();
-
+        DataLoader.ClearAllOldData();
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
@@ -152,23 +151,8 @@ public class WorldGenerator : MonoBehaviour
         return rawMap;
     }
 
-    public void OnDataLoaded(List<Entity> loadedEntities)
+    public void OnDataLoaded()
     {
-        WorldData.Instance.SetTileNeighbors();
-
-        for (int i = 0; i < loadedEntities.Count; i++)
-        {
-            if (loadedEntities[i].type == EntityType.Player)
-            {
-                // TODO how to load player
-                //cbOnPlayerCreated?.Invoke(loadedEntities[i] as Player);
-            }
-            else
-            {
-                AIEntityInstantiation.LoadEntity(loadedEntities[i] as AIEntity);
-            }
-        }
-
         cbOnWorldCreated?.Invoke();
     }
 

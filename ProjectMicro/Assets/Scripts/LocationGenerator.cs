@@ -115,23 +115,8 @@ public class LocationGenerator : MonoBehaviour
         }
     }
 
-    public void OnDataLoaded(List<Entity> loadedEntities)
+    public void OnDataLoaded()
     {
-        LocationData.Instance.SetTileNeighbors();
-
-        for (int i = 0; i < loadedEntities.Count; i++)
-        {
-            if (loadedEntities[i].type == EntityType.Player)
-            {
-                // TODO how to load player
-                //cbOnPlayerCreated?.Invoke(loadedEntities[i] as Player);
-            }
-            else
-            {
-                AIEntityInstantiation.LoadEntity(loadedEntities[i] as AIEntity);
-            }
-        }
-
         cbOnLocationCreated?.Invoke();
     }
 

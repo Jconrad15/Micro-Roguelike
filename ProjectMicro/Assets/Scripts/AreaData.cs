@@ -27,6 +27,16 @@ public class AreaData : MonoBehaviour
         Features.Add(f);
     }
 
+    public void SetEntityList(List<Entity> entities)
+    {
+        Entities = entities;
+    }
+
+    public void SetFeatureList(List<Feature> features)
+    {
+        Features = features;
+    }
+
     public Tile[] GetNeighboringTiles(Tile t)
     {
         List<Tile> neighbors = new List<Tile>();
@@ -136,46 +146,18 @@ public class AreaData : MonoBehaviour
         return (x, y);
     }
 
-    protected static void OnDataLoaded(LoadedAreaData loadedAreaData)
+    /// <summary>
+    /// Sets each tile's list of neighbors. Used when create the tile array.
+    /// </summary>
+    public void SetTileNeighbors()
     {
-        AreaData areaData;
-        if (loadedAreaData.MapType == MapType.World)
-        {
-            areaData = WorldData.Instance;
-        }
-        else
-        {
-            areaData = LocationData.Instance;
-        }
-        
-        areaData.ClearAllOldData();
+        AreaData areaData = GetAreaDataForCurrentType();
 
-        areaData.Width = loadedAreaData.Width;
-        areaData.Height = loadedAreaData.Height;
-
-        areaData.MapData = loadedAreaData.MapData;
-
-        areaData.Entities = loadedAreaData.Entities;
-        areaData.Features = loadedAreaData.Features;
-
-        if (loadedAreaData.MapType == MapType.World)
+        for (int i = 0; i < areaData.MapData.Length; i++)
         {
-            FindObjectOfType<WorldGenerator>().OnDataLoaded(areaData.Entities);
+            Tile[] neighbors =
+                areaData.GetNeighboringTiles(areaData.MapData[i]);
+            areaData.MapData[i].SetNeighbors(neighbors);
         }
-        else
-        {
-            FindObjectOfType<LocationGenerator>().OnDataLoaded(areaData.Entities);
-        }
-        areaData.GenerateTileGraph();
-    }
-
-    public void ClearAllOldData()
-    {
-        foreach (Entity entity in Entities)
-        {
-            entity.Destroy();
-        }
-        FindObjectOfType<AIController>().ClearAll();
-        FindObjectOfType<SpriteDisplay>().ClearAll();
     }
 }
