@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class RawMapData
 {
     public TileType[] rawMap;
@@ -53,33 +55,59 @@ public class RawMapData
     /// <param name="locationTileType"></param>
     public RawMapData(
         int width, int height,
-        int seed, TileType locationTileType)
+        int seed, TileType locationTileType,
+        int worldX, int worldY)
     {
         rawMap = CreateLocationRawMapData(
-            width, height, seed, locationTileType);
+            width, height, seed, locationTileType,
+            worldX, worldY);
     }
 
     private TileType[] CreateLocationRawMapData(
         int width, int height,
-        int seed, TileType locationTileType)
+        int seed, TileType locationTileType,
+        int worldX, int worldY)
     {
         TileType[] rawMap = new TileType[width * height];
         SimplexNoise.Seed = seed;
 
-        // TODO: need to generate map based on this locations tile type
+        // Parameters with default values
+        float scale = 0.05f;
+        float waterLevel = 0.15f;
+        float grassLevel = 0.3f;
 
-        float scale = 0.1f;
+
+        if (locationTileType == TileType.Water)
+        {
+
+        }
+        else if (locationTileType == TileType.Forest)
+        {
+
+        }
+        else if (locationTileType == TileType.OpenArea)
+        {
+
+        }
+        else
+        {
+            Debug.Log("Missing a world tile tile when " +
+                "creating location raw map");
+        }
 
         for (int i = 0; i < rawMap.Length; i++)
         {
             (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
+            // Translate coordinate using world position
+            x = x - (width / 2) + worldX;
+            y = y - (height / 2) + worldY;
 
             float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= 0.15f)
+            if (sample <= waterLevel)
             {
                 rawMap[i] = TileType.Water;
             }
-            else if (sample <= 0.3f)
+            else if (sample <= grassLevel)
             {
                 rawMap[i] = TileType.Grass;
             }

@@ -20,14 +20,14 @@ public class LocationGenerator : MonoBehaviour
     {
         CurrentMapType.SetCurrentMapType(MapType.Location);
 
-        this.seed = seed + worldX + worldY;
+        this.seed = seed;
         this.width = width;
         this.height = height;
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        CreateMapData(locationTileType);
+        CreateMapData(locationTileType, worldX, worldY);
         CreateFeatures();
         PlayerInstantiation.TransitionPlayerToMap(player, width/2, 0);
         AIEntityInstantiation.CreateAIEntities(width, height);
@@ -37,15 +37,19 @@ public class LocationGenerator : MonoBehaviour
         cbOnLocationCreated?.Invoke();
     }
 
-    private void CreateMapData(TileType locationTileType)
+    private void CreateMapData(
+        TileType locationTileType, int worldX, int worldY)
     {
         LocationData.Instance.MapData = new Tile[width * height];
         LocationData.Instance.Width = width;
         LocationData.Instance.Height = height;
 
-        // Create base tile type map
+        // Create raw base tile type map
         RawMapData rawMapData =
-            new RawMapData(width, height, seed,locationTileType);
+            new RawMapData(width, height, seed, locationTileType,
+            worldX, worldY);
+
+        // Perform any edits to the raw base tile type map
 
         // Set tile types
         for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
