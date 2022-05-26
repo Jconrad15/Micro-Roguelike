@@ -4,7 +4,8 @@ using UnityEngine;
 
 public static class ItemDatabase
 {
-    public static Dictionary<string, Item> ItemRefDatabase { get; private set; }
+    public static Dictionary<string, Item> ItemRefDatabase
+    { get; private set; }
 
     public static void CreateDatabase()
     {
@@ -20,8 +21,11 @@ public static class ItemDatabase
         // Create the database
         for (int i = 0; i < itemRefs.Length; i++)
         {
-            ItemRefDatabase.Add(itemRefs[i].itemName, new Item(
-                itemRefs[i].itemName, itemRefs[i].baseCost,itemRefs[i].category));
+            ItemRefDatabase.Add(
+                itemRefs[i].itemName,
+                new Item(
+                    itemRefs[i].itemName, itemRefs[i].baseCost, 
+                    itemRefs[i].category));
         }
     }
 

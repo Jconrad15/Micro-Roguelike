@@ -6,12 +6,14 @@ public class AIController : MonoBehaviour
 {
     private List<AIEntity> aiEntities = new List<AIEntity>();
 
-    private void Start()
+    private void Awake()
+    {
+        AIEntityInstantiation.RegisterOnAIEntityCreated(OnAICreated);
+    }
+
+    private void OnEnable()
     {
         TurnController.Instance.RegisterOnStartAITurn(OnAITurn);
-
-        WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
-        worldGenerator.RegisterOnAIEntityCreated(OnAICreated);
     }
 
     private void OnAICreated(AIEntity aiEntity)

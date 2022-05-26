@@ -13,6 +13,7 @@ public struct SaveData
     public SerializableTile[] mapData;
     public int width;
     public int height;
+    public MapType mapType;
 }
 
 /// <summary>
@@ -20,7 +21,7 @@ public struct SaveData
 /// </summary>
 public class SaveSerial : MonoBehaviour
 {
-    private Action<LoadedWorldData> cbOnDataLoadedFromFile;
+    private Action<LoadedAreaData> cbOnDataLoadedFromFile;
     private Action cbDataSaved;
 
     // Make singleton
@@ -53,8 +54,9 @@ public class SaveSerial : MonoBehaviour
     /// <returns></returns>
     private SaveData GetDataToSave()
     {
-        Tile[] mapData = WorldData.Instance.MapData;
-
+        // Get area data
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        Tile[] mapData = areaData.MapData;
 
         SerializableTile[] serializedTileData =
             new SerializableTile[mapData.Length];
@@ -70,6 +72,8 @@ public class SaveSerial : MonoBehaviour
                 {
                     x = mapData[i].entity.X,
                     y = mapData[i].entity.Y,
+                    entityName = mapData[i].entity.EntityName,
+                    characterName = mapData[i].entity.CharacterName,
                     inventoryItems = mapData[i].entity.InventoryItems,
                     money = mapData[i].entity.Money,
                     type = mapData[i].entity.type,
@@ -106,8 +110,9 @@ public class SaveSerial : MonoBehaviour
         SaveData data = new SaveData
         {
             mapData = serializedTileData,
-            width = WorldData.Instance.Width,
-            height = WorldData.Instance.Height,
+            width = areaData.Width,
+            height = areaData.Height,
+            mapType = CurrentMapType.Type
         };
 
         return data;
@@ -129,9 +134,10 @@ public class SaveSerial : MonoBehaviour
 
         SerializableSaveData ssd = new SerializableSaveData
         {
-            savedMapData = dataToSave.mapData,
+            savedAreaMapData = dataToSave.mapData,
             savedHeight = dataToSave.height,
             savedWidth = dataToSave.width,
+            savedMapType = dataToSave.mapType
         };
 
         bf.Serialize(file, ssd);
@@ -153,14 +159,16 @@ public class SaveSerial : MonoBehaviour
             FileStream file =
                        File.Open(fileName, FileMode.Open);
 
-            SerializableSaveData ssd = (SerializableSaveData)bf.Deserialize(file);
+            SerializableSaveData ssd =
+                (SerializableSaveData)bf.Deserialize(file);
             file.Close();
 
             SaveData loadedData = new SaveData
             {
-                mapData = ssd.savedMapData,
+                mapData = ssd.savedAreaMapData,
                 width = ssd.savedWidth,
                 height = ssd.savedHeight,
+                mapType = ssd.savedMapType
             };
 
             // Convert back to mapData tile array
@@ -182,14 +190,18 @@ public class SaveSerial : MonoBehaviour
                         e = new Player(serializableEntity.type,
                             serializableEntity.inventoryItems,
                             serializableEntity.money,
-                            serializableEntity.visibility);
+                            serializableEntity.visibility,
+                            serializableEntity.entityName,
+                            serializableEntity.characterName);
                     }
                     else
                     {
                         e = new AIEntity(serializableEntity.type,
                             serializableEntity.inventoryItems,
                             serializableEntity.money,
-                            serializableEntity.visibility);
+                            serializableEntity.visibility,
+                            serializableEntity.entityName,
+                            serializableEntity.characterName);
                     }
                 }
                 // Recreate feature
@@ -230,18 +242,19 @@ public class SaveSerial : MonoBehaviour
                 }
             }
 
-            // Create loaded world data container for all loaded data
-            LoadedWorldData loadedWorldData =
-                new LoadedWorldData
+            // Create loaded area data container for all loaded data
+            LoadedAreaData loadedAreaData =
+                new LoadedAreaData
                 (
                     loadedMapData,
                     loadedData.width,
                     loadedData.height,
                     entities,
-                    features
+                    features,
+                    loadedData.mapType
                 );
 
-            cbOnDataLoadedFromFile?.Invoke(loadedWorldData);
+            cbOnDataLoadedFromFile?.Invoke(loadedAreaData);
         }
         else
         {
@@ -249,12 +262,12 @@ public class SaveSerial : MonoBehaviour
         }
     }
 
-    public void RegisterOnDataLoaded(Action<LoadedWorldData> callbackFunc)
+    public void RegisterOnDataLoaded(Action<LoadedAreaData> callbackFunc)
     {
         cbOnDataLoadedFromFile += callbackFunc;
     }
 
-    public void UnregisterOnDataLoaded(Action<LoadedWorldData> callbackFunc)
+    public void UnregisterOnDataLoaded(Action<LoadedAreaData> callbackFunc)
     {
         cbOnDataLoadedFromFile -= callbackFunc;
     }
@@ -276,7 +289,8 @@ public class SaveSerial : MonoBehaviour
 [Serializable]
 class SerializableSaveData
 {
-    public SerializableTile[] savedMapData;
+    public SerializableTile[] savedAreaMapData;
     public int savedWidth;
     public int savedHeight;
+    public MapType savedMapType;
 }

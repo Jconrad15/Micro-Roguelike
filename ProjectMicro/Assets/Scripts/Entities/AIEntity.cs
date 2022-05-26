@@ -13,11 +13,14 @@ public class AIEntity : Entity
 
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
-        int money, VisibilityLevel visibility, Tile t = null) : base(t, type, money)
+        int money, VisibilityLevel visibility, string entityName,
+        string characterName, Tile t = null) : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
+        EntityName = entityName;
+        CharacterName = characterName;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;
@@ -69,7 +72,9 @@ public class AIEntity : Entity
 
     protected virtual void DetermineNewDestination()
     {
-        Destination = WorldData.Instance.GetRandomWalkableTile();
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+
+        Destination = areaData.GetRandomWalkableTile();
     }
 
     public void Moved()

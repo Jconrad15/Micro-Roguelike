@@ -9,6 +9,8 @@ public class SerializableEntity
 {
     public int x;
     public int y;
+    public string entityName;
+    public string characterName;
     public List<Item> inventoryItems;
     public int money;
     public EntityType type;
@@ -94,7 +96,8 @@ public class Entity
         CreateCharacterName();
 
         // Add self to entity list
-        WorldData.Instance.AddEntity(this);
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        areaData.AddEntity(this);
     }
 
     public void PlayerClickOnPlayer()
@@ -245,11 +248,11 @@ public class Entity
         CharacterName = "Character name!";
     }
 
-    public void Destroy()
+/*    public void ClearData()
     {
         InventoryItems.Clear();
         T = null;
-    }
+    }*/
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)
     {

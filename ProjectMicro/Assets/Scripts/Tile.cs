@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public enum TileType { OpenArea, Wall, Water };
+public enum TileType { OpenArea, Wall, Water, Grass, Forest };
 [Serializable]
 public enum VisibilityLevel { NotVisible, PreviouslySeen, Visible };
 [Serializable]
@@ -42,7 +42,6 @@ public class Tile
 
     // NESW
     public Tile[] neighbors;
-
     private Action<Tile> cbOnVisibilityChanged;
 
     // Constructor for creating initial tiles
@@ -76,7 +75,7 @@ public class Tile
         this.feature = feature;
         this.item = item;
         this.isWalkable = isWalkable;
-        visibility = Visibility;
+        Visibility = visibility;
     }
 
     public void SetNeighbors(Tile[] neighbors)
@@ -93,6 +92,4 @@ public class Tile
     {
         cbOnVisibilityChanged -= callbackfunc;
     }
-
-
 }

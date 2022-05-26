@@ -9,8 +9,7 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        WorldGenerator worldGenerator = FindObjectOfType<WorldGenerator>();
-        worldGenerator.RegisterOnPlayerCreated(OnPlayerCreated);
+        PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
         PlayerController playerController = FindObjectOfType<PlayerController>();
         playerController.RegisterOnPlayerMove(OnPlayerMove);

@@ -41,7 +41,8 @@ public class Feature
         Visibility = VisibilityLevel.NotVisible;
 
         // Add self to feature list
-        WorldData.Instance.AddFeature(this);
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        areaData.AddFeature(this);
     }
 
     /// <summary>

@@ -13,10 +13,18 @@ public class Player : Entity
 
     // Constructor for loaded player
     public Player(EntityType type, List<Item> inventoryItems,
-        int money, VisibilityLevel visibility, Tile t = null) : base(t, type, money)
+        int money, VisibilityLevel visibility, string entityName,
+        string characterName, Tile t = null) : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
+        EntityName = entityName;
+        CharacterName = characterName;
+
+        if (t != null)
+        {
+            T = t;
+        }
     }
 }
