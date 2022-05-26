@@ -33,7 +33,7 @@ public class RawMapData
             }
             else if (sample <= 0.5f)
             {
-                rawMap[i] = TileType.Grass;
+                rawMap[i] = TileType.Forest;
             }
             else
             {
@@ -68,7 +68,7 @@ public class RawMapData
 
         // TODO: need to generate map based on this locations tile type
 
-        float scale = 0.6f;
+        float scale = 0.1f;
 
         for (int i = 0; i < rawMap.Length; i++)
         {
@@ -79,7 +79,7 @@ public class RawMapData
             {
                 rawMap[i] = TileType.Water;
             }
-            else if (sample <= 0.5f)
+            else if (sample <= 0.3f)
             {
                 rawMap[i] = TileType.Grass;
             }
