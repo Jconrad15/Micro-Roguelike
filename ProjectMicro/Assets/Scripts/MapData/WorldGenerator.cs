@@ -49,7 +49,6 @@ public class WorldGenerator : MonoBehaviour
         Random.InitState(seed);
 
         CreateWorldMapData();
-        //CreateWorldFeatures();
         PlayerInstantiation.CreatePlayer(width / 2, 0);
         AIEntityInstantiation.CreateAIEntities(width, height);
 
@@ -99,6 +98,8 @@ public class WorldGenerator : MonoBehaviour
         WorldData.Instance.Width = width;
         WorldData.Instance.Height = height;
 
+        // Create tile types
+
         // Create base tile type map
         RawMapData rawMapData = new RawMapData(width, height, seed);
 
@@ -107,12 +108,35 @@ public class WorldGenerator : MonoBehaviour
         {
             (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
 
-            // Otherwise set to open tile
-            WorldData.Instance.MapData[i] = new Tile(x, y, rawMapData.rawMap[i]);
+            WorldData.Instance.MapData[i] =
+                new Tile(x, y, rawMapData.rawMap[i]);
         }
 
         WorldData.Instance.SetTileNeighbors();
         WorldData.Instance.GenerateTileGraph();
+
+        // Create features
+
+        // Place city features
+        PlaceCities(rawMapData);
+    }
+
+    private static void PlaceCities(RawMapData rawMapData)
+    {
+        for (int i = 0; i < rawMapData.potentialCityLocations.Length; i++)
+        {
+            int index = rawMapData.potentialCityLocations[i];
+
+            // Don't place cities in the water
+            if (WorldData.Instance.MapData[index].type != TileType.Water)
+            {
+                WorldData.Instance.MapData[index].feature =
+                    new Feature(
+                        FeatureType.City,
+                        WorldData.Instance.MapData[index]);
+                Debug.Log("CityPlaced");
+            }
+        }
     }
 
     public void OnDataLoaded()

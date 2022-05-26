@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 public class RawMapData
 {
     public TileType[] rawMap;
+    public int[] potentialCityLocations;
 
     /// <summary>
     /// Constructor for world raw map data
@@ -13,37 +15,31 @@ public class RawMapData
     public RawMapData(
         int width, int height, int seed)
     {
-        rawMap = CreateWorldRawMapData(width, height, seed);
+        (rawMap, potentialCityLocations) =
+            CreateWorldRawMapData(width, height, seed);
     }
 
-    private TileType[] CreateWorldRawMapData(
-        int width, int height, int seed)
+    private (TileType[] rawMap, int[] potentialCityLocations) 
+        CreateWorldRawMapData(int width, int height, int seed)
     {
         TileType[] rawMap = new TileType[width * height];
+        
+        int maxCategoryTypes = Enum.GetNames(typeof(TileType)).Length;
+        int seedCount = width / 2;
 
-        SimplexNoise.Seed = seed;
-        float scale = 0.03f;
+        (int[] categories, int[] seedIndicies) =
+            Voronoi.JumpFlood(
+                width, height, seed, seedCount, maxCategoryTypes);
 
+        // Determine tiletypes based on voronoi categories
         for (int i = 0; i < rawMap.Length; i++)
         {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
-
-            float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= 0.3f)
-            {
-                rawMap[i] = TileType.Water;
-            }
-            else if (sample <= 0.5f)
-            {
-                rawMap[i] = TileType.Forest;
-            }
-            else
-            {
-                rawMap[i] = TileType.OpenArea;
-            }
+            rawMap[i] = (TileType)categories[i];
+            // Switch any walls to open area tiles
+            if (rawMap[i] == TileType.Wall) rawMap[i] = TileType.OpenArea;
         }
 
-        return rawMap;
+        return (rawMap, seedIndicies);
     }
 
     /// <summary>
