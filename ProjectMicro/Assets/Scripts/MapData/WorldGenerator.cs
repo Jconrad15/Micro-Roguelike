@@ -83,7 +83,7 @@ public class WorldGenerator : MonoBehaviour
             player, playerWorldX, playerWorldY);
 
         // TODO: generate entites in correct places, not randomly
-        AIEntityInstantiation.CreateAIEntities(width, height);
+        AIEntityInstantiation.GetPreviousWorldEntities();
 
         Random.state = oldState;
 
