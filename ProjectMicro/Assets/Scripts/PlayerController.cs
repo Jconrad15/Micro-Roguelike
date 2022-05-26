@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
         p.Visibility = VisibilityLevel.Visible;
 
         VisibilityChanger.UpdateTileVisibility(player);
+        VisibilityChanger.UpdateEntityVisibility(player);
+        VisibilityChanger.UpdateFeatureVisibility(player);
     }
 
     private void OnStartTurn()
