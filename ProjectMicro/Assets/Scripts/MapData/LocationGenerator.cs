@@ -29,7 +29,7 @@ public class LocationGenerator : MonoBehaviour
 
         CreateMapData(locationTileType, worldX, worldY);
         CreateFeatures();
-        PlayerInstantiation.TransitionPlayerToMap(player, width/2, 0);
+        PlayerInstantiation.TransitionPlayerToMap(player, width/2, 1);
         AIEntityInstantiation.CreateAIEntities(width, height);
 
         Random.state = oldState;
@@ -85,6 +85,20 @@ public class LocationGenerator : MonoBehaviour
         for (int i = 0; i < mapdata.Length; i++)
         {
             (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
+
+            // Set edges to exit area
+            if (x == 0 || y == 0)
+            {
+                mapdata[i].feature =
+                    new Feature(FeatureType.ExitLocation, mapdata[i]);
+                continue;
+            }
+            if (x == width - 1 || y == height - 1)
+            {
+                mapdata[i].feature =
+                    new Feature(FeatureType.ExitLocation, mapdata[i]);
+                continue;
+            }
 
             if (x == 11 && y == 10)
             {

@@ -16,6 +16,9 @@ public class WorldGenerator : MonoBehaviour
 
     private Action cbOnWorldCreated;
 
+    private int playerWorldX;
+    private int playerWorldY;
+
     public static WorldGenerator Instance { get; private set; }
     private void Awake()
     {
@@ -34,6 +37,9 @@ public class WorldGenerator : MonoBehaviour
     {
         locationGenerator = FindObjectOfType<LocationGenerator>();
         InitializeItemDatabase();
+
+        FindObjectOfType<PlayerController>()
+            .RegisterOnPlayerGoToExitTile(OnPlayerGoToExitTile);
     }
 
     private void Start()
@@ -43,13 +49,40 @@ public class WorldGenerator : MonoBehaviour
 
     private void StartGenerateWorld()
     {
+        playerWorldX = width / 2;
+        playerWorldY = 0;
+
         CurrentMapType.SetCurrentMapType(MapType.World);
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
         CreateWorldMapData();
-        PlayerInstantiation.CreatePlayer(width / 2, 0);
+
+        PlayerInstantiation.CreatePlayer(playerWorldX, playerWorldY);
+        AIEntityInstantiation.CreateAIEntities(width, height);
+
+        Random.state = oldState;
+
+        cbOnWorldCreated?.Invoke();
+    }
+
+    private void ReturnToWorld(Player player)
+    {
+        CurrentMapType.SetCurrentMapType(MapType.World);
+
+        // First need to destroy all current info
+        DataLoader.ClearAllOldData();
+
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
+        //CreateWorldMapData();
+
+        PlayerInstantiation.TransitionPlayerToMap(
+            player, playerWorldX, playerWorldY);
+
+        // TODO: generate entites in correct places, not randomly
         AIEntityInstantiation.CreateAIEntities(width, height);
 
         Random.state = oldState;
@@ -79,17 +112,21 @@ public class WorldGenerator : MonoBehaviour
     {
         // Get player location
         Player player = FindObjectOfType<PlayerController>().GetPlayer();
-        int playerX = player.X;
-        int playerY = player.Y;
 
         TileType tileType = player.T.type;
+
+        // Save world location for now
+        playerWorldX = player.X;
+        playerWorldY = player.Y;
 
         // First need to destroy all current info
         DataLoader.ClearAllOldData();
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, width, height, playerX, playerY, tileType, player);
+            seed, width, height,
+            playerWorldX, playerWorldY,
+            tileType, player);
     }
 
     private void CreateWorldMapData()
@@ -153,6 +190,11 @@ public class WorldGenerator : MonoBehaviour
     public void OnDataLoaded()
     {
         cbOnWorldCreated?.Invoke();
+    }
+
+    private void OnPlayerGoToExitTile(Player player)
+    {
+        ReturnToWorld(player);
     }
 
     public void RegisterOnWorldCreated(Action callbackfunc)

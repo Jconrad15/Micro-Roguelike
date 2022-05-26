@@ -35,8 +35,13 @@ public class RawMapData
         for (int i = 0; i < rawMap.Length; i++)
         {
             rawMap[i] = (TileType)categories[i];
-            // Switch any walls to open area tiles
-            if (rawMap[i] == TileType.Wall) rawMap[i] = TileType.OpenArea;
+
+            // Switch any walls and exit tiles to open area tiles
+            if (rawMap[i] == TileType.Wall)
+            {
+                rawMap[i] = TileType.OpenArea;
+                continue;
+            }
         }
 
         return (rawMap, seedIndicies);
@@ -95,8 +100,6 @@ public class RawMapData
         {
             (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
             // Translate coordinate using world position
-            x = x - (width / 2) + worldX;
-            y = y - (height / 2) + worldY;
 
             float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
             if (sample <= waterLevel)
