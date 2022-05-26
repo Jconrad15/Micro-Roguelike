@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public enum FeatureType { Door, City };
+public enum FeatureType { Door, City, Town };
 [Serializable]
 public class SerialziableFeature
 {

@@ -3906,7 +3906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48efe9c22eac5e24ea77d53cfa5f5fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 51
+  seed: 0
   width: 50
   height: 50
 --- !u!114 &1755545258

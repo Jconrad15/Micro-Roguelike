@@ -117,11 +117,11 @@ public class WorldGenerator : MonoBehaviour
 
         // Create features
 
-        // Place city features
-        PlaceCities(rawMapData);
+        // Place urban area tiles
+        PlaceUrbanCenter(rawMapData);
     }
 
-    private static void PlaceCities(RawMapData rawMapData)
+    private static void PlaceUrbanCenter(RawMapData rawMapData)
     {
         for (int i = 0; i < rawMapData.potentialCityLocations.Length; i++)
         {
@@ -130,11 +130,22 @@ public class WorldGenerator : MonoBehaviour
             // Don't place cities in the water
             if (WorldData.Instance.MapData[index].type != TileType.Water)
             {
-                WorldData.Instance.MapData[index].feature =
+                // Choose between city and town
+                if (Random.value > 0.5)
+                {
+                    WorldData.Instance.MapData[index].feature =
                     new Feature(
-                        FeatureType.City,
+                        FeatureType.Town,
                         WorldData.Instance.MapData[index]);
-                Debug.Log("CityPlaced");
+                }
+                else
+                {
+                    WorldData.Instance.MapData[index].feature =
+                        new Feature(
+                            FeatureType.City,
+                            WorldData.Instance.MapData[index]);
+                }
+                Debug.Log("UrbanAreaPlaced");
             }
         }
     }
