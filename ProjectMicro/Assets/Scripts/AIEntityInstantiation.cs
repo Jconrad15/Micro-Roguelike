@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class AIEntityInstantiation
@@ -23,6 +24,21 @@ public static class AIEntityInstantiation
 
         merchantTile.entity = merchant;
         cbOnAIEntityCreated?.Invoke(merchant);
+    }
+
+    public static void GetPreviousWorldEntities()
+    {
+        List<Entity> prevEntities =
+            AreaData.GetEntitiesForCurrentType();
+
+        foreach (Entity entity in prevEntities)
+        {
+            if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
+            {
+                dynamic obj = Convert.ChangeType(entity, entity.GetType());
+                cbOnAIEntityCreated?.Invoke(obj);
+            }
+        }
     }
 
     public static void LoadEntity(Entity loadedEntity)

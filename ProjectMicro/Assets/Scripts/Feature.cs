@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
-public enum FeatureType { Door };
+public enum FeatureType { Door, City, Town, ExitLocation };
 [Serializable]
 public class SerialziableFeature
 {

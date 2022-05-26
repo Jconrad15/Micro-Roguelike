@@ -108,7 +108,9 @@ public class SpriteDisplay : MonoBehaviour
         SpriteRenderer sr = newFeature.GetComponent<SpriteRenderer>();
         // TODO: determine which sprite to use
         // For now just use the first sprite
-        sr.sprite = s[0];
+        int selectedSpriteIndex = DetermineSprite(feature);
+
+        sr.sprite = s[selectedSpriteIndex];
 
         // Visibility
         visibilityAlphaChanger.ChangeVisibilityAlpha(feature, sr);
@@ -517,6 +519,11 @@ public class SpriteDisplay : MonoBehaviour
         return selectedSpriteIndex;
     }
 
+    private static int DetermineSprite(Feature feature)
+    {
+        return 0;
+    }
+
     private void OnEntityMove(Entity entity, Vector2 startPos)
     {
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
@@ -538,7 +545,7 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogError("What Entity is this?" +
+            Debug.LogError("What Feature is this?" +
                 "Not in entity-GO dictionary.");
         }
     }
