@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour
 {
     private readonly int zOffset = -10;
     private readonly float standardSpeed = 8f;
+    private Vector3 destinationLocation;
 
     private void OnEnable()
     {
@@ -13,6 +14,9 @@ public class CameraController : MonoBehaviour
 
         PlayerController playerController = FindObjectOfType<PlayerController>();
         playerController.RegisterOnPlayerMove(OnPlayerMove);
+
+        FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(SnapToPlayer);
+        FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(SnapToPlayer);
     }
 
     private void OnPlayerCreated(Player p)
@@ -26,10 +30,16 @@ public class CameraController : MonoBehaviour
         StartCoroutine(MoveCamera(x, y));
     }
 
+    private void SnapToPlayer()
+    {
+        StopAllCoroutines();
+        transform.position = destinationLocation;
+    }
+
     private IEnumerator MoveCamera(int x, int y)
     {
         Vector3 currentLocation = transform.position;
-        Vector3 destinationLocation = new Vector3(x, y, zOffset);
+        destinationLocation = new Vector3(x, y, zOffset);
 
         while (Vector3.Distance(destinationLocation, currentLocation) > 0.001f)
         {
