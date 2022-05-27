@@ -15,3 +15,4 @@ MonoBehaviour:
   entityName: merchant
   sprites:
   - {fileID: 21300000, guid: 1e6ba221c98fd484487ca33837b521d2, type: 3}
+  - {fileID: 21300000, guid: 47596f7d16dc48849abb9b0896331b28, type: 3}

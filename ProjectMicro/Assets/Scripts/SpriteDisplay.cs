@@ -135,7 +135,8 @@ public class SpriteDisplay : MonoBehaviour
         newEntity_GO.transform.position = new Vector2(x, y);
 
         SpriteRenderer sr = newEntity_GO.GetComponent<SpriteRenderer>();
-        sr.sprite = s[0];
+        int selectedSpriteIndex = DetermineSprite(entity);
+        sr.sprite = s[selectedSpriteIndex];
 
         // Set entity in the entity prefab components
         newEntity_GO.GetComponent<EntityClicker>().SetEntity(entity);
@@ -524,16 +525,53 @@ public class SpriteDisplay : MonoBehaviour
         return 0;
     }
 
+    private static int DetermineSprite(Entity entity)
+    {
+        int selectedSpriteIndex;
+        if (entity.type == EntityType.Player ||
+            entity.GetType() == typeof(Merchant))
+        {
+            if (entity.T.type == TileType.Water)
+            {
+                selectedSpriteIndex = 1;
+            }
+            else
+            {
+                selectedSpriteIndex = 0;
+            }
+        }
+        else
+        {
+            selectedSpriteIndex = 0;
+        }
+
+        return selectedSpriteIndex;
+    }
+
     private void OnEntityMove(Entity entity, Vector2 startPos)
     {
         if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
         {
+            // See if the sprite needs to change on move
+            SwitchSprite(entity, entity_GO);
+
             StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
         }
         else
         {
             Debug.Log("The entity's gameObject is missing");
         }
+    }
+
+    private void SwitchSprite(Entity entity, GameObject entity_GO)
+    {
+        spriteDatabase.EntityDatabase
+            .TryGetValue(entity.EntityName, out Sprite[] s);
+
+        int selectedSpriteIndex = DetermineSprite(entity);
+
+        entity_GO.GetComponent<SpriteRenderer>().sprite =
+            s[selectedSpriteIndex];
     }
 
     private void OnVisiblityChanged(Feature f)
