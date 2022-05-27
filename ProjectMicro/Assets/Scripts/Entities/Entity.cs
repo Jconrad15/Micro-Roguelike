@@ -198,8 +198,8 @@ public class Entity
             // If the trader has enough money
             if (adjustedItemCost <= m.Money)
             {
-                m.AddPurchasedItem(itemToTransfer);
-                player.RemoveSoldItem(itemToTransfer);
+                m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
+                player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
                 return true;
             }
             // The trader does not have enough money
@@ -214,8 +214,8 @@ public class Entity
             // If the player has enough money
             if (adjustedItemCost <= player.Money)
             {
-                player.AddPurchasedItem(itemToTransfer);
-                m.RemoveSoldItem(itemToTransfer);
+                player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
+                m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
                 return true;
             }
             // The trader does not have enough money
@@ -230,9 +230,9 @@ public class Entity
     /// Adds the purchased item to the inventory list and removes money.
     /// </summary>
     /// <param name="item"></param>
-    public void AddPurchasedItem(Item item)
+    public void AddPurchasedItem(Item item, int adjustedCost)
     {
-        Money -= item.baseCost;
+        Money -= adjustedCost;
         InventoryItems.Add(item);
     }
 
@@ -240,9 +240,9 @@ public class Entity
     /// Removes the sold item from the inventory list and adds money.
     /// </summary>
     /// <param name="item"></param>
-    public void RemoveSoldItem(Item item)
+    public void RemoveSoldItem(Item item, int adjustedCost)
     {
-        Money += item.baseCost;
+        Money += adjustedCost;
         _ = InventoryItems.Remove(item);
     }
 

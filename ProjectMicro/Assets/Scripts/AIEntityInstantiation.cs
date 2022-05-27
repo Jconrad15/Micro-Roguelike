@@ -43,9 +43,16 @@ public static class AIEntityInstantiation
                 }
             }
 
+            int merchantStartMoney = Random.value < 0.9 ? 
+                Random.Range(5, 12) : 
+                Random.Range(20, 30);
+            
             Tile merchantTile = WorldData.Instance.GetTile(x, y);
-            Merchant merchant =
-                new Merchant(merchantTile, EntityType.AI, 10);
+            Merchant merchant = new Merchant(
+                merchantTile, 
+                EntityType.AI,
+                MerchantType.Travelling,
+                merchantStartMoney);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
@@ -61,8 +68,11 @@ public static class AIEntityInstantiation
         Random.state = oldState;
     }
 
-    public static void CreateAIEntities(int width, int height)
+    public static void CreateAIEntities(int seed)
     {
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         // Get the area data
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
@@ -72,13 +82,18 @@ public static class AIEntityInstantiation
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
-        // Also create a Merchant
+        // TODO: different merchant types
         Tile merchantTile = areaData.GetTile(2, 1);
-        Merchant merchant =
-            new Merchant(merchantTile, EntityType.AI, 10);
+        Merchant merchant = new Merchant(
+            merchantTile,
+            EntityType.AI,
+            MerchantType.WoodCutter,
+            10);
 
         merchantTile.entity = merchant;
         cbOnAIEntityCreated?.Invoke(merchant);
+
+        Random.state = oldState;
     }
 
     public static void GetPreviousWorldEntities()

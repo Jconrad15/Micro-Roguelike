@@ -21,10 +21,11 @@ public class Merchant : AIEntity
     protected MerchantType merchantType;
     protected MerchantTypeRef typeRef;
 
-    public Merchant(Tile t, EntityType type, int startingMoney)
+    public Merchant(Tile t, EntityType type, MerchantType merchantType, int startingMoney)
         : base(t, type, startingMoney)
     {
         EntityName = "merchant";
+        this.merchantType = merchantType;
         LoadMerchantTypeRef();
         CreateMerchantStartingInventory();
     }
@@ -58,25 +59,37 @@ public class Merchant : AIEntity
 
     private void CreateMerchantStartingInventory()
     {
-        // Get one of each of preferred sell and preferred buy
-        List<string> potentialItemNames = new List<string>();
-        for (int i = 0; i < typeRef.preferredSell.Length; i++)
+        // Travelling merchants get more random items
+        if (merchantType == MerchantType.Travelling)
         {
-            potentialItemNames.Add(typeRef.preferredSell[i].itemName);
+            int itemCount = Random.Range(2, 5);
+            for (int i = 0; i < itemCount; i++)
+            {
+                InventoryItems.Add(ItemDatabase.GetRandomItem());
+            }
         }
-        for (int i = 0; i < typeRef.preferredBuy.Length; i++)
+        else
         {
-            potentialItemNames.Add(typeRef.preferredBuy[i].itemName);
-        }
+            // Get one of each of preferred sell and preferred buy
+            List<string> potentialItemNames = new List<string>();
+            for (int i = 0; i < typeRef.preferredSell.Length; i++)
+            {
+                potentialItemNames.Add(typeRef.preferredSell[i].itemName);
+            }
+            for (int i = 0; i < typeRef.preferredBuy.Length; i++)
+            {
+                potentialItemNames.Add(typeRef.preferredBuy[i].itemName);
+            }
 
-        for (int i = 0; i < potentialItemNames.Count; i++)
-        {
-            InventoryItems.Add(
-                ItemDatabase.GetItemByName(potentialItemNames[i]));
-        }
+            for (int i = 0; i < potentialItemNames.Count; i++)
+            {
+                InventoryItems.Add(
+                    ItemDatabase.GetItemByName(potentialItemNames[i]));
+            }
 
-        // Also, get one random item
-        InventoryItems.Add(ItemDatabase.GetRandomItem());
+            // Also, get one random item
+            InventoryItems.Add(ItemDatabase.GetRandomItem());
+        }
     }
 
     public int GetAdjustedCost(Item itemInQuestion)

@@ -30,7 +30,7 @@ public class LocationGenerator : MonoBehaviour
         CreateMapData(locationTileType, worldX, worldY);
         CreateFeatures();
         PlayerInstantiation.TransitionPlayerToMap(player, width/2, 1);
-        AIEntityInstantiation.CreateAIEntities(width, height);
+        AIEntityInstantiation.CreateAIEntities(seed);
 
         Random.state = oldState;
 
