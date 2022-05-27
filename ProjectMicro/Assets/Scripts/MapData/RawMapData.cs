@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RawMapData
 {
@@ -69,26 +70,155 @@ public class RawMapData
         int seed, TileType locationTileType,
         int worldX, int worldY)
     {
+        // Modify seed for this generation to relate to world pos
+        seed = (seed + worldX + worldY) * 10;
+
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         TileType[] rawMap = new TileType[width * height];
-        SimplexNoise.Seed = seed;
 
-        // Parameters with default values
-        float scale = 0.05f;
-        float waterLevel = 0.15f;
-        float grassLevel = 0.3f;
+        int maxCategoryTypes = Enum.GetNames(typeof(TileType)).Length;
+        int seedCount = width / 2;
 
+        (int[] categories, int[] seedIndicies) =
+            Voronoi.JumpFlood(
+                width, height, seed, seedCount, maxCategoryTypes);
 
+        // Determine tiletypes based on voronoi categories
+        // and location tile type
+        for (int i = 0; i < rawMap.Length; i++)
+        {
+            rawMap[i] = (TileType)categories[i];
+
+            // Switch any walls to open area tiles
+            if (rawMap[i] == TileType.Wall)
+            {
+                rawMap[i] = TileType.OpenArea;
+            }
+
+            // Change raw map based on location type in the world
+            rawMap[i] = EditTileTypeForLocation(
+                locationTileType, rawMap[i]);
+        }
+
+        Random.state = oldState;
+        return rawMap;
+    }
+
+    private static TileType EditTileTypeForLocation(
+        TileType locationTileType, TileType rawMapTile)
+    {
+        // Edit voronoi map based on world location type
+
+        // For water maps
         if (locationTileType == TileType.Water)
         {
-
+            if (rawMapTile == TileType.Forest ||
+                rawMapTile == TileType.Grass)
+            {
+                // For water maps, change forest and grass to water
+                return TileType.Water;
+            }
+            else if (rawMapTile == TileType.OpenArea)
+            {
+                // Change percentage of openarea to water
+                if (Random.value < 0.95f)
+                {
+                    return TileType.Water;
+                }
+            }
         }
+        // For forest maps
         else if (locationTileType == TileType.Forest)
         {
-
+            if (rawMapTile == TileType.Grass)
+            {
+                // Change percentage of grass to forest
+                if (Random.value < 0.5f)
+                {
+                    return TileType.Forest;
+                }
+            }
+            else if (rawMapTile == TileType.OpenArea)
+            {
+                // Change percentage of openarea to forest
+                if (Random.value < 0.5f)
+                {
+                    return TileType.Forest;
+                }
+            }
+            else if (rawMapTile == TileType.Water)
+            {
+                // Change percentage of openarea to water
+                if (Random.value < 0.2f)
+                {
+                    return TileType.Forest;
+                }
+            }
         }
+        // For openarea maps
         else if (locationTileType == TileType.OpenArea)
         {
-
+            if (rawMapTile == TileType.Grass)
+            {
+                if (Random.value < 0.2f)
+                {
+                    return TileType.OpenArea;
+                }
+            }
+            else if (rawMapTile == TileType.Forest)
+            {
+                if (Random.value < 0.8f)
+                {
+                    if (Random.value < 0.5f)
+                    {
+                        return TileType.OpenArea;
+                    }
+                    else
+                    {
+                        return TileType.Grass;
+                    }
+                }
+            }
+            else if (rawMapTile == TileType.Water)
+            {
+                if (Random.value < 0.5f)
+                {
+                    return TileType.OpenArea;
+                }
+            }
+        }
+        else if (locationTileType == TileType.Grass)
+        {
+            if (rawMapTile == TileType.OpenArea)
+            {
+                if (Random.value < 0.2f)
+                {
+                    return TileType.OpenArea;
+                }
+            }
+            else if (rawMapTile == TileType.Forest)
+            {
+                if (Random.value < 0.8f)
+                {
+                    if (Random.value < 0.5f)
+                    {
+                        return TileType.OpenArea;
+                    }
+                    else
+                    {
+                        return TileType.Grass;
+                    }
+                }
+            }
+            else if (rawMapTile == TileType.Water)
+            {
+                if (Random.value < 0.5f)
+                {
+                    return TileType.Grass;
+                }
+            }
         }
         else
         {
@@ -96,26 +226,7 @@ public class RawMapData
                 "creating location raw map");
         }
 
-        for (int i = 0; i < rawMap.Length; i++)
-        {
-            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
-            // Translate coordinate using world position
-
-            float sample = SimplexNoise.CalcPixel2D(x, y, scale) / 255f;
-            if (sample <= waterLevel)
-            {
-                rawMap[i] = TileType.Water;
-            }
-            else if (sample <= grassLevel)
-            {
-                rawMap[i] = TileType.Grass;
-            }
-            else
-            {
-                rawMap[i] = TileType.OpenArea;
-            }
-        }
-
-        return rawMap;
+        // Don't make an edit
+        return rawMapTile;
     }
 }

@@ -16,7 +16,8 @@ public class LocationGenerator : MonoBehaviour
     /// </summary>
     /// <param name="seed"></param>
     public void StartGenerateLocation(int seed, int width, int height,
-        int worldX, int worldY, TileType locationTileType, Player player)
+        int worldX, int worldY, TileType locationTileType, Player player,
+        Feature locationFeature)
     {
         CurrentMapType.SetCurrentMapType(MapType.Location);
 
@@ -27,9 +28,12 @@ public class LocationGenerator : MonoBehaviour
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        CreateMapData(locationTileType, worldX, worldY);
-        CreateFeatures();
-        PlayerInstantiation.TransitionPlayerToMap(player, width/2, 1);
+        CreateLocationMapData(locationTileType, worldX, worldY);
+        CreateExitLocationFeatures();
+        TryCreateUrban(locationFeature);
+
+        PlayerInstantiation.TransitionPlayerToMap(
+            player, width / 2, height / 2);
         AIEntityInstantiation.CreateAIEntities(seed);
 
         Random.state = oldState;
@@ -37,7 +41,51 @@ public class LocationGenerator : MonoBehaviour
         cbOnLocationCreated?.Invoke();
     }
 
-    private void CreateMapData(
+    private void TryCreateUrban(Feature tileFeature)
+    {
+        // Create urban if city or town feature present in world tile
+        if (tileFeature.type != FeatureType.City ||
+            tileFeature.type != FeatureType.Town)
+        {
+            return;
+        }
+
+        Tile[] mapData = LocationData.Instance.MapData;
+
+        int buildingCount = tileFeature.type == FeatureType.City ?
+            Random.Range(10, 20) :
+            Random.Range(5, 10);
+
+        for (int i = 0; i < buildingCount; i++)
+        {
+            TryCreateBuilding();
+        }
+
+    }
+
+    // TODO: finish creating buildings
+    private void TryCreateBuilding()
+    {
+        Tile[] mapData = LocationData.Instance.MapData;
+
+        bool isPlaced = false;
+        while (isPlaced == false)
+        {
+            // Determine location
+            int index = Random.Range(0, mapData.Length);
+
+            // return if already wall
+            if (mapData[index].type == TileType.Wall) { return; }
+
+            int sizeX = Random.Range(4, 10);
+            int sizeY = Random.Range(4, 10);
+            (int x, int y) = LocationData.Instance.GetCoordFromIndex(index);
+
+
+        }
+    }
+
+    private void CreateLocationMapData(
         TileType locationTileType, int worldX, int worldY)
     {
         LocationData.Instance.MapData = new Tile[width * height];
@@ -51,23 +99,12 @@ public class LocationGenerator : MonoBehaviour
 
         // Perform any edits to the raw base tile type map
 
-        // Set tile types
+        // Edit any tile types
         for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
         {
             (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
 
-            // Create walls
-            // For now just generate walls here
-            if ((x == 5 && y >= 5 && y <= 10) ||
-                (y == 10 && x >= 0 && x <= 10) ||
-                (y == 10 && x >= 12 && x <= width))
-            {
-                LocationData.Instance.MapData[i] =
-                    new Tile(x, y, TileType.Wall);
-                continue;
-            }
-
-            // Otherwise set to open tile
+            // Otherwise set to raw map tile
             LocationData.Instance.MapData[i] =
                 new Tile(x, y, rawMapData.rawMap[i]);
         }
@@ -77,9 +114,9 @@ public class LocationGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates the features in the location.
+    /// Creates the exit features in the location.
     /// </summary>
-    private void CreateFeatures()
+    private void CreateExitLocationFeatures()
     {
         Tile[] mapdata = LocationData.Instance.MapData;
         for (int i = 0; i < mapdata.Length; i++)
@@ -98,12 +135,6 @@ public class LocationGenerator : MonoBehaviour
                 mapdata[i].feature =
                     new Feature(FeatureType.ExitLocation, mapdata[i]);
                 continue;
-            }
-
-            if (x == 11 && y == 10)
-            {
-                mapdata[i].feature =
-                    new Feature(FeatureType.Door, mapdata[i]);
             }
         }
     }

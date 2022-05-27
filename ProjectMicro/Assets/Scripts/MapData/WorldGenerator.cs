@@ -126,7 +126,8 @@ public class WorldGenerator : MonoBehaviour
         locationGenerator.StartGenerateLocation(
             seed, width, height,
             playerWorldX, playerWorldY,
-            tileType, player);
+            tileType, player,
+            player.T.feature);
     }
 
     private void CreateWorldMapData()
