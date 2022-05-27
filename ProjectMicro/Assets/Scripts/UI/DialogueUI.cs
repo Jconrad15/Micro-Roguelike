@@ -29,6 +29,7 @@ public class DialogueUI : MonoBehaviour
     {
         FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
         FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
+        CurrentMapType.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
 
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -75,6 +76,33 @@ public class DialogueUI : MonoBehaviour
 
         // Register to player
         player.RegisterOnPlayerClicked(OnPlayerClicked);
+    }
+
+    private void UnregisterToClicksOnEntities()
+    {
+        MapType mapType = CurrentMapType.Type;
+
+        List<Entity> entities;
+        if (mapType == MapType.World)
+        {
+            entities = WorldData.Instance.Entities;
+        }
+        else
+        {
+            entities = LocationData.Instance.Entities;
+        }
+
+        // Unregister to all merchants
+        for (int i = 0; i < entities.Count; i++)
+        {
+            if (entities[i].GetType() == typeof(Merchant))
+            {
+                entities[i].UnregisterOnMerchantClicked(OnMerchantClicked);
+            }
+        }
+
+        // Unregister to player
+        player.UnregisterOnPlayerClicked(OnPlayerClicked);
     }
 
     private void OnMerchantClicked(Entity clickedEntity)
@@ -176,5 +204,10 @@ public class DialogueUI : MonoBehaviour
             }
             createdTraderItems = null;
         }
+    }
+
+    private void OnCurrentMapTypeChange(MapType mapType)
+    {
+        UnregisterToClicksOnEntities();
     }
 }

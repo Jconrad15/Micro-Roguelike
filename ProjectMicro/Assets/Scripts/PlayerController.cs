@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Player player;
 
     private Action<int, int> cbOnPlayerMoved;
+    private Action<Player> cbOnPlayerGoToExitTile;
     private Action cbOnInventoryToggled;
     //private bool isPlayerTurn = false;
 
@@ -24,6 +25,8 @@ public class PlayerController : MonoBehaviour
         p.Visibility = VisibilityLevel.Visible;
 
         VisibilityChanger.UpdateTileVisibility(player);
+        VisibilityChanger.UpdateEntityVisibility(player);
+        VisibilityChanger.UpdateFeatureVisibility(player);
     }
 
     private void OnStartTurn()
@@ -44,6 +47,18 @@ public class PlayerController : MonoBehaviour
         }
 
         cbOnPlayerMoved?.Invoke(player.X, player.Y);
+
+        // Check if player entered an exit tile
+        if (CurrentMapType.Type == MapType.Location)
+        {
+            if (player.T.feature != null)
+            {
+                if (player.T.feature.type == FeatureType.ExitLocation)
+                {
+                    cbOnPlayerGoToExitTile?.Invoke(player);
+                }
+            }
+        }
 
         // Update visibilities based on player position
         VisibilityChanger.UpdateTileVisibility(player);
@@ -127,4 +142,13 @@ public class PlayerController : MonoBehaviour
         cbOnInventoryToggled -= callbackfunc;
     }
 
+    public void RegisterOnPlayerGoToExitTile(Action<Player> callbackfunc)
+    {
+        cbOnPlayerGoToExitTile += callbackfunc;
+    }
+
+    public void UnregisterOnPlayerGoToExitTile(Action<Player> callbackfunc)
+    {
+        cbOnPlayerGoToExitTile -= callbackfunc;
+    }
 }

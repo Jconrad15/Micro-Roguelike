@@ -69,7 +69,7 @@ public class DataLoader : MonoBehaviour
 
     public static void ClearAllOldData()
     {
-        AreaData areaData = AreaData.GetAreaDataForCurrentType();
+        //AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
 /*        foreach (Entity entity in areaData.Entities)
         {
@@ -79,7 +79,7 @@ public class DataLoader : MonoBehaviour
         FindObjectOfType<SpriteDisplay>().ClearAll();
 
         //Clear old Area data from both world and location
-        WorldData.Instance.ClearAll();
+        //WorldData.Instance.ClearAll();
         LocationData.Instance.ClearAll();
     }
 }
