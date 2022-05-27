@@ -248,7 +248,7 @@ public class Entity
 
     protected void CreateCharacterName()
     {
-        CharacterName = "Character name!";
+        CharacterName = NameGenerator.GenerateName();
     }
 
 /*    public void ClearData()

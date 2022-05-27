@@ -19,46 +19,24 @@ public static class AIEntityInstantiation
 
         for (int i = 0; i < merchantCount; i++)
         {
-            int x = 0;
-            int y = 0;
-            bool isPositionDetermined = false;
-            int breakCounter = 0;
-            while (isPositionDetermined == false)
-            {
-                x = Random.Range(0, width);
-                y = Random.Range(0, height);
+            DetermineOpenLocation(WorldData.Instance, out int x, out int y);
+            if (x == int.MinValue || y == int.MinValue) { break; }
 
-                Tile testTile = WorldData.Instance.GetTile(x, y);
-                if (testTile.entity == null)
-                {
-                    isPositionDetermined = true;
-                }
-                else
-                {
-                    breakCounter++;
-                    if (breakCounter == width * height)
-                    {
-                        goto NoMoreOpenPositions;
-                    }
-                }
-            }
-
-            int merchantStartMoney = Random.value < 0.9 ? 
-                Random.Range(5, 12) : 
+            int merchantStartMoney = Random.value < 0.9 ?
+                Random.Range(5, 12) :
                 Random.Range(20, 30);
-            
+
             Tile merchantTile = WorldData.Instance.GetTile(x, y);
             Merchant merchant = new Merchant(
-                merchantTile, 
+                merchantTile,
                 EntityType.AI,
-                MerchantType.Travelling,
+                MerchantType.Traveler,
                 merchantStartMoney);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
         }
 
-        NoMoreOpenPositions:
         // Also create a dog to wander around
         Tile dogTile = WorldData.Instance.GetTile(1, 1);
         Dog dog = new Dog(dogTile, EntityType.AI, 0);
@@ -76,25 +54,66 @@ public static class AIEntityInstantiation
         // Get the area data
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
-        // For now generate a dog
+        int aiEntityCount = Random.Range(10, 15);
+        for (int i = 0; i < aiEntityCount; i++)
+        {
+            DetermineOpenLocation(areaData, out int x, out int y);
+            if (x == int.MinValue || y == int.MinValue) { break; }
+
+            int merchantStartMoney = Random.value < 0.9 ?
+                Random.Range(5, 12) :
+                Random.Range(20, 30);
+
+            Tile merchantTile = areaData.GetTile(x, y);
+            Merchant merchant = new Merchant(
+                merchantTile,
+                EntityType.AI,
+                Utility.GetRandomEnum<MerchantType>(),
+                merchantStartMoney);
+
+            merchantTile.entity = merchant;
+            cbOnAIEntityCreated?.Invoke(merchant);
+        }
+
+        // Also generate a dog
         Tile dogTile = areaData.GetTile(1, 1);
         Dog dog = new Dog(dogTile, EntityType.AI, 0);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
-        // TODO: different merchant types
-        Tile merchantTile = areaData.GetTile(2, 1);
-        Merchant merchant = new Merchant(
-            merchantTile,
-            EntityType.AI,
-            MerchantType.WoodCutter,
-            10);
-
-        merchantTile.entity = merchant;
-        cbOnAIEntityCreated?.Invoke(merchant);
-
         Random.state = oldState;
     }
+
+    private static void DetermineOpenLocation(
+        AreaData ad, out int x, out int y)
+    {
+        x = 0;
+        y = 0;
+        bool isPositionDetermined = false;
+        int breakCounter = 0;
+        while (isPositionDetermined == false)
+        {
+            x = Random.Range(0, ad.Width);
+            y = Random.Range(0, ad.Height);
+
+            Tile testTile = ad.GetTile(x, y);
+            if (testTile.entity == null)
+            {
+                isPositionDetermined = true;
+            }
+            else
+            {
+                breakCounter++;
+                if (breakCounter == ad.Width * ad.Height)
+                {
+                    x = int.MinValue;
+                    y = int.MinValue;
+                    break;
+                }
+            }
+        }
+    }
+
 
     public static void GetPreviousWorldEntities()
     {

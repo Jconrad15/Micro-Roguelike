@@ -13,19 +13,19 @@ Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
 Fresh Produce Cartographer Stables University Hatter Bank Spice 
 Shipwrights Wineries*/
 
-public enum MerchantType { WoodCutter, Miner, Blacksmith, Travelling };
+public enum MerchantType { WoodCutter, Miner, Blacksmith, Traveler };
 public class Merchant : AIEntity
 {
     private const float sellModifier = 0.2f;
     protected int waitAtTileTurns;
-    protected MerchantType merchantType;
+    public MerchantType MType { get; protected set; }
     protected MerchantTypeRef typeRef;
 
     public Merchant(Tile t, EntityType type, MerchantType merchantType, int startingMoney)
         : base(t, type, startingMoney)
     {
         EntityName = "merchant";
-        this.merchantType = merchantType;
+        MType = merchantType;
         LoadMerchantTypeRef();
         CreateMerchantStartingInventory();
     }
@@ -54,13 +54,13 @@ public class Merchant : AIEntity
             MerchantTypeDatabase.CreateDatabase();
         }
 
-        typeRef = MerchantTypeDatabase.GetMerchantTypeRef(merchantType);
+        typeRef = MerchantTypeDatabase.GetMerchantTypeRef(MType);
     }
 
     private void CreateMerchantStartingInventory()
     {
         // Travelling merchants get more random items
-        if (merchantType == MerchantType.Travelling)
+        if (MType == MerchantType.Traveler)
         {
             int itemCount = Random.Range(2, 5);
             for (int i = 0; i < itemCount; i++)

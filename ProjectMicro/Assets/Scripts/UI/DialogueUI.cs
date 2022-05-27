@@ -15,7 +15,9 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI playerMoneyText;
     [SerializeField]
-    private TextMeshProUGUI traderMoneyText;
+    private TextMeshProUGUI merchantMoneyText;
+    [SerializeField]
+    private TextMeshProUGUI entityTitleText;
 
     [SerializeField]
     private GameObject tradeItemPrefab;
@@ -73,7 +75,6 @@ public class DialogueUI : MonoBehaviour
                 entities[i].RegisterOnMerchantClicked(OnMerchantClicked);
             }
         }
-
     }
 
     private void UnregisterToClicksOnEntities()
@@ -98,7 +99,6 @@ public class DialogueUI : MonoBehaviour
                 entities[i].UnregisterOnMerchantClicked(OnMerchantClicked);
             }
         }
-
     }
 
     private void OnMerchantClicked(Entity clickedEntity)
@@ -114,8 +114,18 @@ public class DialogueUI : MonoBehaviour
 
         // Show player and trader money
         UpdateShownMoney(clickedEntity);
-
+        UpdateTitle(clickedEntity);
         dialogueArea.SetActive(true);
+    }
+
+    private void UpdateTitle(Entity clickedEntity)
+    {
+        Merchant merchant = (Merchant)clickedEntity;
+
+        string text = merchant.CharacterName + " the " +
+                      merchant.MType.ToString();
+
+        entityTitleText.SetText(text);
     }
 
     private void UpdateTraderPlayerItems(Entity clickedEntity)
@@ -163,7 +173,7 @@ public class DialogueUI : MonoBehaviour
     private void UpdateShownMoney(Entity clickedEntity)
     {
         playerMoneyText.SetText("$" + player.Money.ToString());
-        traderMoneyText.SetText("$" + clickedEntity.Money.ToString());
+        merchantMoneyText.SetText("$" + clickedEntity.Money.ToString());
     }
 
     public void Hide()
