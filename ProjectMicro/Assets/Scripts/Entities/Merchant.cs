@@ -80,7 +80,7 @@ public class Merchant : AIEntity
         InventoryItems.Add(ItemDatabase.GetRandomItem());
     }
 
-    private int GetAdjustedCost(Item itemInQuestion)
+    public int GetAdjustedCost(Item itemInQuestion)
     {
         if (itemInQuestion == null) { return int.MaxValue; }
 

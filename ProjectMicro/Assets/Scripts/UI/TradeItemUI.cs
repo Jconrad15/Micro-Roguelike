@@ -31,7 +31,11 @@ public class TradeItemUI : MonoBehaviour
         this.isPlayerItem = isPlayerItem;
 
         itemNameText.SetText(item.itemName);
-        buttonText.SetText("$" + item.baseCost.ToString());
+
+        Merchant m = (Merchant)clickedEntity;
+        int adjustedCost = m.GetAdjustedCost(item);
+
+        buttonText.SetText("$" + adjustedCost.ToString());
 
         // Setup the button
         button.onClick.AddListener(OnButtonClicked);

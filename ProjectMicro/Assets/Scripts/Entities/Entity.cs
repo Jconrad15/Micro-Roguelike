@@ -189,13 +189,16 @@ public class Entity
     public bool TryTransferItem(Item itemToTransfer, Player player,
         Entity clickedEntity, bool isPlayerItem)
     {
+        Merchant m = (Merchant)clickedEntity;
+        int adjustedItemCost = m.GetAdjustedCost(itemToTransfer);
+
         // Transfer to the trader if possible
         if (isPlayerItem)
         {
             // If the trader has enough money
-            if (itemToTransfer.baseCost <= clickedEntity.Money)
+            if (adjustedItemCost <= m.Money)
             {
-                clickedEntity.AddPurchasedItem(itemToTransfer);
+                m.AddPurchasedItem(itemToTransfer);
                 player.RemoveSoldItem(itemToTransfer);
                 return true;
             }
@@ -209,10 +212,10 @@ public class Entity
         else
         {
             // If the player has enough money
-            if (itemToTransfer.baseCost <= player.Money)
+            if (adjustedItemCost <= player.Money)
             {
                 player.AddPurchasedItem(itemToTransfer);
-                clickedEntity.RemoveSoldItem(itemToTransfer);
+                m.RemoveSoldItem(itemToTransfer);
                 return true;
             }
             // The trader does not have enough money
