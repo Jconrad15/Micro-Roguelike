@@ -60,7 +60,7 @@ public class WorldGenerator : MonoBehaviour
         CreateWorldMapData();
 
         PlayerInstantiation.CreatePlayer(playerWorldX, playerWorldY);
-        AIEntityInstantiation.CreateAIEntities(width, height);
+        AIEntityInstantiation.CreateInitialWorldEntities(seed);
 
         Random.state = oldState;
 
@@ -182,7 +182,6 @@ public class WorldGenerator : MonoBehaviour
                             FeatureType.City,
                             WorldData.Instance.MapData[index]);
                 }
-                Debug.Log("UrbanAreaPlaced");
             }
         }
     }

@@ -1,10 +1,65 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public static class AIEntityInstantiation
 {
     private static Action<AIEntity> cbOnAIEntityCreated;
+
+    public static void CreateInitialWorldEntities(int seed)
+    {
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
+        // Create travelling merchants
+        int width = WorldData.Instance.Width;
+        int height = WorldData.Instance.Height;
+        int merchantCount = 10;
+
+        for (int i = 0; i < merchantCount; i++)
+        {
+            int x = 0;
+            int y = 0;
+            bool isPositionDetermined = false;
+            int breakCounter = 0;
+            while (isPositionDetermined == false)
+            {
+                x = Random.Range(0, width);
+                y = Random.Range(0, height);
+
+                Tile testTile = WorldData.Instance.GetTile(x, y);
+                if (testTile.entity == null)
+                {
+                    isPositionDetermined = true;
+                }
+                else
+                {
+                    breakCounter++;
+                    if (breakCounter == width * height)
+                    {
+                        goto NoMoreOpenPositions;
+                    }
+                }
+            }
+
+            Tile merchantTile = WorldData.Instance.GetTile(x, y);
+            Merchant merchant =
+                new Merchant(merchantTile, EntityType.AI, 10);
+
+            merchantTile.entity = merchant;
+            cbOnAIEntityCreated?.Invoke(merchant);
+        }
+
+        NoMoreOpenPositions:
+        // Also create a dog to wander around
+        Tile dogTile = WorldData.Instance.GetTile(1, 1);
+        Dog dog = new Dog(dogTile, EntityType.AI, 0);
+        dogTile.entity = dog;
+        cbOnAIEntityCreated?.Invoke(dog);
+
+        Random.state = oldState;
+    }
 
     public static void CreateAIEntities(int width, int height)
     {

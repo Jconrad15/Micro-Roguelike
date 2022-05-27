@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO: Future genereal ideas:
-// Fisher, Miner, Botanist, Armorer, Carpenter, Blacksmith,
+// Fisher, Botanist, Armorer, Carpenter,
 // LeatherWorker, Weaver, Goldsmith, Cook, Alchemist
-/*Blacksmith shop, Enchanter's shop, Butcher, Bookstore, Tailor, Barber, Fletcher,
-Cooper, Farrier, Carpenter, Candlemaker Baker Haberdashery Fabric shop Weaver
-Leatherworker Cobbler Tanner Apothecary Alchemist supply store Flower boutique 
-Clothing boutique Saloon Potion Brewery Clockwork repair Tea House Glassblower
-Pottery shop Porcelain shop Florist Tinker Thatcher Messenger service 
-Magic bookstore Inn Tavern Weaponsmith Armorer Food carts Grocery store Fish Market
-Fresh Produce Cartographer Stables University Hatter Bank Spice shop Lumber yard
-Brewery Adventuring Supply Store Art Emporium Dye Maker Shipwrights Wineries*/
+/*Enchanter, Butcher, Bookstore, Tailor, Barber, Fletcher,
+Cooper, Farrier, Carpenter, Candlemaker Baker Weaver
+Leatherworker Cobbler Tanner Apothecary Alchemist 
+Clothing Brewery Glassblower Pottery Porcelain Florist 
+Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
+Fresh Produce Cartographer Stables University Hatter Bank Spice 
+Shipwrights Wineries*/
 
-public enum MerchantType { WoodCutter };
+public enum MerchantType { WoodCutter, Miner, Blacksmith, Travelling };
 public class Merchant : AIEntity
 {
     private const float sellModifier = 0.2f;
