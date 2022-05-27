@@ -74,8 +74,6 @@ public class DialogueUI : MonoBehaviour
             }
         }
 
-        // Register to player
-        player.RegisterOnPlayerClicked(OnPlayerClicked);
     }
 
     private void UnregisterToClicksOnEntities()
@@ -101,18 +99,11 @@ public class DialogueUI : MonoBehaviour
             }
         }
 
-        // Unregister to player
-        player.UnregisterOnPlayerClicked(OnPlayerClicked);
     }
 
     private void OnMerchantClicked(Entity clickedEntity)
     {
         Show(clickedEntity);
-    }
-
-    private void OnPlayerClicked(Entity playerEntity)
-    {
-        Debug.Log("ClickedOnPlayer");
     }
 
     public void Show(Entity clickedEntity)

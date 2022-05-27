@@ -15,13 +15,24 @@ public class InventoryUI : MonoBehaviour
     private List<GameObject> inventoryItems = new List<GameObject>();
 
     // Start is called before the first frame update
-    private void Start()
+    private void OnEnable()
     {
         playerController = FindObjectOfType<PlayerController>();
         playerController.RegisterOnInventoryToggled(OnInventoryToggled);
+        PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
         // Start hidden
         Hide();
+    }
+
+    private void OnPlayerCreated(Player p)
+    {
+        p.RegisterOnPlayerClicked(OnPlayerClicked);
+    }
+
+    private void OnPlayerClicked(Entity obj)
+    {
+        OnInventoryToggled();
     }
 
     private void OnInventoryToggled()
