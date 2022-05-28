@@ -98,7 +98,7 @@ public class SaveSerial : MonoBehaviour
             {
                 x = mapData[i].x,
                 y = mapData[i].y,
-                type = mapData[i].type,
+                type = mapData[i].Type,
                 entity = e,
                 feature = f,
                 item = mapData[i].item,

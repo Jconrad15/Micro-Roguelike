@@ -159,7 +159,7 @@ public class SpriteDisplay : MonoBehaviour
         }
 
         if (spriteDatabase.TileDatabase
-            .TryGetValue(tile.type, out Sprite[] s) == false)
+            .TryGetValue(tile.Type, out Sprite[] s) == false)
         {
             Debug.LogError("No sprites for this tile type");
             return;
@@ -191,7 +191,7 @@ public class SpriteDisplay : MonoBehaviour
     {
         int selectedSpriteIndex = -1;
         // Determine which sprite to use
-        if (tile.type == TileType.Wall)
+        if (tile.Type == TileType.Wall)
         {
             // WALL SPRITE ORDER DETERMINED BY SCRIPTABLE OBJECT
 
@@ -201,7 +201,7 @@ public class SpriteDisplay : MonoBehaviour
             {
                 if (tile.neighbors[i] != null)
                 {
-                    if (tile.neighbors[i].type == TileType.Wall)
+                    if (tile.neighbors[i].Type == TileType.Wall)
                     {
                         isNeighborWall[i] = true;
                     }
@@ -251,18 +251,18 @@ public class SpriteDisplay : MonoBehaviour
                                     currentTile.neighbors[0].neighbors;
 
                                 // Check northern neighbor's eastern neighbor
-                                if (neighborNeighbors[1].type == TileType.Wall)
+                                if (neighborNeighbors[1].Type == TileType.Wall)
                                 {
                                     selectedSpriteIndex = 3;
                                     isDetermined = true;
                                 }
                                 // Check northern neighbor's western neighbor
-                                else if (neighborNeighbors[3].type == TileType.Wall)
+                                else if (neighborNeighbors[3].Type == TileType.Wall)
                                 {
                                     selectedSpriteIndex = 4;
                                     isDetermined = true;
                                 }
-                                else if (currentTile.neighbors[0].type != TileType.Wall)
+                                else if (currentTile.neighbors[0].Type != TileType.Wall)
                                 {
                                     // if northern tile is not a wall, then set this 
                                     // tile to be east west wall
@@ -335,7 +335,7 @@ public class SpriteDisplay : MonoBehaviour
                 }
             }
         }
-        else if (tile.type == TileType.Water)
+        else if (tile.Type == TileType.Water)
         {
             // WATER SPRITE ORDER DETERMINED BY SCRIPTABLE OBJECT
 
@@ -345,7 +345,7 @@ public class SpriteDisplay : MonoBehaviour
             {
                 if (tile.neighbors[i] != null)
                 {
-                    if (tile.neighbors[i].type == TileType.Water)
+                    if (tile.neighbors[i].Type == TileType.Water)
                     {
                         isNeighborWater[i] = true;
                     }
@@ -531,7 +531,7 @@ public class SpriteDisplay : MonoBehaviour
         if (entity.type == EntityType.Player ||
             entity.GetType() == typeof(Merchant))
         {
-            if (entity.T.type == TileType.Water)
+            if (entity.T.Type == TileType.Water)
             {
                 selectedSpriteIndex = 1;
             }

@@ -113,7 +113,7 @@ public class WorldGenerator : MonoBehaviour
         // Get player location
         Player player = FindObjectOfType<PlayerController>().GetPlayer();
 
-        TileType tileType = player.T.type;
+        TileType tileType = player.T.Type;
 
         // Save world location for now
         playerWorldX = player.X;
@@ -166,7 +166,7 @@ public class WorldGenerator : MonoBehaviour
             int index = rawMapData.potentialCityLocations[i];
 
             // Don't place cities in the water
-            if (WorldData.Instance.MapData[index].type != TileType.Water)
+            if (WorldData.Instance.MapData[index].Type != TileType.Water)
             {
                 // Choose between city and town
                 if (Random.value > 0.5)

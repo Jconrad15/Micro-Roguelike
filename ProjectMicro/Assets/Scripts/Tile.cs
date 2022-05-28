@@ -23,7 +23,19 @@ public class Tile
     public int x;
     public int y;
 
-    public TileType type;
+    private TileType type;
+    public TileType Type
+    {
+        get => type;
+        set
+        {
+            type = value;
+            if (value == TileType.Wall)
+            {
+                isWalkable = false;
+            }
+        }
+    }
     public Entity entity;
     public Feature feature;
     public Item item;
@@ -49,7 +61,7 @@ public class Tile
     {
         this.x = x;
         this.y = y;
-        this.type = type;
+        this.Type = type;
 
         // Start with some null data
         entity = null;
@@ -70,7 +82,7 @@ public class Tile
     {
         this.x = x;
         this.y = y;
-        this.type = type;
+        this.Type = type;
         this.entity = entity;
         this.feature = feature;
         this.item = item;
