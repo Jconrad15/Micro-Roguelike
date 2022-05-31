@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private readonly int zOffset = -10;
-    private readonly float standardSpeed = 6f;
+    private readonly float standardSpeed = 7f;
     private Vector3 destinationLocation;
 
     private void OnEnable()

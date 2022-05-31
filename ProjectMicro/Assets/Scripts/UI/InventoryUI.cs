@@ -6,13 +6,16 @@ using TMPro;
 public class InventoryUI : MonoBehaviour
 {
     private PlayerController playerController;
-    
+    private Player player;
+
     [SerializeField]
     private GameObject inventoryArea;
     [SerializeField]
     private GameObject itemArea;
     [SerializeField]
     private GameObject itemPrefab;
+    [SerializeField]
+    private TextMeshProUGUI moneyText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -23,6 +26,7 @@ public class InventoryUI : MonoBehaviour
         playerController.RegisterOnInventoryToggled(OnInventoryToggled);
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
+
         // Start hidden
         Hide();
     }
@@ -30,6 +34,7 @@ public class InventoryUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         p.RegisterOnPlayerClicked(OnPlayerClicked);
+        player = p;
     }
 
     private void OnPlayerClicked(Entity obj)
@@ -54,11 +59,12 @@ public class InventoryUI : MonoBehaviour
     {
         inventoryArea.SetActive(true);
         CreateUIItems();
+        moneyText.SetText("$" + player.Money.ToString());
     }
 
     private void CreateUIItems()
     {
-        List<Item> items = playerController.GetPlayer().InventoryItems;
+        List<Item> items = player.InventoryItems;
         foreach (Item item in items)
         {
             GameObject item_GO =
