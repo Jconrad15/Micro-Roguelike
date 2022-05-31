@@ -14,7 +14,7 @@ public class TitlePurchaser : MonoBehaviour
 
     private Player player;
 
-    private int titleCost = 20;
+    private readonly int titleCost = 20;
 
     void Start()
     {
@@ -50,7 +50,7 @@ public class TitlePurchaser : MonoBehaviour
         if (isPurchased)
         {
             // If purchased
-            Debug.Log("You win");
+            FindObjectOfType<VictoryScreen>().Victory();
         }
     }
 
