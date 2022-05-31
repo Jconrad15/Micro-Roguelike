@@ -583,8 +583,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogError("What Feature is this?" +
-                "Not in entity-GO dictionary.");
+/*            Debug.LogError("What Feature is this?" +
+                "Not in entity-GO dictionary.");*/
         }
     }
 
@@ -611,8 +611,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogError("What tile is this?" +
-                "Not in tile-GO dictionary.");
+/*            Debug.LogError("What tile is this?" +
+                "Not in tile-GO dictionary.");*/
         }
     }
 
