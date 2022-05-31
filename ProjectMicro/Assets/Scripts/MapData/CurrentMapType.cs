@@ -10,7 +10,7 @@ public static class CurrentMapType
     {
         if (Type != type)
         {
-            cbOnCurrentMapTypeChange?.Invoke(Type);
+            cbOnCurrentMapTypeChange?.Invoke(type);
         }
 
         Type = type;
