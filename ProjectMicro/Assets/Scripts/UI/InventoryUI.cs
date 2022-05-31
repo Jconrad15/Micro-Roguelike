@@ -10,6 +10,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField]
     private GameObject inventoryArea;
     [SerializeField]
+    private GameObject itemArea;
+    [SerializeField]
     private GameObject itemPrefab;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
@@ -59,8 +61,12 @@ public class InventoryUI : MonoBehaviour
         List<Item> items = playerController.GetPlayer().InventoryItems;
         foreach (Item item in items)
         {
-            GameObject item_GO = Instantiate(itemPrefab, inventoryArea.transform);
-            item_GO.GetComponentInChildren<TextMeshProUGUI>().SetText(item.itemName);
+            GameObject item_GO =
+                Instantiate(itemPrefab, itemArea.transform);
+            
+            item_GO.GetComponentInChildren<TextMeshProUGUI>()
+                .SetText(item.itemName);
+            
             inventoryItems.Add(item_GO);
         }
     }

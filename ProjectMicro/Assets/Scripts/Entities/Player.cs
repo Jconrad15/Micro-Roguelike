@@ -4,11 +4,15 @@ using System.Collections.Generic;
 [Serializable]
 public class Player : Entity
 {
+    public enum PlayerTitle { Traveller, Merchant };
+    public PlayerTitle Title { get; protected set; }
+
     // Contructor for new player
     public Player(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
         EntityName = "player";
+        Title = PlayerTitle.Traveller;
     }
 
     // Constructor for loaded player
@@ -27,4 +31,17 @@ public class Player : Entity
             T = t;
         }
     }
+
+    public bool TryPurchaseTitle(int cost)
+    {
+        if (Money >= cost)
+        {
+            Money -= cost;
+            Title = PlayerTitle.Merchant;
+            return true;
+        }
+
+        return false;
+    }
+
 }
