@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private readonly int zOffset = -10;
-    private readonly float standardSpeed = 8f;
+    private readonly float standardSpeed = 6f;
     private Vector3 destinationLocation;
 
     private void OnEnable()
@@ -48,7 +48,7 @@ public class CameraController : MonoBehaviour
                 currentLocation, destinationLocation, step);
 
             transform.position = currentLocation;
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         transform.position = destinationLocation;

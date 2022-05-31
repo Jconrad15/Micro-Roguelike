@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         {
             playerMoved = TryPlayerInputMovement();
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         cbOnPlayerMoved?.Invoke(player.X, player.Y);

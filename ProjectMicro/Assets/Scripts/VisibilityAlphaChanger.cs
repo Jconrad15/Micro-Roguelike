@@ -7,7 +7,7 @@ public class VisibilityAlphaChanger: MonoBehaviour
     private static Dictionary<SpriteRenderer, Coroutine> currentlyLerpingSRs =
         new Dictionary<SpriteRenderer, Coroutine>();
 
-    private readonly float alphaChangeSpeed = 0.3f;
+    private readonly float alphaChangeSpeed = 0.8f;
 
     private void OnEnable()
     {
@@ -62,7 +62,7 @@ public class VisibilityAlphaChanger: MonoBehaviour
             currentColor.a = Mathf.Lerp(currentColor.a, targetColor.a, t);
             sr.color = currentColor;
             t += alphaChangeSpeed * Time.deltaTime;
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         currentlyLerpingSRs.Remove(sr);

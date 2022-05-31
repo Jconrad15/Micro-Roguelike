@@ -52,7 +52,7 @@ public class NotificationUI : MonoBehaviour
         while (canvasGroup.alpha > 0)
         {
             canvasGroup.alpha -= Time.deltaTime * fadeSpeed;
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         Hide();

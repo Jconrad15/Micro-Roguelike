@@ -13,7 +13,7 @@ public class SpriteDisplay : MonoBehaviour
     private GameObject entitiesContainer;
     private GameObject featuresContainer;
 
-    private readonly float moveSpeed = 10f;
+    private readonly float moveSpeed = 8f;
 
     private Dictionary<Tile, GameObject> placedTiles =
         new Dictionary<Tile, GameObject>();
@@ -660,7 +660,7 @@ public class SpriteDisplay : MonoBehaviour
                 currentLocation, destinationLocation, step);
 
             entity_GO.transform.position = currentLocation;
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         entity_GO.transform.position = destinationLocation;
