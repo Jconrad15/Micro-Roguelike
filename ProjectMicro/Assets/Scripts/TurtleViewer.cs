@@ -35,7 +35,6 @@ public class TurtleViewer : MonoBehaviour
 
     private void HideTurtle()
     {
-        Debug.Log("HideTurtle");
         Color c = sr.color;
         c.a = 0;
         sr.color = c;

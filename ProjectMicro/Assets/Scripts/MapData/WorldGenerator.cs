@@ -44,6 +44,8 @@ public class WorldGenerator : MonoBehaviour
 
     private void Start()
     {
+        // For now, just randomize the seed
+        seed = Random.Range(0, 10000);
         StartGenerateWorld();
     }
 
