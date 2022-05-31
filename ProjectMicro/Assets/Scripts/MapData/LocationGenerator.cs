@@ -37,7 +37,7 @@ public class LocationGenerator : MonoBehaviour
 
         PlayerInstantiation.TransitionPlayerToMap(
             player, width / 2, height / 2);
-        AIEntityInstantiation.CreateAIEntities(seed);
+        AIEntityInstantiation.CreateLocationAIEntities(seed);
 
         Random.state = oldState;
 
@@ -109,22 +109,22 @@ public class LocationGenerator : MonoBehaviour
                             //Check if at edge of map
                             if (localNeighborTile.x >= LocationData.Instance.Width - 2)
                             {
-                                doorMaxX = x + 1;
+                                doorMaxX = x;
                                 continue; 
                             }
                             if (localNeighborTile.x <= 2)
                             {
-                                doorMinX = x + 1;
+                                doorMinX = x;
                                 continue;
                             }
                             if (localNeighborTile.y >= LocationData.Instance.Height - 2)
                             { 
-                                doorMaxY = y + 1;
+                                doorMaxY = y;
                                 continue; 
                             }
                             if (localNeighborTile.y <= 2)
                             {
-                                doorMinY = y + 1;
+                                doorMinY = y;
                                 continue;
                             }
 
@@ -197,22 +197,22 @@ public class LocationGenerator : MonoBehaviour
                     List<bool> isIndoorNeighbor = new List<bool>();
 
                     int index1 = LocationData.Instance.GetIndexFromCoord(x, y + 1);
-                    if (index1 >= 0 && index1 < mapData.Length)
+                    if (index1 >= 0 && index1 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index1]);
                     }
                     int index2 = LocationData.Instance.GetIndexFromCoord(x + 1, y);
-                    if (index1 >= 0 && index1 < mapData.Length)
+                    if (index2 >= 0 && index2 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index2]);
                     }
                     int index3 = LocationData.Instance.GetIndexFromCoord(x, y - 1);
-                    if (index1 >= 0 && index1 < mapData.Length)
+                    if (index3 >= 0 && index3 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index3]);
                     }
                     int index4 = LocationData.Instance.GetIndexFromCoord(x - 1, y);
-                    if (index1 >= 0 && index1 < mapData.Length)
+                    if (index4 >= 0 && index4 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index4]);
                     }
@@ -223,8 +223,18 @@ public class LocationGenerator : MonoBehaviour
                         // if neighbor is outdoor, then this should be a wall
                         if (n == false)
                         {
-                            mapData[index].Type = TileType.Wall;
-                            break;
+                            // Place wall here, but only 90% of the time
+                            if (Random.value < 0.9f)
+                            {
+
+                                mapData[index].Type = TileType.Wall;
+                                break;
+                            }
+                            else
+                            {
+                                mapData[index].Type = TileType.OpenArea;
+                                break;
+                            }
                         }
                         else
                         {

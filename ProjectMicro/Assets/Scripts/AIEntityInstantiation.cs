@@ -46,7 +46,7 @@ public static class AIEntityInstantiation
         Random.state = oldState;
     }
 
-    public static void CreateAIEntities(int seed)
+    public static void CreateLocationAIEntities(int seed)
     {
         Random.State oldState = Random.state;
         Random.InitState(seed);
@@ -54,7 +54,7 @@ public static class AIEntityInstantiation
         // Get the area data
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
-        int aiEntityCount = Random.Range(10, 15);
+        int aiEntityCount = Random.Range(2, 6);
         for (int i = 0; i < aiEntityCount; i++)
         {
             DetermineOpenLocation(areaData, out int x, out int y);
