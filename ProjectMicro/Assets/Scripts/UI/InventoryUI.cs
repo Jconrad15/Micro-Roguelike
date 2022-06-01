@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class InventoryUI : MonoBehaviour
@@ -16,6 +17,8 @@ public class InventoryUI : MonoBehaviour
     private GameObject itemPrefab;
     [SerializeField]
     private TextMeshProUGUI moneyText;
+    [SerializeField]
+    private TextMeshProUGUI foodLevelText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -26,7 +29,6 @@ public class InventoryUI : MonoBehaviour
         playerController.RegisterOnInventoryToggled(OnInventoryToggled);
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
-
         // Start hidden
         Hide();
     }
@@ -34,12 +36,25 @@ public class InventoryUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         p.RegisterOnPlayerClicked(OnPlayerClicked);
+        p.RegisterOnFoodLevelChanged(OnFoodLevelChanged);
         player = p;
     }
 
     private void OnPlayerClicked(Entity obj)
     {
         OnInventoryToggled();
+    }
+
+    private void OnFoodLevelChanged(int foodLevel)
+    {
+        UpdateFoodLevelText(foodLevel);
+    }
+
+    private void UpdateFoodLevelText(int foodLevel)
+    {
+        foodLevelText.SetText(
+            foodLevel.ToString() + "/" +
+            player.FoodLevelMax.ToString());
     }
 
     private void OnInventoryToggled()
@@ -60,6 +75,7 @@ public class InventoryUI : MonoBehaviour
         inventoryArea.SetActive(true);
         CreateUIItems();
         moneyText.SetText("$" + player.Money.ToString());
+        UpdateFoodLevelText(player.FoodLevel);
     }
 
     private void CreateUIItems()
@@ -72,8 +88,24 @@ public class InventoryUI : MonoBehaviour
             
             item_GO.GetComponentInChildren<TextMeshProUGUI>()
                 .SetText(item.itemName);
-            
+
+            // Add button function
+            item_GO.GetComponent<Button>()
+                .onClick.AddListener(() => OnInventoryItemClicked(item));
+
             inventoryItems.Add(item_GO);
+        }
+    }
+
+    private void OnInventoryItemClicked(Item item)
+    {
+        // Check food items
+        if (item.itemName == "Food")
+        {
+            if (player.TryEatFood(item))
+            {
+                RefreshInventoryItems();
+            }
         }
     }
 
@@ -88,5 +120,19 @@ public class InventoryUI : MonoBehaviour
             }
         }
         inventoryItems.Clear();
+    }
+
+    private void RefreshInventoryItems()
+    {
+        foreach (GameObject item in inventoryItems)
+        {
+            if (item != null)
+            {
+                Destroy(item);
+            }
+        }
+        inventoryItems.Clear();
+
+        CreateUIItems();
     }
 }
