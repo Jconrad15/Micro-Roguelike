@@ -52,7 +52,7 @@ public class WorldGenerator : MonoBehaviour
     private void StartGenerateWorld()
     {
         playerWorldX = width / 2;
-        playerWorldY = 0;
+        playerWorldY = height / 2;
 
         CurrentMapType.SetCurrentMapType(MapType.World);
 
