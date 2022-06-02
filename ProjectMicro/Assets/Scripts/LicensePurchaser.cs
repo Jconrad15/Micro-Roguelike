@@ -19,25 +19,26 @@ public class LicensePurchaser : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<PlayerController>().GetPlayer();
-        SetTitles();
+        player.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
+        SetLicenses();
     }
 
     private void OnEnable()
     {
-        SetTitles();
+        SetLicenses();
     }
 
-    private void SetTitles()
+    private void SetLicenses()
     {
         if (player == null) { return; }
 
-        currentLicense.SetText(player.Title.ToString());
+        currentLicense.SetText(player.License.ToString());
 
         // Set next title
-        if (player.Title == Player.PlayerTitle.Traveller)
+        if (player.License == Player.PlayerLicense.Traveller)
         {
             nextLicense.SetText(
-                Player.PlayerTitle.Merchant.ToString() + " License");
+                Player.PlayerLicense.Merchant.ToString() + " License");
         }
 
         costText.SetText("$" + titleCost.ToString());
@@ -54,4 +55,8 @@ public class LicensePurchaser : MonoBehaviour
         }
     }
 
+    private void OnPlayerLicenseChanged(Player.PlayerLicense newLicense)
+    {
+
+    }
 }

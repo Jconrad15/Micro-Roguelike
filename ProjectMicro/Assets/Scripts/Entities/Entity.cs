@@ -45,7 +45,6 @@ public class Entity
 
     public List<Item> InventoryItems { get; protected set; }
 
-    // TODO: for now just have everyone start with 10 money
     public int Money { get; protected set; }
 
     public EntityType type;

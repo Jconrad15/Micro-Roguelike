@@ -17,6 +17,8 @@ public class InventoryUI : MonoBehaviour
     private GameObject itemPrefab;
     [SerializeField]
     private TextMeshProUGUI moneyText;
+    [SerializeField]
+    private TextMeshProUGUI tributeDueText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -34,6 +36,8 @@ public class InventoryUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         p.RegisterOnPlayerClicked(OnPlayerClicked);
+        p.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
+        p.RegisterOnMoneyChanged(OnPlayerMoneyChanged);
         player = p;
     }
 
@@ -59,7 +63,25 @@ public class InventoryUI : MonoBehaviour
     {
         inventoryArea.SetActive(true);
         CreateUIItems();
+        UpdateMoneyText();
+        UpdateTributeText();
+    }
+
+    private void UpdateMoneyText()
+    {
         moneyText.SetText("$" + player.Money.ToString());
+    }
+
+    private void UpdateMoneyText(int money)
+    {
+        moneyText.SetText("$" + money);
+    }
+
+    private void UpdateTributeText()
+    {
+        int tributeDue =
+            TributeManager.Instance.GetTributeRatePerSeason(player.License);
+        tributeDueText.SetText("$" + tributeDue.ToString());
     }
 
     private void CreateUIItems()
@@ -81,9 +103,19 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void OnPlayerMoneyChanged(int money)
+    {
+        UpdateMoneyText(money);
+    }
+
+    private void OnPlayerLicenseChanged(Player.PlayerLicense newLicense)
+    {
+        UpdateTributeText();
+    }
+
     private void OnInventoryItemClicked(Item item)
     {
-
+        Debug.Log("Inventory item clicked");
     }
 
     public void Hide()
