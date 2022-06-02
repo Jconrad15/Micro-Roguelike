@@ -25,12 +25,11 @@ public class GameInitializer : MonoBehaviour
             if (SceneBus.Instance.IsLoadGame)
             {
                 SaveSerial.Instance.ButtonToLoadGame();
+                return;
             }
         }
-        else
-        {
-            // Normal world generation process
-            WorldGenerator.Instance.StartGeneration();
-        }
+
+        // Normal world generation process
+        WorldGenerator.Instance.StartGeneration();
     }
 }
