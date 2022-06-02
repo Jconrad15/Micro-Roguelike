@@ -11,6 +11,8 @@ public class TributeManager : MonoBehaviour
     private SeasonManager seasonManager;
     private PlayerController playerController;
 
+    private bool skippedFirstSeasonChange = false;
+
     // Make singleton
     public static TributeManager Instance;
     private void Awake()
@@ -34,6 +36,13 @@ public class TributeManager : MonoBehaviour
 
     private void OnSeasonChanged(Season newSeason)
     {
+        // Skip the first season change
+        if (skippedFirstSeasonChange == false)
+        {
+            skippedFirstSeasonChange = true;
+            return;
+        }
+
         Player player = playerController.GetPlayer();
         bool tributePaid =
             player.TryPayTribute(GetTributeRatePerSeason(player.License));
@@ -44,6 +53,7 @@ public class TributeManager : MonoBehaviour
             WinLoseManager.Instance.Lose();
         }
     }
+
     public int GetTributeRatePerSeason(Player.PlayerLicense title)
     {
         if (title == Player.PlayerLicense.Traveller)
