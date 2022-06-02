@@ -41,7 +41,7 @@ public class TributeManager : MonoBehaviour
         if (tributePaid == false)
         {
             // Player loses if they cannot pay their tribute
-            Debug.Log("You lose, can't pay tribute.");
+            WinLoseManager.Instance.Lose();
         }
     }
     public int GetTributeRatePerSeason(Player.PlayerLicense title)

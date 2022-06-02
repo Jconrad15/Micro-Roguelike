@@ -51,7 +51,7 @@ public class LicensePurchaser : MonoBehaviour
         if (isPurchased)
         {
             // If purchased
-            FindObjectOfType<VictoryScreen>().Victory();
+            WinLoseManager.Instance.Win();
         }
     }
 
