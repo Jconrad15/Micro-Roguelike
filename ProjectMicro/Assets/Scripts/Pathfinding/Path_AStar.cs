@@ -28,10 +28,6 @@ public class Path_AStar
         // Get map data from areaData
         Path_TileGraph tileGraph = areaData.TileGraph;
 
-        // If tileEnd is null, then scan for the nearest objectType. 
-        // Can do this by ignoring the heuristic component of aStar, which basically
-        // just turns this into an over-engineered Dijkstra's algorithm.
-
         // Check to see if there is a valid tile graph
         if (tileGraph == null) 
         {
@@ -45,7 +41,8 @@ public class Path_AStar
         // Make sure the start/end tiles are in the list of nodes
         if (nodesDict.ContainsKey(tileStart) == false)
         {
-            Debug.LogError("Path_AStar: The starting tile isn't in the list of nodes");
+            Debug.LogError("Path_AStar: The starting tile " +
+                "isn't in the list of nodes");
             return;
         }
 
@@ -58,7 +55,8 @@ public class Path_AStar
         {
             if (nodesDict.ContainsKey(tileEnd) == false)
             {
-                Debug.LogError("Path_AStar: The ending tile isn't in the list of nodes");
+                Debug.LogError("Path_AStar: The ending tile " +
+                    "isn't in the list of nodes");
                 return;
             }
             goal = nodesDict[tileEnd]; 
@@ -68,14 +66,18 @@ public class Path_AStar
 
         List<Path_Node<Tile>> ClosedSet = new List<Path_Node<Tile>>();
 
-        SimplePriorityQueue<Path_Node<Tile>> OpenSet = new SimplePriorityQueue<Path_Node<Tile>>();
+        SimplePriorityQueue<Path_Node<Tile>> OpenSet =
+            new SimplePriorityQueue<Path_Node<Tile>>();
         OpenSet.Enqueue(start, 0); // priority is the f_score
 
-        Dictionary<Path_Node<Tile>, Path_Node<Tile>> Came_From = new Dictionary<Path_Node<Tile>, Path_Node<Tile>>();
+        Dictionary<Path_Node<Tile>, Path_Node<Tile>> Came_From =
+            new Dictionary<Path_Node<Tile>, Path_Node<Tile>>();
 
         // Create g_score and f_score dictionaries
-        Dictionary<Path_Node<Tile>, float> g_score = new Dictionary<Path_Node<Tile>, float>();
-        Dictionary<Path_Node<Tile>, float> f_score = new Dictionary<Path_Node<Tile>, float>();
+        Dictionary<Path_Node<Tile>, float> g_score =
+            new Dictionary<Path_Node<Tile>, float>();
+        Dictionary<Path_Node<Tile>, float> f_score =
+            new Dictionary<Path_Node<Tile>, float>();
 
         foreach (Path_Node<Tile> n in nodesDict.Values)
         {
@@ -96,34 +98,42 @@ public class Path_AStar
                 if (current == goal)
                 {
                     // Goal has been reached
-                    // Convert this into an actual sequence of tiles to walk on
+                    // Convert this into an actual sequence
+                    // of tiles to walk on
                     Reconstruct_Path(Came_From, current);
                     return;
                 }
             }
 
-            // The lists in the following foreach loop can cause massive slowdowns.
+            // The lists in the following foreach
+            // loop can cause massive slowdowns.
 
             ClosedSet.Add(current);
             foreach (Path_Edge<Tile> edge_neighbour in current.edges)
             {
                 Path_Node<Tile> neighbor = edge_neighbour.node;
 
-                // If the set already includes the neighbor node, then ignore it.
+                // If the set already includes the neighbor node,
+                // then ignore it.
                 if (ClosedSet.Contains(neighbor) == true) { continue; }
 
-                float movement_cost_to_neighbour = Dist_Between(current, neighbor);
+                float movement_cost_to_neighbour =
+                    Dist_Between(current, neighbor);
 
-                float tentative_g_score = g_score[current] + movement_cost_to_neighbour;
+                float tentative_g_score =
+                    g_score[current] + movement_cost_to_neighbour;
 
-                if (OpenSet.Contains(neighbor) && tentative_g_score >= g_score[neighbor])
+                if (OpenSet.Contains(neighbor) &&
+                    tentative_g_score >= g_score[neighbor])
                 {
                     continue;
                 }
 
                 Came_From[neighbor] = current;
                 g_score[neighbor] = tentative_g_score;
-                f_score[neighbor] = g_score[neighbor] + HeuristicWeight * Heuristic_cost_estimate(neighbor, goal);
+                f_score[neighbor] = g_score[neighbor] +
+                    (HeuristicWeight *
+                    Heuristic_cost_estimate(neighbor, goal));
 
                 if (OpenSet.Contains(neighbor) == false)
                 {
@@ -156,12 +166,14 @@ public class Path_AStar
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <returns>Heuristic Value</returns>
-    private float Heuristic_cost_estimate(Path_Node<Tile> a, Path_Node<Tile> b)
+    private float Heuristic_cost_estimate(
+        Path_Node<Tile> a, Path_Node<Tile> b)
     {
         if (b == null)
         {
-            // We have no fixed destination (e.g., looking for an inventory item
-            // so just return 0 for the cost estimate (all directions are just as good
+            // We have no fixed destination
+            // just return 0 for the cost estimate
+            // (all directions are just as good)
             return 0f;
         }
 
@@ -181,12 +193,14 @@ public class Path_AStar
         // We can make assumptions since we are on a grid at this point
 
         // Horizontal/vertical neighbours have a distance of 1
-        if (Mathf.Abs(a.data.x - b.data.x) + Mathf.Abs(a.data.y - b.data.y) == 1)
+        if (Mathf.Abs(a.data.x - b.data.x) +
+            Mathf.Abs(a.data.y - b.data.y) == 1)
         {
             return 1f;
         }
         // Diagonal neighbours have a distance of 1.41421356237
-        if((Mathf.Abs(a.data.x - b.data.x) == 1 && Mathf.Abs(a.data.y - b.data.y) == 1))
+        if((Mathf.Abs(a.data.x - b.data.x) == 1 &&
+            Mathf.Abs(a.data.y - b.data.y) == 1))
         {
             return 1.41421356237f;
         }
@@ -203,14 +217,17 @@ public class Path_AStar
     /// </summary>
     /// <param name="Came_From"></param>
     /// <param name="current"></param>
-    private void Reconstruct_Path(Dictionary<Path_Node<Tile>, Path_Node<Tile>> Came_From, 
-                          Path_Node<Tile> current)
+    private void Reconstruct_Path(
+        Dictionary<Path_Node<Tile>, Path_Node<Tile>> Came_From, 
+        Path_Node<Tile> current)
     {
         // At this point, current is the goal,
         // So what we want to do is walk backwards through the Came_From map,
-        // until we reach the 'end' of that map...which will be the starting node.
+        // until we reach the 'end' of that map...
+        // which will be the starting node.
         Queue<Tile> total_Path = new Queue<Tile>();
-        total_Path.Enqueue(current.data); // This final step of the path is the goal.
+        total_Path.Enqueue(current.data); 
+        // This final step of the path is the goal.
 
         while (Came_From.ContainsKey(current))
         {
@@ -239,7 +256,8 @@ public class Path_AStar
         }
         if (path.Count <= 0)
         {
-            Debug.LogError("Trying to dequeue from a path with count 0 or less.");
+            Debug.LogError("Trying to dequeue from a path " +
+                "with count 0 or less.");
             return null;
         }
 
