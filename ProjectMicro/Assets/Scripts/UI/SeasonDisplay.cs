@@ -5,8 +5,7 @@ using TMPro;
 
 public class SeasonDisplay : MonoBehaviour
 {
-    [SerializeField]
-    private SeasonManager seasonManager;
+
     [SerializeField]
     private TextMeshProUGUI seasonText;
     [SerializeField]
@@ -14,8 +13,11 @@ public class SeasonDisplay : MonoBehaviour
 
     private void Start()
     {
-        seasonManager.RegisterOnDayChanged(OnDayChanged);
-        seasonManager.RegisterOnSeasonChanged(OnSeasonChanged);
+        SeasonManager.Instance.RegisterOnDayChanged(OnDayChanged);
+        SeasonManager.Instance.RegisterOnSeasonChanged(OnSeasonChanged);
+
+        OnDayChanged(SeasonManager.Instance.Day);
+        OnSeasonChanged(SeasonManager.Instance.CurrentSeason);
     }
 
     private void OnDayChanged(int day)
@@ -48,10 +50,7 @@ public class SeasonDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (seasonManager != null)
-        {
-            seasonManager.UnregisterOnDayChanged(OnDayChanged);
-            seasonManager.UnregisterOnSeasonChanged(OnSeasonChanged);
-        }
+        SeasonManager.Instance.UnregisterOnDayChanged(OnDayChanged);
+        SeasonManager.Instance.UnregisterOnSeasonChanged(OnSeasonChanged);
     }
 }

@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db89a701ded12d2448c01746be1220f6, type: 3}
-  m_Name: traveler
+  m_Name: baker
   m_EditorClassIdentifier: 
-  merchantType: 3
-  preferredBuy: []
-  preferredSell: []
+  merchantType: 5
+  preferredBuy:
+  - {fileID: 11400000, guid: 31b4ee6503d78c8408cf47a1d5230ea3, type: 2}
+  preferredSell:
+  - {fileID: 11400000, guid: 64bf8f23c2ec1d440944c3624fb52420, type: 2}
   overrideSprite: {fileID: 0}

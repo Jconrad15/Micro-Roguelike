@@ -18,7 +18,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI moneyText;
     [SerializeField]
-    private TextMeshProUGUI foodLevelText;
+    private TextMeshProUGUI tributeDueText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -36,25 +36,14 @@ public class InventoryUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         p.RegisterOnPlayerClicked(OnPlayerClicked);
-        p.RegisterOnFoodLevelChanged(OnFoodLevelChanged);
+        p.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
+        p.RegisterOnMoneyChanged(OnPlayerMoneyChanged);
         player = p;
     }
 
     private void OnPlayerClicked(Entity obj)
     {
         OnInventoryToggled();
-    }
-
-    private void OnFoodLevelChanged(int foodLevel)
-    {
-        UpdateFoodLevelText(foodLevel);
-    }
-
-    private void UpdateFoodLevelText(int foodLevel)
-    {
-        foodLevelText.SetText(
-            foodLevel.ToString() + "/" +
-            player.FoodLevelMax.ToString());
     }
 
     private void OnInventoryToggled()
@@ -74,8 +63,25 @@ public class InventoryUI : MonoBehaviour
     {
         inventoryArea.SetActive(true);
         CreateUIItems();
+        UpdateMoneyText();
+        UpdateTributeText();
+    }
+
+    private void UpdateMoneyText()
+    {
         moneyText.SetText("$" + player.Money.ToString());
-        UpdateFoodLevelText(player.FoodLevel);
+    }
+
+    private void UpdateMoneyText(int money)
+    {
+        moneyText.SetText("$" + money);
+    }
+
+    private void UpdateTributeText()
+    {
+        int tributeDue =
+            TributeManager.Instance.GetTributeRatePerSeason(player.License);
+        tributeDueText.SetText("$" + tributeDue.ToString());
     }
 
     private void CreateUIItems()
@@ -97,16 +103,19 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void OnPlayerMoneyChanged(int money)
+    {
+        UpdateMoneyText(money);
+    }
+
+    private void OnPlayerLicenseChanged(Player.PlayerLicense newLicense)
+    {
+        UpdateTributeText();
+    }
+
     private void OnInventoryItemClicked(Item item)
     {
-        // Check food items
-        if (item.itemName == "Food")
-        {
-            if (player.TryEatFood(item))
-            {
-                RefreshInventoryItems();
-            }
-        }
+        Debug.Log("Inventory item clicked");
     }
 
     public void Hide()

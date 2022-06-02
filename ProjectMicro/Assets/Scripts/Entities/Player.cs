@@ -4,34 +4,39 @@ using System.Collections.Generic;
 [Serializable]
 public class Player : Entity
 {
-    private Action<int> cbOnFoodLevelChanged;
+    private Action<PlayerLicense> cbOnPlayerLicenseChanged;
+    private Action<int> cbOnPlayerMoneyChanged;
 
-    private int foodLevel;
-    public int FoodLevel 
+    public enum PlayerLicense { Traveller, Merchant };
+    private PlayerLicense license;
+    public PlayerLicense License
     {
-        get
-        {
-            return foodLevel;
-        }
+        get => license;
         protected set
         {
-            foodLevel = value;
-            cbOnFoodLevelChanged?.Invoke(foodLevel);
+            license = value;
+            cbOnPlayerLicenseChanged?.Invoke(license);
         }
     }
 
-    public int FoodLevelMax { get; protected set; } = 10;
-
-    public enum PlayerTitle { Traveller, Merchant };
-    public PlayerTitle Title { get; protected set; }
+    private int money;
+    public new int Money
+    { 
+        get => money;
+        protected set
+        {
+            money = value;
+            cbOnPlayerMoneyChanged?.Invoke(money);
+        }
+    }
 
     // Contructor for new player
     public Player(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
         EntityName = "player";
-        Title = PlayerTitle.Traveller;
-        foodLevel = FoodLevelMax;
+        License = PlayerLicense.Traveller;
+        Money = startingMoney;
     }
 
     // Constructor for loaded player
@@ -56,47 +61,41 @@ public class Player : Entity
         if (Money >= cost)
         {
             Money -= cost;
-            Title = PlayerTitle.Merchant;
+            License = PlayerLicense.Merchant;
             return true;
         }
 
         return false;
     }
 
-    public bool TryEatFood(Item foodItem)
+    public bool TryPayTribute(int amount)
     {
-        if (foodItem == null) { return false; }
-        if (InventoryItems.Contains(foodItem) == false) { return false; }
-
-        // If food level can increase
-        if (FoodLevel < FoodLevelMax)
+        if (Money >= amount)
         {
-            // Remove food item from inventory and satisfy player hunger 
-            _ = InventoryItems.Remove(foodItem);
-            IncreaseFoodLevel();
+            Money -= amount;
             return true;
         }
 
         return false;
     }
 
-    private void IncreaseFoodLevel()
+    public void RegisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)
     {
-        FoodLevel += 1;
+        cbOnPlayerLicenseChanged += callbackfunc;
     }
 
-    private void DecreaseFoodLevel()
+    public void UnregisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)
     {
-        FoodLevel -= 1;
+        cbOnPlayerLicenseChanged -= callbackfunc;
     }
 
-    public void RegisterOnFoodLevelChanged(Action<int> callbackfunc)
+    public void RegisterOnMoneyChanged(Action<int> callbackfunc)
     {
-        cbOnFoodLevelChanged += callbackfunc;
+        cbOnPlayerMoneyChanged += callbackfunc;
     }
 
-    public void UnregisterOnFoodLevelChanged(Action<int> callbackfunc)
+    public void UnregisterOnMoneyChanged(Action<int> callbackfunc)
     {
-        cbOnFoodLevelChanged -= callbackfunc;
+        cbOnPlayerMoneyChanged -= callbackfunc;
     }
 }

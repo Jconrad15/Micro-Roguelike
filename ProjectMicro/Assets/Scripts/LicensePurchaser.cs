@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TitlePurchaser : MonoBehaviour
+public class LicensePurchaser : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI currentTitle;
+    private TextMeshProUGUI currentLicense;
     [SerializeField]
-    private TextMeshProUGUI nextTitle;
+    private TextMeshProUGUI nextLicense;
     [SerializeField]
     private TextMeshProUGUI costText;
 
@@ -19,25 +19,26 @@ public class TitlePurchaser : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<PlayerController>().GetPlayer();
-        SetTitles();
+        player.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
+        SetLicenses();
     }
 
     private void OnEnable()
     {
-        SetTitles();
+        SetLicenses();
     }
 
-    private void SetTitles()
+    private void SetLicenses()
     {
         if (player == null) { return; }
 
-        currentTitle.SetText(player.Title.ToString());
+        currentLicense.SetText(player.License.ToString());
 
         // Set next title
-        if (player.Title == Player.PlayerTitle.Traveller)
+        if (player.License == Player.PlayerLicense.Traveller)
         {
-            nextTitle.SetText(
-                Player.PlayerTitle.Merchant.ToString() + " License");
+            nextLicense.SetText(
+                Player.PlayerLicense.Merchant.ToString() + " License");
         }
 
         costText.SetText("$" + titleCost.ToString());
@@ -54,4 +55,8 @@ public class TitlePurchaser : MonoBehaviour
         }
     }
 
+    private void OnPlayerLicenseChanged(Player.PlayerLicense newLicense)
+    {
+
+    }
 }

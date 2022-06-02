@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum Season { Spring, Summer, Autumn, Winter };
+/// <summary>
+/// Singleton for tracking days and seasons
+/// </summary>
 public class SeasonManager : MonoBehaviour
 {
     private Action<Season> cbOnSeasonChanged;
@@ -11,6 +14,20 @@ public class SeasonManager : MonoBehaviour
     private PlayerController playerController;
 
     private readonly int daysPerMonth = 30;
+
+    // Make singleton
+    public static SeasonManager Instance;
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private Season currentSeason;
     public Season CurrentSeason
