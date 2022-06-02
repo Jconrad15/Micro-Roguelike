@@ -13,7 +13,7 @@ Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
 Fresh Produce Cartographer Stables University Hatter Bank Spice 
 Shipwrights Wineries*/
 
-public enum MerchantType { WoodCutter, Miner, Blacksmith, Traveler };
+public enum MerchantType { WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer };
 public class Merchant : AIEntity
 {
     private const float sellModifier = 0.2f;
@@ -60,7 +60,7 @@ public class Merchant : AIEntity
     private void CreateMerchantStartingInventory()
     {
         // Travelling merchants get more random items
-        if (MType == MerchantType.Traveler)
+        if (MType == MerchantType.Traveller)
         {
             int itemCount = Random.Range(2, 5);
             for (int i = 0; i < itemCount; i++)

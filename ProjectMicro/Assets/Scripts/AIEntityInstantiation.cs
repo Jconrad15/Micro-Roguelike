@@ -30,7 +30,7 @@ public static class AIEntityInstantiation
             Merchant merchant = new Merchant(
                 merchantTile,
                 EntityType.AI,
-                MerchantType.Traveler,
+                MerchantType.Traveller,
                 merchantStartMoney);
 
             merchantTile.entity = merchant;
