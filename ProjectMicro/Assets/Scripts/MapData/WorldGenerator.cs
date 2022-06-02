@@ -8,9 +8,9 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private int seed = 0;
     [SerializeField]
-    private int width = 30;
+    private int worldWidth = 50;
     [SerializeField]
-    private int height = 30;
+    private int worldHeight = 50;
 
     private LocationGenerator locationGenerator;
 
@@ -51,8 +51,8 @@ public class WorldGenerator : MonoBehaviour
 
     private void StartGenerateWorld()
     {
-        playerWorldX = width / 2;
-        playerWorldY = height / 2;
+        playerWorldX = worldWidth / 2;
+        playerWorldY = worldHeight / 2;
 
         CurrentMapType.SetCurrentMapType(MapType.World);
 
@@ -126,22 +126,21 @@ public class WorldGenerator : MonoBehaviour
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, width, height,
-            playerWorldX, playerWorldY,
+            seed, playerWorldX, playerWorldY,
             tileType, player,
             player.T.feature);
     }
 
     private void CreateWorldMapData()
     {
-        WorldData.Instance.MapData = new Tile[width * height];
-        WorldData.Instance.Width = width;
-        WorldData.Instance.Height = height;
+        WorldData.Instance.MapData = new Tile[worldWidth * worldHeight];
+        WorldData.Instance.Width = worldWidth;
+        WorldData.Instance.Height = worldHeight;
 
         // Create tile types
 
         // Create base tile type map
-        RawMapData rawMapData = new RawMapData(width, height, seed);
+        RawMapData rawMapData = new RawMapData(worldWidth, worldHeight, seed);
 
         // Set tile types
         for (int i = 0; i < WorldData.Instance.MapData.Length; i++)

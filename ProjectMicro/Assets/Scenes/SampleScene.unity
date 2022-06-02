@@ -6180,6 +6180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 279e887323c51564ca3103577027050e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locationWidth: 30
+  locationHeight: 30
 --- !u!4 &1578313634
 Transform:
   m_ObjectHideFlags: 0
@@ -6656,8 +6658,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 10
-  width: 50
-  height: 50
+  worldWidth: 50
+  worldHeight: 50
 --- !u!114 &1755545258
 MonoBehaviour:
   m_ObjectHideFlags: 0

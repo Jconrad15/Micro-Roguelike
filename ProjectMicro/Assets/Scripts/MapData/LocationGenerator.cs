@@ -5,8 +5,10 @@ using Random = UnityEngine.Random;
 
 public class LocationGenerator : MonoBehaviour
 {
-    private int width;
-    private int height;
+    [SerializeField]
+    private int locationWidth = 30;
+    [SerializeField]
+    private int locationHeight = 30;
     private int seed;
 
     private Action cbOnLocationCreated;
@@ -15,7 +17,7 @@ public class LocationGenerator : MonoBehaviour
     /// Initiate generation of this location.
     /// </summary>
     /// <param name="seed"></param>
-    public void StartGenerateLocation(int seed, int width, int height,
+    public void StartGenerateLocation(int seed,
         int worldX, int worldY, TileType locationTileType, Player player,
         Feature locationFeature)
     {
@@ -25,9 +27,6 @@ public class LocationGenerator : MonoBehaviour
         seed = (seed + worldX + worldY) * 10;
         this.seed = seed;
 
-        this.width = width;
-        this.height = height;
-
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
@@ -36,7 +35,7 @@ public class LocationGenerator : MonoBehaviour
         TryCreateUrban(seed, locationFeature);
 
         PlayerInstantiation.TransitionPlayerToMap(
-            player, width / 2, height / 2);
+            player, locationWidth / 2, locationHeight / 2);
         AIEntityInstantiation.CreateLocationAIEntities(seed);
 
         Random.state = oldState;
@@ -88,8 +87,8 @@ public class LocationGenerator : MonoBehaviour
                 {
                     isIndoor[index] = true;
                     isPlaced = true;
-                    int doorMaxX = width - 1;
-                    int doorMaxY = height - 1;
+                    int doorMaxX = locationWidth - 1;
+                    int doorMaxY = locationHeight - 1;
                     int doorMinX = 1;
                     int doorMinY = 1;
                     // Also set neighbors up to size x,y 
@@ -252,13 +251,13 @@ public class LocationGenerator : MonoBehaviour
     private void CreateLocationMapData(
         TileType locationTileType, int worldX, int worldY)
     {
-        LocationData.Instance.MapData = new Tile[width * height];
-        LocationData.Instance.Width = width;
-        LocationData.Instance.Height = height;
+        LocationData.Instance.MapData = new Tile[locationWidth * locationHeight];
+        LocationData.Instance.Width = locationWidth;
+        LocationData.Instance.Height = locationHeight;
 
         // Create raw base tile type map
         RawMapData rawMapData =
-            new RawMapData(width, height, seed, locationTileType,
+            new RawMapData(locationWidth, locationHeight, seed, locationTileType,
             worldX, worldY);
 
         // Perform any edits to the raw base tile type map
@@ -294,7 +293,7 @@ public class LocationGenerator : MonoBehaviour
                     new Feature(FeatureType.ExitLocation, mapdata[i]);
                 continue;
             }
-            if (x == width - 1 || y == height - 1)
+            if (x == locationWidth - 1 || y == locationHeight - 1)
             {
                 mapdata[i].feature =
                     new Feature(FeatureType.ExitLocation, mapdata[i]);
