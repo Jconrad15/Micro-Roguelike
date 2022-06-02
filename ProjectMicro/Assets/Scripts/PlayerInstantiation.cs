@@ -33,11 +33,13 @@ public static class PlayerInstantiation
         Tile playerTile;
         if (CurrentMapType.Type == MapType.Location) 
         {
-            playerTile = LocationData.Instance.GetTile(playerStartX, playerStartY);
+            playerTile = LocationData.Instance.GetTile(
+                playerStartX, playerStartY);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(playerStartX, playerStartY);
+            playerTile = WorldData.Instance.GetTile(
+                playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
@@ -56,16 +58,22 @@ public static class PlayerInstantiation
         Tile playerTile;
         if (CurrentMapType.Type == MapType.Location)
         {
-            playerTile = LocationData.Instance.GetTile(entityToLoad.X, entityToLoad.Y);
+            playerTile = LocationData.Instance.GetTile(
+                entityToLoad.X, entityToLoad.Y);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(entityToLoad.X, entityToLoad.Y);
+            playerTile = WorldData.Instance.GetTile(
+                entityToLoad.X, entityToLoad.Y);
         }
 
         // Place the player at the tile, and the tile to the player
-        Player player = new Player(EntityType.Player, entityToLoad.InventoryItems, entityToLoad.Money,
-            entityToLoad.Visibility, entityToLoad.EntityName, entityToLoad.CharacterName, playerTile);
+        Player player = new Player(
+            EntityType.Player, entityToLoad.InventoryItems,
+            entityToLoad.Money, entityToLoad.Visibility,
+            entityToLoad.EntityName, entityToLoad.CharacterName,
+            playerTile);
+
         playerTile.entity = player;
 
         cbOnPlayerCreated?.Invoke(player);

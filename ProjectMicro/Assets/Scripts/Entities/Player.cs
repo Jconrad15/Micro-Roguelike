@@ -37,6 +37,7 @@ public class Player : Entity
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        Money = money;
 
         if (t != null)
         {
