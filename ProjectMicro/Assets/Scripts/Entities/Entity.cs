@@ -45,7 +45,17 @@ public class Entity
 
     public List<Item> InventoryItems { get; protected set; }
 
-    public int Money { get; protected set; }
+    protected Action<int> cbOnPlayerMoneyChanged;
+    private int money;
+    public int Money 
+    { 
+        get => money;
+        protected set
+        {
+            money = value;
+            cbOnPlayerMoneyChanged?.Invoke(money);
+        }
+    }
 
     public EntityType type;
     protected VisibilityLevel visibility;

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Player : Entity
 {
     private Action<PlayerLicense> cbOnPlayerLicenseChanged;
-    private Action<int> cbOnPlayerMoneyChanged;
 
     public enum PlayerLicense { Traveller, Merchant };
     private PlayerLicense license;
@@ -16,17 +15,6 @@ public class Player : Entity
         {
             license = value;
             cbOnPlayerLicenseChanged?.Invoke(license);
-        }
-    }
-
-    private int money;
-    public new int Money
-    { 
-        get => money;
-        protected set
-        {
-            money = value;
-            cbOnPlayerMoneyChanged?.Invoke(money);
         }
     }
 
