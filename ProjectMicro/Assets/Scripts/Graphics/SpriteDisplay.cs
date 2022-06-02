@@ -583,8 +583,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-/*            Debug.LogError("What Feature is this?" +
-                "Not in entity-GO dictionary.");*/
+            Debug.LogError("What Feature is this?" +
+                "Not in entity-GO dictionary.");
         }
     }
 
@@ -597,8 +597,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-/*            Debug.LogError("What Entity is this?" +
-                "Not in entity-GO dictionary.");*/
+            Debug.LogError("What Entity is this?" +
+                "Not in entity-GO dictionary.");
         }
     }
 
@@ -611,8 +611,8 @@ public class SpriteDisplay : MonoBehaviour
         }
         else
         {
-/*            Debug.LogError("What tile is this?" +
-                "Not in tile-GO dictionary.");*/
+            Debug.LogError("What tile is this?" +
+                "Not in tile-GO dictionary.");
         }
     }
 
@@ -639,6 +639,21 @@ public class SpriteDisplay : MonoBehaviour
             Destroy(go);
         }
         StopAllCoroutines();
+
+        // Unregister from each object
+        foreach (Tile tile in placedTiles.Keys)
+        {
+            tile.UnregisterOnVisibilityChanged(OnVisiblityChanged);
+        }
+        foreach(Feature feature in placedFeatures.Keys)
+        {
+            feature.UnregisterOnVisibilityChanged(OnVisiblityChanged);
+        }
+        foreach (Entity entity in placedEntities.Keys)
+        {
+            entity.UnregisterOnMove(OnEntityMove);
+            entity.UnregisterOnVisibilityChanged(OnVisiblityChanged);
+        }
 
         // Clear dictionaries
         placedTiles.Clear();

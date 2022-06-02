@@ -56,32 +56,16 @@ public class DataLoader : MonoBehaviour
 
         areaData.GenerateTileGraph();
 
-        // Tell the game initilizaer that data is loaded
-/*        if (loadedAreaData.MapType == MapType.World)
-        {
-            FindObjectOfType<WorldGenerator>().OnDataLoaded();
-        }
-        else
-        {
-            FindObjectOfType<LocationGenerator>().OnDataLoaded();
-        }*/
+        // Tell the GameInitializer that data is loaded
         GameInitializer.Instance.OnDataLoaded(
             loadedAreaData.MapType, loadedAreaData.Seed);
     }
 
     public static void ClearAllOldData()
     {
-        //AreaData areaData = AreaData.GetAreaDataForCurrentType();
-
-/*        foreach (Entity entity in areaData.Entities)
-        {
-            //entity.ClearData();
-        }*/
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
 
-        //Clear old Area data from both world and location
-        //WorldData.Instance.ClearAll();
         LocationData.Instance.ClearAll();
     }
 }
