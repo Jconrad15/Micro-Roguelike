@@ -25,8 +25,6 @@ public class SceneChanger : MonoBehaviour
 
     private IEnumerator AsyncLoadScene(int buildIndex)
     {
-        yield return new WaitForSeconds(1);
-
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(buildIndex);
 
         // Wait until the asynchronous scene fully loads
