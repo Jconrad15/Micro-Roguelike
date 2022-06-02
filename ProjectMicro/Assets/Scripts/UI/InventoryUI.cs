@@ -17,8 +17,6 @@ public class InventoryUI : MonoBehaviour
     private GameObject itemPrefab;
     [SerializeField]
     private TextMeshProUGUI moneyText;
-    [SerializeField]
-    private TextMeshProUGUI foodLevelText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -36,25 +34,12 @@ public class InventoryUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         p.RegisterOnPlayerClicked(OnPlayerClicked);
-        p.RegisterOnFoodLevelChanged(OnFoodLevelChanged);
         player = p;
     }
 
     private void OnPlayerClicked(Entity obj)
     {
         OnInventoryToggled();
-    }
-
-    private void OnFoodLevelChanged(int foodLevel)
-    {
-        UpdateFoodLevelText(foodLevel);
-    }
-
-    private void UpdateFoodLevelText(int foodLevel)
-    {
-        foodLevelText.SetText(
-            foodLevel.ToString() + "/" +
-            player.FoodLevelMax.ToString());
     }
 
     private void OnInventoryToggled()
@@ -75,7 +60,6 @@ public class InventoryUI : MonoBehaviour
         inventoryArea.SetActive(true);
         CreateUIItems();
         moneyText.SetText("$" + player.Money.ToString());
-        UpdateFoodLevelText(player.FoodLevel);
     }
 
     private void CreateUIItems()
@@ -99,14 +83,7 @@ public class InventoryUI : MonoBehaviour
 
     private void OnInventoryItemClicked(Item item)
     {
-        // Check food items
-        if (item.itemName == "Food")
-        {
-            if (player.TryEatFood(item))
-            {
-                RefreshInventoryItems();
-            }
-        }
+
     }
 
     public void Hide()
