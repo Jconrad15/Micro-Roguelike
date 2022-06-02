@@ -20,9 +20,12 @@ public class GameInitializer : MonoBehaviour
     void Start()
     {
         // Check if player wanted to load game
-        if (SceneBus.Instance.IsLoadGame)
+        if (SceneBus.Instance != null)
         {
-            SaveSerial.Instance.ButtonToLoadGame();
+            if (SceneBus.Instance.IsLoadGame)
+            {
+                SaveSerial.Instance.ButtonToLoadGame();
+            }
         }
         else
         {
