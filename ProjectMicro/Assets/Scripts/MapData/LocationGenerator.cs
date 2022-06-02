@@ -9,23 +9,37 @@ public class LocationGenerator : MonoBehaviour
     private int locationWidth = 30;
     [SerializeField]
     private int locationHeight = 30;
-    private int seed;
 
     private Action cbOnLocationCreated;
+
+    public static LocationGenerator Instance { get; private set; }
+    private void Awake()
+    {
+        // If there is an instance, and it's not me, delete myself.
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     /// <summary>
     /// Initiate generation of this location.
     /// </summary>
     /// <param name="seed"></param>
-    public void StartGenerateLocation(int seed,
+    public void StartGenerateLocation(
         int worldX, int worldY, TileType locationTileType, Player player,
         Feature locationFeature)
     {
+        int seed = GameInitializer.Instance.Seed;
+
         CurrentMapType.SetCurrentMapType(MapType.Location);
         
         // Modify seed for this generation to relate to world pos
         seed = (seed + worldX + worldY) * 10;
-        this.seed = seed;
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
@@ -254,6 +268,8 @@ public class LocationGenerator : MonoBehaviour
         LocationData.Instance.MapData = new Tile[locationWidth * locationHeight];
         LocationData.Instance.Width = locationWidth;
         LocationData.Instance.Height = locationHeight;
+
+        int seed = GameInitializer.Instance.Seed;
 
         // Create raw base tile type map
         RawMapData rawMapData =

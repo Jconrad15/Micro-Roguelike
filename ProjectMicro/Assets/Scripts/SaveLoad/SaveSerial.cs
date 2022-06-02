@@ -14,6 +14,7 @@ public struct SaveData
     public int width;
     public int height;
     public MapType mapType;
+    public int seed;
 }
 
 /// <summary>
@@ -112,7 +113,8 @@ public class SaveSerial : MonoBehaviour
             mapData = serializedTileData,
             width = areaData.Width,
             height = areaData.Height,
-            mapType = CurrentMapType.Type
+            mapType = CurrentMapType.Type,
+            seed = GameInitializer.Instance.Seed,
         };
 
         return data;
@@ -137,7 +139,8 @@ public class SaveSerial : MonoBehaviour
             savedAreaMapData = dataToSave.mapData,
             savedHeight = dataToSave.height,
             savedWidth = dataToSave.width,
-            savedMapType = dataToSave.mapType
+            savedMapType = dataToSave.mapType,
+            savedSeed = dataToSave.seed,
         };
 
         bf.Serialize(file, ssd);
@@ -168,7 +171,8 @@ public class SaveSerial : MonoBehaviour
                 mapData = ssd.savedAreaMapData,
                 width = ssd.savedWidth,
                 height = ssd.savedHeight,
-                mapType = ssd.savedMapType
+                mapType = ssd.savedMapType,
+                seed = ssd.savedSeed,
             };
 
             // Convert back to mapData tile array
@@ -251,7 +255,8 @@ public class SaveSerial : MonoBehaviour
                     loadedData.height,
                     entities,
                     features,
-                    loadedData.mapType
+                    loadedData.mapType,
+                    loadedData.seed
                 );
 
             cbOnDataLoadedFromFile?.Invoke(loadedAreaData);
@@ -293,4 +298,5 @@ class SerializableSaveData
     public int savedWidth;
     public int savedHeight;
     public MapType savedMapType;
+    public int savedSeed;
 }

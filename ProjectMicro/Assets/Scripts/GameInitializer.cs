@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameInitializer : MonoBehaviour
 {
+    [SerializeField]
+    public int Seed { get; private set; } = 0;
+    
     public static GameInitializer Instance { get; private set; }
     private void Awake()
     {
@@ -17,7 +20,7 @@ public class GameInitializer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    private void Start()
     {
         // Check if player wanted to load game
         if (SceneBus.Instance != null)
@@ -30,6 +33,25 @@ public class GameInitializer : MonoBehaviour
         }
 
         // Normal world generation process
+        Seed = Random.Range(-10000, 10000);
+
         WorldGenerator.Instance.StartGeneration();
     }
+
+    public void OnDataLoaded(MapType loadedMapType, int loadedSeed)
+    {
+        Seed = loadedSeed;
+
+        if (loadedMapType == MapType.World)
+        {
+            WorldGenerator.Instance.OnDataLoaded();
+        }
+        else
+        {
+            LocationGenerator.Instance.OnDataLoaded();
+        }
+    }
+
+
+
 }

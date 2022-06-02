@@ -10,9 +10,11 @@ public class LoadedAreaData
     public List<Entity> Entities { get; set; }
     public List<Feature> Features { get; set; }
     public MapType MapType { get; set; }
+    public int Seed { get; set; }
 
     public LoadedAreaData(Tile[] mapData, int width, int height,
-        List<Entity> entities, List<Feature> features, MapType mapType)
+        List<Entity> entities, List<Feature> features,
+        MapType mapType, int seed)
     {
         MapData = mapData;
         Width = width;
@@ -20,5 +22,6 @@ public class LoadedAreaData
         Entities = entities;
         Features = features;
         MapType = mapType;
+        Seed = seed;
     }
 }

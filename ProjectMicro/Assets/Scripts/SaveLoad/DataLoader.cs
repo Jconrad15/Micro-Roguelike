@@ -56,15 +56,17 @@ public class DataLoader : MonoBehaviour
 
         areaData.GenerateTileGraph();
 
-        // Tell the generator that data is loaded
-        if (loadedAreaData.MapType == MapType.World)
+        // Tell the game initilizaer that data is loaded
+/*        if (loadedAreaData.MapType == MapType.World)
         {
             FindObjectOfType<WorldGenerator>().OnDataLoaded();
         }
         else
         {
             FindObjectOfType<LocationGenerator>().OnDataLoaded();
-        }
+        }*/
+        GameInitializer.Instance.OnDataLoaded(
+            loadedAreaData.MapType, loadedAreaData.Seed);
     }
 
     public static void ClearAllOldData()

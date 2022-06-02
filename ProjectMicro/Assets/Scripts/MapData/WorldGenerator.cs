@@ -6,8 +6,6 @@ using Random = UnityEngine.Random;
 public class WorldGenerator : MonoBehaviour
 {
     [SerializeField]
-    private int seed = 0;
-    [SerializeField]
     private int worldWidth = 50;
     [SerializeField]
     private int worldHeight = 50;
@@ -44,13 +42,13 @@ public class WorldGenerator : MonoBehaviour
 
     public void StartGeneration()
     {
-        // For now, just randomize the seed
-        seed = Random.Range(0, 10000);
         StartGenerateWorld();
     }
 
     private void StartGenerateWorld()
     {
+        int seed = GameInitializer.Instance.Seed;
+
         playerWorldX = worldWidth / 2;
         playerWorldY = worldHeight / 2;
 
@@ -71,6 +69,8 @@ public class WorldGenerator : MonoBehaviour
 
     private void ReturnToWorld(Player player)
     {
+        int seed = GameInitializer.Instance.Seed;
+
         CurrentMapType.SetCurrentMapType(MapType.World);
 
         // First need to destroy all current info
@@ -126,7 +126,7 @@ public class WorldGenerator : MonoBehaviour
 
         // Then load the location
         locationGenerator.StartGenerateLocation(
-            seed, playerWorldX, playerWorldY,
+            playerWorldX, playerWorldY,
             tileType, player,
             player.T.feature);
     }
