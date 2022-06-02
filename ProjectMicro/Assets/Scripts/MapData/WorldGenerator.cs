@@ -42,7 +42,7 @@ public class WorldGenerator : MonoBehaviour
             .RegisterOnPlayerGoToExitTile(OnPlayerGoToExitTile);
     }
 
-    private void Start()
+    public void StartGeneration()
     {
         // For now, just randomize the seed
         seed = Random.Range(0, 10000);
