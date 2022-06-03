@@ -8,25 +8,14 @@ using UnityEngine;
 public class SpriteDisplay : MonoBehaviour
 {
     private SpriteDatabase spriteDatabase;
-    private GameObject entitiesContainer;
-
-    [SerializeField]
     private TileSpriteDisplay tileSpriteDisplay;
-    [SerializeField]
     private FeatureSpriteDisplay featureSpriteDisplay;
-
-    private readonly float moveSpeed = 8f;
-
-    private Dictionary<Entity, GameObject> placedEntities;
-
-    [SerializeField]
-    private GameObject entitiesPrefab;
-
-    [SerializeField]
-    private VisibilityAlphaChanger visibilityAlphaChanger;
+    private EntitySpriteDisplay entitySpriteDisplay;
 
     private void Awake()
     {
+        GetSpriteDisplayComponents();
+
         FindObjectOfType<WorldGenerator>()
             .RegisterOnWorldCreated(DisplayInitialMap);
         FindObjectOfType<LocationGenerator>()
@@ -34,22 +23,16 @@ public class SpriteDisplay : MonoBehaviour
         spriteDatabase = FindObjectOfType<SpriteDatabase>();
     }
 
-    private void OnEnable()
+    private void GetSpriteDisplayComponents()
     {
-        CreateGameObjectContainers();
-    }
-
-    private void CreateGameObjectContainers()
-    {
-        entitiesContainer = new GameObject("Entities");
-        entitiesContainer.transform.parent = transform;
+        tileSpriteDisplay = GetComponent<TileSpriteDisplay>();
+        featureSpriteDisplay = GetComponent<FeatureSpriteDisplay>();
+        entitySpriteDisplay = GetComponent<EntitySpriteDisplay>();
     }
 
     private void DisplayInitialMap()
     {
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
-
-        placedEntities = new Dictionary<Entity, GameObject>();
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
@@ -72,7 +55,7 @@ public class SpriteDisplay : MonoBehaviour
                 // Place initial entities
                 if (areaData.MapData[i].entity != null)
                 {
-                    PlaceInitialEntity(
+                    entitySpriteDisplay.PlaceInitialEntity(
                         areaData.MapData[i].entity, x, y);
                 }
 
@@ -86,154 +69,11 @@ public class SpriteDisplay : MonoBehaviour
         }
     }
 
-    private void PlaceInitialEntity(Entity entity, int x, int y)
-    {
-        spriteDatabase.EntityDatabase
-            .TryGetValue(entity.EntityName, out Sprite[] s);
-
-        CreateEntityGO(entity, x, y, s, 
-            out GameObject newEntity_GO, out SpriteRenderer sr);
-
-        // Visibility
-        visibilityAlphaChanger.ChangeVisibilityAlpha(entity, sr);
-
-        placedEntities.Add(entity, newEntity_GO);
-
-        entity.RegisterOnMove(OnEntityMove);
-        entity.RegisterOnVisibilityChanged(OnVisiblityChanged);
-    }
-
-    private void CreateEntityGO(
-        Entity entity, int x, int y, Sprite[] s,
-        out GameObject newEntity_GO, out SpriteRenderer sr)
-    {
-        newEntity_GO =
-            Instantiate(entitiesPrefab, entitiesContainer.transform);
-        newEntity_GO.transform.position = new Vector2(x, y);
-
-        sr = newEntity_GO.GetComponent<SpriteRenderer>();
-        int selectedSpriteIndex = DetermineSprite(entity);
-        sr.sprite = s[selectedSpriteIndex];
-
-        // Set entity in the entity prefab components
-        newEntity_GO.GetComponent<EntityClicker>()
-            .SetEntity(entity);
-        newEntity_GO.GetComponent<EntityMouseOver>()
-            .SetEntity(entity);
-        newEntity_GO.GetComponent<EntityNotificationGenerator>()
-            .SetEntity(entity);
-    }
-
-    private static int DetermineSprite(Entity entity)
-    {
-        int selectedSpriteIndex;
-        if (entity.type == EntityType.Player ||
-            entity.GetType() == typeof(Merchant))
-        {
-            if (entity.T.Type == TileType.Water)
-            {
-                selectedSpriteIndex = 1;
-            }
-            else
-            {
-                selectedSpriteIndex = 0;
-            }
-        }
-        else
-        {
-            selectedSpriteIndex = 0;
-        }
-
-        return selectedSpriteIndex;
-    }
-
-    private void OnEntityMove(Entity entity, Vector2 startPos)
-    {
-        if (placedEntities.TryGetValue(entity, out GameObject entity_GO))
-        {
-            // See if the sprite needs to change on move
-            SwitchSprite(entity, entity_GO);
-
-            StartCoroutine(SmoothEntityMove(entity, entity_GO, startPos));
-        }
-        else
-        {
-            Debug.Log("The entity's gameObject is missing");
-        }
-    }
-
-    private void SwitchSprite(Entity entity, GameObject entity_GO)
-    {
-        spriteDatabase.EntityDatabase
-            .TryGetValue(entity.EntityName, out Sprite[] s);
-
-        int selectedSpriteIndex = DetermineSprite(entity);
-
-        entity_GO.GetComponent<SpriteRenderer>().sprite =
-            s[selectedSpriteIndex];
-    }
-
-    private void OnVisiblityChanged(Entity e)
-    {
-        if (placedEntities.TryGetValue(e, out GameObject tile_GO))
-        {
-            visibilityAlphaChanger.ChangeVisibilityAlpha(
-                e, tile_GO.GetComponent<SpriteRenderer>());
-        }
-        else
-        {
-            Debug.LogError("What Entity is this?" +
-                "Not in entity-GO dictionary.");
-        }
-    }
-
     public void ClearAll()
     {
         tileSpriteDisplay.ClearAll();
         featureSpriteDisplay.ClearAll();
-
-        List<GameObject> currentGOs = new List<GameObject>();
-        // Get single list of all placed gameobjects
-        foreach (GameObject go in placedEntities.Values)
-        {
-            currentGOs.Add(go);
-        }
-
-        // Destroy all placed gameobjects
-        foreach (GameObject go in currentGOs)
-        {
-            Destroy(go);
-        }
-        StopAllCoroutines();
-
-        // Unregister from each object
-        foreach (Entity entity in placedEntities.Keys)
-        {
-            entity.UnregisterOnMove(OnEntityMove);
-            entity.UnregisterOnVisibilityChanged(OnVisiblityChanged);
-        }
-
-        // Clear dictionaries
-        placedEntities = null;
+        entitySpriteDisplay.ClearAll();
     }
 
-    private IEnumerator SmoothEntityMove(
-        Entity entity, GameObject entity_GO, Vector2 startPos)
-    {
-        Vector2 destinationLocation = new Vector2(entity.X, entity.Y);
-        Vector2 currentLocation = startPos;
-
-        while (Vector3.Distance(destinationLocation, currentLocation)
-            > 0.001f)
-        {
-            float step = moveSpeed * Time.deltaTime;
-            currentLocation = Vector2.MoveTowards(
-                currentLocation, destinationLocation, step);
-
-            entity_GO.transform.position = currentLocation;
-            yield return new WaitForEndOfFrame();
-        }
-
-        entity_GO.transform.position = destinationLocation;
-    }
 }

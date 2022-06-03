@@ -98,6 +98,5 @@ public class FeatureSpriteDisplay : MonoBehaviour
 
         // Clear dictionary
         placedFeatures = new Dictionary<Feature, GameObject>();
-
     }
 }
