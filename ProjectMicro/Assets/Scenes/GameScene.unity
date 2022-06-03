@@ -5654,6 +5654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1512168082}
   - component: {fileID: 1512168083}
+  - component: {fileID: 1512168085}
   - component: {fileID: 1512168084}
   m_Layer: 0
   m_Name: Display
@@ -5688,7 +5689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80fae5f4b416faf45bdb84fe059125fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 3869480886591443336, guid: b518671fc31a21545b55f9f90ba48ac1, type: 3}
+  tileSpriteDisplay: {fileID: 1512168085}
   entitiesPrefab: {fileID: 5839522873765451967, guid: 0d51856916168444bb09033035b2af52, type: 3}
   featurePrefab: {fileID: 5839522873765451967, guid: 886385415125a22439f5580097b28486, type: 3}
   visibilityAlphaChanger: {fileID: 1512168084}
@@ -5704,6 +5705,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f5135d7252a1b4193847bc918d8052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1512168085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512168081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc4773b3374a5d478d30655548bd1cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 3869480886591443336, guid: b518671fc31a21545b55f9f90ba48ac1, type: 3}
+  visibilityAlphaChanger: {fileID: 1512168084}
 --- !u!1 &1521989230
 GameObject:
   m_ObjectHideFlags: 0
@@ -6700,7 +6715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48efe9c22eac5e24ea77d53cfa5f5fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 10
   worldWidth: 100
   worldHeight: 100
 --- !u!114 &1755545258

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EntityNotificationGenerator : MonoBehaviour
 {
-    public Entity entity;
+    private Entity entity;
 
     public void SetEntity(Entity e)
     {
