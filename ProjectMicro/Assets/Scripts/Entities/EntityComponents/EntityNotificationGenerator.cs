@@ -26,4 +26,9 @@ public class EntityNotificationGenerator : MonoBehaviour
         notification.AddComponent<EntityNotification>()
             .StartNotification(delta.ToString());
     }
+
+    private void OnDestroy()
+    {
+        entity.UnregisterOnMoneyDelta(OnMoneyDelta);
+    }
 }
