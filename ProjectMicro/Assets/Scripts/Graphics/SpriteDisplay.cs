@@ -9,20 +9,18 @@ public class SpriteDisplay : MonoBehaviour
 {
     private SpriteDatabase spriteDatabase;
     private GameObject entitiesContainer;
-    private GameObject featuresContainer;
 
     [SerializeField]
     private TileSpriteDisplay tileSpriteDisplay;
+    [SerializeField]
+    private FeatureSpriteDisplay featureSpriteDisplay;
 
     private readonly float moveSpeed = 8f;
 
     private Dictionary<Entity, GameObject> placedEntities;
-    private Dictionary<Feature, GameObject> placedFeatures;
 
     [SerializeField]
     private GameObject entitiesPrefab;
-    [SerializeField]
-    private GameObject featurePrefab;
 
     [SerializeField]
     private VisibilityAlphaChanger visibilityAlphaChanger;
@@ -45,9 +43,6 @@ public class SpriteDisplay : MonoBehaviour
     {
         entitiesContainer = new GameObject("Entities");
         entitiesContainer.transform.parent = transform;
-
-        featuresContainer = new GameObject("Features");
-        featuresContainer.transform.parent = transform;
     }
 
     private void DisplayInitialMap()
@@ -55,7 +50,6 @@ public class SpriteDisplay : MonoBehaviour
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         placedEntities = new Dictionary<Entity, GameObject>();
-        placedFeatures = new Dictionary<Feature, GameObject>();
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
@@ -72,50 +66,24 @@ public class SpriteDisplay : MonoBehaviour
                 int i = areaData.GetIndexFromCoord(x, y);
 
                 // Place initial tiles
-                tileSpriteDisplay.PlaceInitialTile(areaData.MapData[i], x, y);
+                tileSpriteDisplay.PlaceInitialTile(
+                    areaData.MapData[i], x, y);
 
                 // Place initial entities
                 if (areaData.MapData[i].entity != null)
                 {
-                    PlaceInitialEntity(areaData.MapData[i].entity, x, y);
+                    PlaceInitialEntity(
+                        areaData.MapData[i].entity, x, y);
                 }
 
                 // Place initial features
                 if (areaData.MapData[i].feature != null)
                 {
-                    PlaceInitialFeature(areaData.MapData[i].feature, x, y);
+                    featureSpriteDisplay.PlaceInitialFeature(
+                        areaData.MapData[i].feature, x, y);
                 }
             }
         }
-    }
-
-    private void PlaceInitialFeature(Feature feature, int x, int y)
-    {
-        spriteDatabase.FeatureDatabase
-            .TryGetValue(feature.type, out Sprite[] s);
-
-        CreateFeatureGO(feature, x, y, s,
-            out GameObject newFeature, out SpriteRenderer sr);
-
-        // Visibility
-        visibilityAlphaChanger.ChangeVisibilityAlpha(feature, sr);
-
-        placedFeatures.Add(feature, newFeature);
-
-        feature.RegisterOnVisibilityChanged(OnVisiblityChanged);
-    }
-
-    private void CreateFeatureGO(
-        Feature feature, int x, int y, Sprite[] s,
-        out GameObject newFeature, out SpriteRenderer sr)
-    {
-        newFeature =
-            Instantiate(featurePrefab, featuresContainer.transform);
-        newFeature.transform.position = new Vector2(x, y);
-
-        sr = newFeature.GetComponent<SpriteRenderer>();
-        int selectedSpriteIndex = DetermineSprite(feature);
-        sr.sprite = s[selectedSpriteIndex];
     }
 
     private void PlaceInitialEntity(Entity entity, int x, int y)
@@ -154,11 +122,6 @@ public class SpriteDisplay : MonoBehaviour
             .SetEntity(entity);
         newEntity_GO.GetComponent<EntityNotificationGenerator>()
             .SetEntity(entity);
-    }
-
-    private static int DetermineSprite(Feature feature)
-    {
-        return 0;
     }
 
     private static int DetermineSprite(Entity entity)
@@ -210,20 +173,6 @@ public class SpriteDisplay : MonoBehaviour
             s[selectedSpriteIndex];
     }
 
-    private void OnVisiblityChanged(Feature f)
-    {
-        if (placedFeatures.TryGetValue(f, out GameObject tile_GO))
-        {
-            visibilityAlphaChanger.ChangeVisibilityAlpha(
-                f, tile_GO.GetComponent<SpriteRenderer>());
-        }
-        else
-        {
-            Debug.LogError("What Feature is this?" +
-                "Not in entity-GO dictionary.");
-        }
-    }
-
     private void OnVisiblityChanged(Entity e)
     {
         if (placedEntities.TryGetValue(e, out GameObject tile_GO))
@@ -241,14 +190,11 @@ public class SpriteDisplay : MonoBehaviour
     public void ClearAll()
     {
         tileSpriteDisplay.ClearAll();
+        featureSpriteDisplay.ClearAll();
 
         List<GameObject> currentGOs = new List<GameObject>();
         // Get single list of all placed gameobjects
         foreach (GameObject go in placedEntities.Values)
-        {
-            currentGOs.Add(go);
-        }
-        foreach (GameObject go in placedFeatures.Values)
         {
             currentGOs.Add(go);
         }
@@ -261,10 +207,6 @@ public class SpriteDisplay : MonoBehaviour
         StopAllCoroutines();
 
         // Unregister from each object
-        foreach(Feature feature in placedFeatures.Keys)
-        {
-            feature.UnregisterOnVisibilityChanged(OnVisiblityChanged);
-        }
         foreach (Entity entity in placedEntities.Keys)
         {
             entity.UnregisterOnMove(OnEntityMove);
@@ -273,7 +215,6 @@ public class SpriteDisplay : MonoBehaviour
 
         // Clear dictionaries
         placedEntities = null;
-        placedFeatures = null;
     }
 
     private IEnumerator SmoothEntityMove(
