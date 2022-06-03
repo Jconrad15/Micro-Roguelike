@@ -186,8 +186,8 @@ public class WorldGenerator : MonoBehaviour
         {
             int index = rawMapData.potentialCityLocations[i];
 
-            // Sometimes determine not to place city
-            if (Random.value < 0.1f) { continue; }
+            // Determine not to place urban area in each voronoi cell
+            if (Random.value < 0.8f) { continue; }
 
             // Don't place cities in the water
             if (WorldData.Instance.MapData[index].Type != TileType.Water)

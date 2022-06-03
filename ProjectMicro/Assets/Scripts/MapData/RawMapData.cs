@@ -26,7 +26,7 @@ public class RawMapData
         TileType[] rawMap = new TileType[width * height];
         
         int maxCategoryTypes = Enum.GetNames(typeof(TileType)).Length;
-        int seedCount = (int)(width * height * 0.01f);
+        int seedCount = (int)(width * height * 0.02f);
 
         (int[] categories, int[] seedIndicies) =
             Voronoi.JumpFlood(
