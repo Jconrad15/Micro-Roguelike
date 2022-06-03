@@ -114,7 +114,6 @@ public static class AIEntityInstantiation
         }
     }
 
-
     public static void GetPreviousWorldEntities()
     {
         List<Entity> prevEntities =
@@ -124,6 +123,9 @@ public static class AIEntityInstantiation
         {
             if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
             {
+                // Set new tile so that the old tiles reference is lost
+                entity.SetTile(WorldData.Instance.GetTile(entity.X, entity.Y));
+                // Convert AIEntity to subclass
                 dynamic obj = Convert.ChangeType(entity, entity.GetType());
                 cbOnAIEntityCreated?.Invoke(obj);
             }

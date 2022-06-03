@@ -21,6 +21,7 @@ public class AIEntity : Entity
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        T = t;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;
@@ -88,5 +89,20 @@ public class AIEntity : Entity
         {
             NextTile = Pathway.Dequeue();
         }
+    }
+
+    public void NullPathfinding()
+    {
+        Destination = null;
+        NextTile = null;
+        Pathway = null;
+    }
+
+    public override void ClearData()
+    {
+        base.ClearData();
+        Pathway = null;
+        Destination = null;
+        NextTile = null;
     }
 }

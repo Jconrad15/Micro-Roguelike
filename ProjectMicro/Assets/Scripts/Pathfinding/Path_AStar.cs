@@ -29,7 +29,7 @@ public class Path_AStar
         Path_TileGraph tileGraph = areaData.TileGraph;
 
         // Check to see if there is a valid tile graph
-        if (tileGraph == null) 
+        if (tileGraph == null)
         {
             areaData.GenerateTileGraph();
             tileGraph = areaData.TileGraph;

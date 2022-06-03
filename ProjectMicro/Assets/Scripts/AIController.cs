@@ -18,7 +18,15 @@ public class AIController : MonoBehaviour
 
     private void OnAICreated(AIEntity aiEntity)
     {
+        // Try to nullify any pathfinding a loaded entity may have
+        aiEntity.NullPathfinding();
+
         aiEntities.Add(aiEntity);
+
+        if (aiEntity.T == null)
+        {
+            Debug.LogError("New entity's tile is null");
+        }
     }
 
     private void OnAITurn()
@@ -28,7 +36,7 @@ public class AIController : MonoBehaviour
 
     public void ClearAll()
     {
-        aiEntities.Clear();
+        aiEntities = new List<AIEntity>();
     }
 
     private IEnumerator AIProcessing()

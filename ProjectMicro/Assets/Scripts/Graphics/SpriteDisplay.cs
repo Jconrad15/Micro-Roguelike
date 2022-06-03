@@ -15,14 +15,11 @@ public class SpriteDisplay : MonoBehaviour
 
     private readonly float moveSpeed = 8f;
 
-    private Dictionary<Tile, GameObject> placedTiles =
-        new Dictionary<Tile, GameObject>();
+    private Dictionary<Tile, GameObject> placedTiles;
 
-    private Dictionary<Entity, GameObject> placedEntities =
-        new Dictionary<Entity, GameObject>();
+    private Dictionary<Entity, GameObject> placedEntities;
 
-    private Dictionary<Feature, GameObject> placedFeatures =
-        new Dictionary<Feature, GameObject>();
+    private Dictionary<Feature, GameObject> placedFeatures;
 
     [SerializeField]
     private GameObject tilePrefab;
@@ -58,6 +55,10 @@ public class SpriteDisplay : MonoBehaviour
     private void DisplayInitialMap()
     {
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
+
+        placedEntities = new Dictionary<Entity, GameObject>();
+        placedFeatures = new Dictionary<Feature, GameObject>();
+        placedTiles = new Dictionary<Tile, GameObject>();
 
         // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
@@ -656,9 +657,9 @@ public class SpriteDisplay : MonoBehaviour
         }
 
         // Clear dictionaries
-        placedTiles.Clear();
-        placedEntities.Clear();
-        placedFeatures.Clear();
+        placedTiles = null;
+        placedEntities = null;
+        placedFeatures = null;
     }
 
     private IEnumerator SmoothEntityMove(

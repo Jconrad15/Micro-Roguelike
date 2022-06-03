@@ -260,11 +260,18 @@ public class Entity
         CharacterName = NameGenerator.GenerateName();
     }
 
-/*    public void ClearData()
+    public virtual void ClearData()
     {
-        InventoryItems.Clear();
+        InventoryItems = null;
         T = null;
-    }*/
+        EntityName = null;
+        CharacterName = null;
+        cbOnMerchantClicked = null;
+        cbOnMove = null;
+        cbOnPlayerClicked = null;
+        cbOnPlayerMoneyChanged = null;
+        cbOnVisibilityChanged = null;
+    }
 
     public void RegisterOnMove(Action<Entity, Vector2> callbackfunc)
     {
