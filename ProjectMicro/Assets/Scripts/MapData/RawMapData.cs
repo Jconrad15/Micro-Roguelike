@@ -70,6 +70,9 @@ public class RawMapData
         int seed, TileType locationTileType,
         int worldX, int worldY)
     {
+        // Edit seed depending on world location
+        seed = seed * (worldX + 100) * (worldY + 100);
+
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
