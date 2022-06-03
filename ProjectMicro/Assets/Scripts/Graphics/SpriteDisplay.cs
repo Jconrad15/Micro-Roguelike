@@ -142,6 +142,7 @@ public class SpriteDisplay : MonoBehaviour
         // Set entity in the entity prefab components
         newEntity_GO.GetComponent<EntityClicker>().SetEntity(entity);
         newEntity_GO.GetComponent<EntityMouseOver>().SetEntity(entity);
+        newEntity_GO.GetComponent<EntityNotificationGenerator>().SetEntity(entity);
 
         // Visibility
         visibilityAlphaChanger.ChangeVisibilityAlpha(entity, sr);

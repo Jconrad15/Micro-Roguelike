@@ -52,6 +52,12 @@ public class Entity
         get => money;
         protected set
         {
+            int delta = value - money;
+            if (delta != 0)
+            {
+                cbOnMoneyDelta?.Invoke(delta);
+            }
+
             money = value;
             cbOnPlayerMoneyChanged?.Invoke(money);
         }
@@ -73,6 +79,7 @@ public class Entity
     protected Action<Entity, Vector2> cbOnMove;
     protected Action<Entity> cbOnMerchantClicked;
     protected Action<Entity> cbOnPlayerClicked;
+    protected Action<int> cbOnMoneyDelta;
 
     public int TurnsNotMovedStuck { get; protected set; } = 0;
 
@@ -311,5 +318,15 @@ public class Entity
     public void UnregisterOnPlayerClicked(Action<Entity> callbackfunc)
     {
         cbOnPlayerClicked -= callbackfunc;
+    }
+
+    public void RegisterOnMoneyDelta(Action<int> callbackfunc)
+    {
+        cbOnMoneyDelta += callbackfunc;
+    }
+
+    public void UnregisterOnMoneyDelta(Action<int> callbackfunc)
+    {
+        cbOnMoneyDelta -= callbackfunc;
     }
 }
