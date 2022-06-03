@@ -60,10 +60,10 @@ public class SpriteDisplay : MonoBehaviour
                 }
 
                 // Place initial features
-                if (areaData.MapData[i].feature != null)
+                if (areaData.MapData[i].TileFeature != null)
                 {
                     featureSpriteDisplay.PlaceInitialFeature(
-                        areaData.MapData[i].feature, x, y);
+                        areaData.MapData[i].TileFeature, x, y);
                 }
             }
         }

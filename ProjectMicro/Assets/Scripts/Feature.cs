@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public enum FeatureType { Door, City, Town, ExitLocation };
+public enum FeatureType { Door, City, Town, ExitLocation, Wall };
 [Serializable]
 public class SerialziableFeature
 {

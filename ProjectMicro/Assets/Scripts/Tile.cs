@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public enum TileType { OpenArea, Wall, Water, Grass, Forest };
+public enum TileType { OpenArea, Water, Grass, Forest };
 [Serializable]
 public enum VisibilityLevel { NotVisible, PreviouslySeen, Visible };
 [Serializable]
@@ -30,14 +30,30 @@ public class Tile
         set
         {
             type = value;
-            if (value == TileType.Wall)
+/*            if (value == TileType.Wall)
             {
                 isWalkable = false;
-            }
+            }*/
         }
     }
     public Entity entity;
-    public Feature feature;
+
+    private Feature tileFeature;
+    public Feature TileFeature 
+    { 
+        get => tileFeature;
+        set
+        {
+            tileFeature = value;
+            if (value != null)
+            {
+                if (value.type == FeatureType.Wall)
+                {
+                    isWalkable = false;
+                }
+            }
+        }
+    }
     public Item item;
     public bool isWalkable = true;
 
@@ -65,15 +81,15 @@ public class Tile
 
         // Start with some null data
         entity = null;
-        feature = null;
+        TileFeature = null;
         neighbors = null;
         item = null;
 
         Visibility = VisibilityLevel.NotVisible;
-        if (type == TileType.Wall)
+/*        if (type == TileType.Wall)
         {
             isWalkable = false;
-        }
+        }*/
     }
 
     // Constructor for loading tile data from save file
@@ -84,7 +100,7 @@ public class Tile
         this.y = y;
         this.Type = type;
         this.entity = entity;
-        this.feature = feature;
+        this.TileFeature = feature;
         this.item = item;
         this.isWalkable = isWalkable;
         Visibility = visibility;

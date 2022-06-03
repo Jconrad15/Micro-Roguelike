@@ -128,7 +128,7 @@ public class WorldGenerator : MonoBehaviour
         locationGenerator.StartGenerateLocation(
             playerWorldX, playerWorldY,
             tileType, player,
-            player.T.feature);
+            player.T.TileFeature);
     }
 
     private void CreateWorldMapData(int seed)
@@ -195,14 +195,14 @@ public class WorldGenerator : MonoBehaviour
                 // Choose between city and town
                 if (Random.value > 0.5)
                 {
-                    WorldData.Instance.MapData[index].feature =
+                    WorldData.Instance.MapData[index].TileFeature =
                     new Feature(
                         FeatureType.Town,
                         WorldData.Instance.MapData[index]);
                 }
                 else
                 {
-                    WorldData.Instance.MapData[index].feature =
+                    WorldData.Instance.MapData[index].TileFeature =
                         new Feature(
                             FeatureType.City,
                             WorldData.Instance.MapData[index]);

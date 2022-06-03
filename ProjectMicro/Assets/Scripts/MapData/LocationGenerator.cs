@@ -88,8 +88,8 @@ public class LocationGenerator : MonoBehaviour
                 // Determine location
                 int index = Random.Range(0, mapData.Length);
 
-                // return if already wall
-                if (mapData[index].Type == TileType.Wall) { return; }
+                // return if already a feature
+                if (mapData[index].TileFeature != null) { continue; }
 
                 int sizeX = Random.Range(6, 10);
                 int sizeY = Random.Range(6, 10);
@@ -181,7 +181,9 @@ public class LocationGenerator : MonoBehaviour
                     doorY = Mathf.Clamp(doorY, doorMinY, doorMaxY);
 
                     int doorIndex = LocationData.Instance.GetIndexFromCoord(doorX, doorY);
-                    mapData[doorIndex].feature = new Feature(FeatureType.Door, mapData[doorIndex]);
+                    mapData[doorIndex].TileFeature = new Feature(FeatureType.Door, mapData[doorIndex]);
+                    // Change door to open area
+                    mapData[doorIndex].Type = TileType.OpenArea;
                 }
             }
         }
@@ -193,14 +195,10 @@ public class LocationGenerator : MonoBehaviour
             {
                 int index = LocationData.Instance.GetIndexFromCoord(x, y);
 
-                // If this was designated as a door, set to open area and continue
-                if (mapData[index].feature != null)
+                // If this was designated as a feature, then just continue
+                if (mapData[index].TileFeature != null)
                 {
-                    if (mapData[index].feature.type == FeatureType.Door)
-                    {
-                        mapData[index].Type = TileType.OpenArea;
-                        continue;
-                    }
+                    continue;
                 }
 
                 // if is indoor
@@ -239,8 +237,10 @@ public class LocationGenerator : MonoBehaviour
                             // Place wall here, but only 90% of the time
                             if (Random.value < 0.9f)
                             {
-
-                                mapData[index].Type = TileType.Wall;
+                                mapData[index].TileFeature =
+                                    new Feature(FeatureType.Wall, mapData[index]);
+                                // Also set tile to open area
+                                mapData[index].Type = TileType.OpenArea;
                                 break;
                             }
                             else
@@ -305,13 +305,13 @@ public class LocationGenerator : MonoBehaviour
             // Set edges to exit area
             if (x == 0 || y == 0)
             {
-                mapdata[i].feature =
+                mapdata[i].TileFeature =
                     new Feature(FeatureType.ExitLocation, mapdata[i]);
                 continue;
             }
             if (x == locationWidth - 1 || y == locationHeight - 1)
             {
-                mapdata[i].feature =
+                mapdata[i].TileFeature =
                     new Feature(FeatureType.ExitLocation, mapdata[i]);
                 continue;
             }

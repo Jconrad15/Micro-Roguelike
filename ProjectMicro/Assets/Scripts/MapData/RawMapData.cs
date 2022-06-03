@@ -37,12 +37,12 @@ public class RawMapData
         {
             rawMap[i] = (TileType)categories[i];
 
-            // Switch any walls and exit tiles to open area tiles
+/*            // Switch any walls and exit tiles to open area tiles
             if (rawMap[i] == TileType.Wall)
             {
                 rawMap[i] = TileType.OpenArea;
                 continue;
-            }
+            }*/
         }
 
         return (rawMap, seedIndicies);
@@ -81,9 +81,8 @@ public class RawMapData
         int maxCategoryTypes = Enum.GetNames(typeof(TileType)).Length;
         int seedCount = width / 2;
 
-        (int[] categories, int[] seedIndicies) =
-            Voronoi.JumpFlood(
-                width, height, seed, seedCount, maxCategoryTypes);
+        (int[] categories, _ ) = Voronoi.JumpFlood(
+            width, height, seed, seedCount, maxCategoryTypes);
 
         // Determine tiletypes based on voronoi categories
         // and location tile type
@@ -91,11 +90,11 @@ public class RawMapData
         {
             rawMap[i] = (TileType)categories[i];
 
-            // Switch any walls to open area tiles
+/*            // Switch any walls to open area tiles
             if (rawMap[i] == TileType.Wall)
             {
                 rawMap[i] = TileType.OpenArea;
-            }
+            }*/
 
             // Change raw map based on location type in the world
             rawMap[i] = EditTileTypeForLocation(

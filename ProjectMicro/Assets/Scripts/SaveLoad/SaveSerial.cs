@@ -84,12 +84,12 @@ public class SaveSerial : MonoBehaviour
 
             // Check if a feature is present
             SerialziableFeature f = null;
-            if (mapData[i].feature != null)
+            if (mapData[i].TileFeature != null)
             {
                 f = new SerialziableFeature
                 {
-                    type = mapData[i].feature.type,
-                    visibility = mapData[i].feature.Visibility,
+                    type = mapData[i].TileFeature.type,
+                    visibility = mapData[i].TileFeature.Visibility,
                 };
             }
 
