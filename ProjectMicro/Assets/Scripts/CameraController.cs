@@ -5,18 +5,47 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private readonly int zOffset = -10;
-    private readonly float standardSpeed = 7f;
+    private readonly float panSpeed = 7f;
+    private readonly float zoomSpeed = 20f;
     private Vector3 destinationLocation;
+
+    private readonly float minSize = 5f;
+    private readonly float maxSize = 100f;
 
     private void OnEnable()
     {
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
-        PlayerController playerController = FindObjectOfType<PlayerController>();
+        PlayerController playerController =
+            FindObjectOfType<PlayerController>();
         playerController.RegisterOnPlayerMove(OnPlayerMove);
 
-        FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(SnapToPlayer);
-        FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(SnapToPlayer);
+        FindObjectOfType<LocationGenerator>()
+            .RegisterOnLocationCreated(SnapToPlayer);
+        FindObjectOfType<WorldGenerator>()
+            .RegisterOnWorldCreated(SnapToPlayer);
+    }
+
+    private void Update()
+    {
+        // Zoom
+        float scroll = Input.mouseScrollDelta.y;
+        if (scroll != 0)
+        {
+            float currentSize = Camera.main.orthographicSize;
+            currentSize -= scroll * zoomSpeed * currentSize * Time.deltaTime;
+
+            if (currentSize < minSize)
+            {
+                currentSize = minSize;
+            }
+            else if (currentSize > maxSize)
+            {
+                currentSize = maxSize;
+            }
+
+            Camera.main.orthographicSize = currentSize;
+        }
     }
 
     private void OnPlayerCreated(Player p)
@@ -41,9 +70,12 @@ public class CameraController : MonoBehaviour
         Vector3 currentLocation = transform.position;
         destinationLocation = new Vector3(x, y, zOffset);
 
-        while (Vector3.Distance(destinationLocation, currentLocation) > 0.001f)
+        float distance =
+            Vector3.Distance(destinationLocation, currentLocation);
+
+        while (distance > 0.001f)
         {
-            float step = standardSpeed * Time.deltaTime;
+            float step = panSpeed * Time.deltaTime;
             currentLocation = Vector3.MoveTowards(
                 currentLocation, destinationLocation, step);
 
