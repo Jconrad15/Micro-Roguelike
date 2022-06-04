@@ -4,8 +4,6 @@ using System.Collections.Generic;
 [Serializable]
 public class AIEntity : Entity
 {
-    public bool IsFollower { get;protected set; }
-
     protected Path_AStar Pathway { get; set; }
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
@@ -37,7 +35,8 @@ public class AIEntity : Entity
             // and not at end tile,
             // and not yet at max turns of not moving
             // return false, no new destination
-            if (Pathway.Length() > 0 && TurnsNotMovedStuck <= maxTurnsNotMovedStuck)
+            if (Pathway.Length() > 0 &&
+                TurnsNotMovedStuck <= maxTurnsNotMovedStuck)
             {
                 return false;
             }

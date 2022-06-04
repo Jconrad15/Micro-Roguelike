@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +12,8 @@ Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
 Fresh Produce Cartographer Stables University Hatter Bank Spice 
 Shipwrights Wineries*/
 
-public enum MerchantType { WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer };
+public enum MerchantType {
+    WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer };
 public class Merchant : AIEntity
 {
     private const float sellModifier = 0.2f;
@@ -21,7 +21,9 @@ public class Merchant : AIEntity
     public MerchantType MType { get; protected set; }
     protected MerchantTypeRef typeRef;
 
-    public Merchant(Tile t, EntityType type, MerchantType merchantType, int startingMoney)
+    public Merchant(
+        Tile t, EntityType type,
+        MerchantType merchantType, int startingMoney)
         : base(t, type, startingMoney)
     {
         EntityName = "merchant";
@@ -105,7 +107,8 @@ public class Merchant : AIEntity
         {
             for (int i = 0; i < typeRef.preferredSell.Length; i++)
             {
-                if (itemInQuestion.itemName == typeRef.preferredSell[i].itemName)
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredSell[i].itemName)
                 {
                     modifier -= sellModifier;
                     break;
@@ -120,7 +123,8 @@ public class Merchant : AIEntity
         {
             for (int i = 0; i < typeRef.preferredBuy.Length; i++)
             {
-                if (itemInQuestion.itemName == typeRef.preferredBuy[i].itemName)
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredBuy[i].itemName)
                 {
                     modifier += sellModifier;
                     break;
@@ -128,7 +132,8 @@ public class Merchant : AIEntity
             }
         }
 
-        // Return the base cost mutlipled by any modifier, but truncated to int
+        // Return the base cost mutlipled by any modifier,
+        // but truncated to int
         return (int)(itemInQuestion.baseCost * modifier);
     }
 

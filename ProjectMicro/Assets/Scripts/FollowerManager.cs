@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class FollowerManager
 {
-    public List<Entity> Followers { get; private set; }
+    public List<Follower> CurrentFollowers { get; private set; }
 
     public FollowerManager()
     {
-        Followers = new List<Entity>();
+        CurrentFollowers = new List<Follower>();
     }
 
-    public void AddFollower(Entity e)
+    public void AddFollower(Follower f)
     {
-        if (e == null) { return; }
-        Followers.Add(e);
+        if (f == null) { return; }
+        CurrentFollowers.Add(f);
     }
 
 }
