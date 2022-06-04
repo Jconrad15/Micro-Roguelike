@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class Player : Entity
 {
+    private FollowerManager followerManager;
+
     private Action<PlayerLicense> cbOnPlayerLicenseChanged;
 
     public enum PlayerLicense { Traveller, Merchant };
@@ -25,6 +27,8 @@ public class Player : Entity
         EntityName = "player";
         License = PlayerLicense.Traveller;
         Money = startingMoney;
+
+        followerManager = new FollowerManager();
     }
 
     // Constructor for loaded player
@@ -43,6 +47,8 @@ public class Player : Entity
         {
             T = t;
         }
+
+        followerManager = new FollowerManager();
     }
 
     public bool TryPurchaseTitle(int cost)

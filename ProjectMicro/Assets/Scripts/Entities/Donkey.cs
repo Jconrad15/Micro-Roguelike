@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dog : Animal
+public class Donkey : Animal
 {
-    public Dog(Tile t, EntityType type, int startingMoney)
+    public Donkey(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
-        EntityName = "dog";
+        EntityName = "donkey";
     }
 
-    // Constructor for loaded Dog
-    public Dog(EntityType type, List<Item> inventoryItems,
+    // Constructor for loaded Donkey
+    public Donkey(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Tile t = null) : base(t, type, money)
     {
@@ -26,4 +26,5 @@ public class Dog : Animal
             T = t;
         }
     }
+
 }

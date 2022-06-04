@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class AIEntity : Entity
 {
+    public bool IsFollower { get;protected set; }
+
     protected Path_AStar Pathway { get; set; }
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }

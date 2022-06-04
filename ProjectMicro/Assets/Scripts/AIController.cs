@@ -48,7 +48,7 @@ public class AIController : MonoBehaviour
             AIEntity aiEntity = aiEntities[i];
 
             // Does ai entity need a new path from pathfinding
-            aiEntity.TryDetermineNewDestination();
+            _ = aiEntity.TryDetermineNewDestination();
 
             bool moved = aiEntity.TryMove(aiEntity.NextTile);
             if (moved) { aiEntity.Moved(); }
