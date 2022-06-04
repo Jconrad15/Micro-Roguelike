@@ -22,6 +22,8 @@ public class GameInitializer : MonoBehaviour
 
     private void Start()
     {
+        ItemDatabase.CreateDatabase();
+
         // Check if player wanted to load game
         if (SceneBus.Instance != null)
         {
@@ -32,9 +34,8 @@ public class GameInitializer : MonoBehaviour
             }
         }
 
-        // Normal world generation process
+        // Otherwise, normal world generation process
         Seed = Random.Range(-10000, 10000);
-
         WorldGenerator.Instance.StartGeneration();
     }
 

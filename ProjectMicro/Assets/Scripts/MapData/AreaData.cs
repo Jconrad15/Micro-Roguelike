@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class AreaData : MonoBehaviour
 {
+    public bool IsWorld { get; private set; }
+
     public Tile[] MapData { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
-    public List<Entity> Entities { get; protected set; } = new List<Entity>();
-    public List<Feature> Features { get; protected set; } = new List<Feature>();
+    public List<Entity> Entities { get; protected set; } =
+        new List<Entity>();
+    public List<Feature> Features { get; protected set; } =
+        new List<Feature>();
 
     public Path_TileGraph TileGraph { get; protected set; }
 
@@ -40,7 +44,8 @@ public class AreaData : MonoBehaviour
     public Tile[] GetNeighboringTiles(Tile t)
     {
         List<Tile> neighbors = new List<Tile>();
-        foreach (Direction d in (Direction[])System.Enum.GetValues(typeof(Direction)))
+        foreach (Direction d in 
+            (Direction[])System.Enum.GetValues(typeof(Direction)))
         {
             neighbors.Add(GetNeighboringTile(d, t));
         }

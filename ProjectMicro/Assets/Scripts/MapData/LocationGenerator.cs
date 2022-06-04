@@ -120,7 +120,8 @@ public class LocationGenerator : MonoBehaviour
                             if (localNeighborTile == null) { continue; }
 
                             //Check if at edge of map
-                            if (localNeighborTile.x >= LocationData.Instance.Width - 2)
+                            if (localNeighborTile.x >=
+                                LocationData.Instance.Width - 2)
                             {
                                 doorMaxX = x;
                                 continue; 
@@ -130,7 +131,8 @@ public class LocationGenerator : MonoBehaviour
                                 doorMinX = x;
                                 continue;
                             }
-                            if (localNeighborTile.y >= LocationData.Instance.Height - 2)
+                            if (localNeighborTile.y >=
+                                LocationData.Instance.Height - 2)
                             { 
                                 doorMaxY = y;
                                 continue; 
@@ -176,12 +178,14 @@ public class LocationGenerator : MonoBehaviour
                         }
                     }
 
-                    // Clamp door position based on potentially previously determined min/max values
+                    // Clamp door position based on potentially
+                    // previously determined min/max values
                     doorX = Mathf.Clamp(doorX, doorMinX, doorMaxX);
                     doorY = Mathf.Clamp(doorY, doorMinY, doorMaxY);
 
                     int doorIndex = LocationData.Instance.GetIndexFromCoord(doorX, doorY);
-                    mapData[doorIndex].TileFeature = new Feature(FeatureType.Door, mapData[doorIndex]);
+                    mapData[doorIndex].TileFeature =
+                        new Feature(FeatureType.Door, mapData[doorIndex]);
                     // Change door to open area
                     mapData[doorIndex].Type = TileType.OpenArea;
                 }
@@ -207,22 +211,26 @@ public class LocationGenerator : MonoBehaviour
                     // Get isIndoor neighbors
                     List<bool> isIndoorNeighbor = new List<bool>();
 
-                    int index1 = LocationData.Instance.GetIndexFromCoord(x, y + 1);
+                    int index1 = LocationData.Instance
+                        .GetIndexFromCoord(x, y + 1);
                     if (index1 >= 0 && index1 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index1]);
                     }
-                    int index2 = LocationData.Instance.GetIndexFromCoord(x + 1, y);
+                    int index2 = LocationData.Instance
+                        .GetIndexFromCoord(x + 1, y);
                     if (index2 >= 0 && index2 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index2]);
                     }
-                    int index3 = LocationData.Instance.GetIndexFromCoord(x, y - 1);
+                    int index3 = LocationData.Instance
+                        .GetIndexFromCoord(x, y - 1);
                     if (index3 >= 0 && index3 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index3]);
                     }
-                    int index4 = LocationData.Instance.GetIndexFromCoord(x - 1, y);
+                    int index4 = LocationData.Instance
+                        .GetIndexFromCoord(x - 1, y);
                     if (index4 >= 0 && index4 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index4]);
@@ -237,8 +245,8 @@ public class LocationGenerator : MonoBehaviour
                             // Place wall here, but only 90% of the time
                             if (Random.value < 0.9f)
                             {
-                                mapData[index].TileFeature =
-                                    new Feature(FeatureType.Wall, mapData[index]);
+                                mapData[index].TileFeature = new Feature(
+                                    FeatureType.Wall, mapData[index]);
                                 // Also set tile to open area
                                 mapData[index].Type = TileType.OpenArea;
                                 break;
@@ -251,7 +259,8 @@ public class LocationGenerator : MonoBehaviour
                         }
                         else
                         {
-                            // if all neighbors are inside, then this should be openarea
+                            // if all neighbors are inside,
+                            // then this should be openarea
                             mapData[index].Type = TileType.OpenArea;
                         }
                     }
@@ -265,16 +274,17 @@ public class LocationGenerator : MonoBehaviour
     private void CreateLocationMapData(
         TileType locationTileType, int worldX, int worldY)
     {
-        LocationData.Instance.MapData = new Tile[locationWidth * locationHeight];
+        LocationData.Instance.MapData =
+            new Tile[locationWidth * locationHeight];
         LocationData.Instance.Width = locationWidth;
         LocationData.Instance.Height = locationHeight;
 
         int seed = GameInitializer.Instance.Seed;
 
         // Create raw base tile type map
-        RawMapData rawMapData =
-            new RawMapData(locationWidth, locationHeight, seed, locationTileType,
-            worldX, worldY);
+        RawMapData rawMapData = new RawMapData(
+            locationWidth, locationHeight, seed,
+            locationTileType, worldX, worldY);
 
         // Perform any edits to the raw base tile type map
 

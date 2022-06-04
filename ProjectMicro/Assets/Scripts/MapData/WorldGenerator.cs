@@ -10,8 +10,6 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private int worldHeight = 50;
 
-    private LocationGenerator locationGenerator;
-
     private Action cbOnWorldCreated;
 
     private int playerWorldX;
@@ -33,9 +31,6 @@ public class WorldGenerator : MonoBehaviour
 
     private void OnEnable()
     {
-        locationGenerator = FindObjectOfType<LocationGenerator>();
-        InitializeItemDatabase();
-
         FindObjectOfType<PlayerController>()
             .RegisterOnPlayerGoToExitTile(OnPlayerGoToExitTile);
     }
@@ -90,11 +85,6 @@ public class WorldGenerator : MonoBehaviour
         Random.state = oldState;
 
         cbOnWorldCreated?.Invoke();
-    }
-
-    private void InitializeItemDatabase()
-    {
-        ItemDatabase.CreateDatabase();
     }
 
     public void SavePlayerWorldPosition(int x, int y)
