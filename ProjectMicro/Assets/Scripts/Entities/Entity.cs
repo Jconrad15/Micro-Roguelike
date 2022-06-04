@@ -44,6 +44,7 @@ public class Entity
     }
 
     public List<Item> InventoryItems { get; protected set; }
+    public int InventorySize { get; protected set; } = 10;
 
     protected Action<int> cbOnPlayerMoneyChanged;
     private int money;
@@ -80,6 +81,8 @@ public class Entity
     protected Action<Entity> cbOnMerchantClicked;
     protected Action<Entity> cbOnPlayerClicked;
     protected Action<int> cbOnMoneyDelta;
+    protected Action<Item> cbOnItemPurchased;
+    protected Action<Item> cbOnItemSold;
 
     public int TurnsNotMovedStuck { get; protected set; } = 0;
 
@@ -211,14 +214,15 @@ public class Entity
         // Transfer to the trader if possible
         if (isPlayerItem)
         {
-            // If the trader has enough money
-            if (adjustedItemCost <= m.Money)
+            // If the trader has enough money and inventory space
+            if (adjustedItemCost <= m.Money &&
+                InventoryItems.Count < InventorySize)
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
                 return true;
             }
-            // The trader does not have enough money
+            // The trader does not have enough money or enough space
             else
             {
                 return false;
@@ -227,16 +231,18 @@ public class Entity
         // Trasfer to the player if possible
         else
         {
-            // If the player has enough money
-            if (adjustedItemCost <= player.Money)
+            // If the player has enough money and inventory space
+            if (adjustedItemCost <= player.Money &&
+                player.InventoryItems.Count < InventorySize)
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
                 return true;
             }
-            // The trader does not have enough money
+            // The player does not have enough money or space
             else
             {
+                Debug.Log("no money or no space");
                 return false;
             }
         }
@@ -250,6 +256,7 @@ public class Entity
     {
         Money -= adjustedCost;
         InventoryItems.Add(item);
+        cbOnItemPurchased?.Invoke(item);
     }
 
     /// <summary>
@@ -260,6 +267,7 @@ public class Entity
     {
         Money += adjustedCost;
         _ = InventoryItems.Remove(item);
+        cbOnItemSold?.Invoke(item);
     }
 
     protected void CreateCharacterName()
@@ -328,5 +336,25 @@ public class Entity
     public void UnregisterOnMoneyDelta(Action<int> callbackfunc)
     {
         cbOnMoneyDelta -= callbackfunc;
+    }
+
+    public void RegisterOnItemPurchased(Action<Item> callbackfunc)
+    {
+        cbOnItemPurchased += callbackfunc;
+    }
+
+    public void UnregisterOnItemPurchased(Action<Item> callbackfunc)
+    {
+        cbOnItemPurchased -= callbackfunc;
+    }
+
+    public void RegisterOnItemSold(Action<Item> callbackfunc)
+    {
+        cbOnItemSold += callbackfunc;
+    }
+
+    public void UnregisterOnItemSold(Action<Item> callbackfunc)
+    {
+        cbOnItemSold -= callbackfunc;
     }
 }

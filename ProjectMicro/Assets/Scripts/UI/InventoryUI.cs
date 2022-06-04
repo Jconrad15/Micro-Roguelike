@@ -19,6 +19,8 @@ public class InventoryUI : MonoBehaviour
     private TextMeshProUGUI moneyText;
     [SerializeField]
     private TextMeshProUGUI tributeDueText;
+    [SerializeField]
+    private TextMeshProUGUI inventorySpaceText;
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
@@ -38,6 +40,8 @@ public class InventoryUI : MonoBehaviour
         p.RegisterOnPlayerClicked(OnPlayerClicked);
         p.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
         p.RegisterOnMoneyChanged(OnPlayerMoneyChanged);
+        p.RegisterOnItemPurchased(OnPlayerInventoryChanged);
+        p.RegisterOnItemSold(OnPlayerInventoryChanged);
         player = p;
     }
 
@@ -65,6 +69,15 @@ public class InventoryUI : MonoBehaviour
         CreateUIItems();
         UpdateMoneyText();
         UpdateTributeText();
+        UpdateInventorySpaceText();
+    }
+
+    private void UpdateInventorySpaceText()
+    {
+        inventorySpaceText.SetText(
+            player.InventoryItems.Count.ToString() +
+            " / " + 
+            player.InventorySize.ToString());
     }
 
     private void UpdateMoneyText()
@@ -118,6 +131,11 @@ public class InventoryUI : MonoBehaviour
         Debug.Log("Inventory item clicked");
     }
 
+    private void OnPlayerInventoryChanged(Item item)
+    {
+        RefreshInventoryItems();
+    }
+
     public void Hide()
     {
         inventoryArea.SetActive(false);
@@ -143,5 +161,6 @@ public class InventoryUI : MonoBehaviour
         inventoryItems.Clear();
 
         CreateUIItems();
+        UpdateInventorySpaceText();
     }
 }
