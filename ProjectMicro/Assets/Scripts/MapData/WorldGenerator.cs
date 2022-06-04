@@ -97,38 +97,10 @@ public class WorldGenerator : MonoBehaviour
         ItemDatabase.CreateDatabase();
     }
 
-    void Update()
+    public void SavePlayerWorldPosition(int x, int y)
     {
-        // If on world map
-        if (CurrentMapType.Type == MapType.World)
-        {
-            // If hit space bar
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                EnterLocation();
-            }
-        }
-    }
-
-    private void EnterLocation()
-    {
-        // Get player location
-        Player player = FindObjectOfType<PlayerController>().GetPlayer();
-
-        TileType tileType = player.T.Type;
-
-        // Save world location for now
-        playerWorldX = player.X;
-        playerWorldY = player.Y;
-
-        // First need to destroy all current info
-        DataLoader.ClearAllOldData();
-
-        // Then load the location
-        locationGenerator.StartGenerateLocation(
-            playerWorldX, playerWorldY,
-            tileType, player,
-            player.T.TileFeature);
+        playerWorldX = x;
+        playerWorldY = y;
     }
 
     private void CreateWorldMapData(int seed)
