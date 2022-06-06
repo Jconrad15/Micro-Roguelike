@@ -31,7 +31,7 @@ public class DialogueUI : MonoBehaviour
     {
         FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
         FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
-        CurrentMapType.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
 
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -60,11 +60,11 @@ public class DialogueUI : MonoBehaviour
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = WorldData.Instance.Entities;
+            entities = AreaDataManager.Instance.GetWorldData().Entities;
         }
         else
         {
-            entities = LocationData.Instance.Entities;
+            entities = AreaDataManager.Instance.CurrentLocationData.Entities;
         }
 
         // Register to all merchants
@@ -77,18 +77,18 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    private void UnregisterToClicksOnEntities()
+    public void UnregisterToClicksOnEntities()
     {
-        MapType mapType = CurrentMapType.Type;
+        MapType mapType = AreaDataManager.Instance.CurrentMapType;
 
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = WorldData.Instance.Entities;
+            entities = AreaDataManager.Instance.GetWorldData().Entities;
         }
         else
         {
-            entities = LocationData.Instance.Entities;
+            entities = AreaDataManager.Instance.CurrentLocationData.Entities;
         }
 
         // Unregister to all merchants

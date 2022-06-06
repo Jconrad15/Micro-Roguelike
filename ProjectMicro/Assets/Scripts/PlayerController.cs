@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         cbOnPlayerMoved?.Invoke(player.X, player.Y);
 
         // Check if player entered an exit tile
-        if (CurrentMapType.Type == MapType.Location)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
         {
             if (player.T.TileFeature != null)
             {

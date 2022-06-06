@@ -1,20 +1,25 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class AreaData : MonoBehaviour
+public class AreaData
 {
+    public bool IsWorld { get; private set; }
+
     public Tile[] MapData { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
-    public List<Entity> Entities { get; protected set; } = new List<Entity>();
-    public List<Feature> Features { get; protected set; } = new List<Feature>();
+    public List<Entity> Entities { get; protected set; } =
+        new List<Entity>();
+    public List<Feature> Features { get; protected set; } =
+        new List<Feature>();
 
     public Path_TileGraph TileGraph { get; protected set; }
 
     public void GenerateTileGraph()
     {
-        TileGraph = new Path_TileGraph();
+        TileGraph = new Path_TileGraph(this);
     }
 
     public void AddEntity(Entity e)
@@ -40,7 +45,8 @@ public class AreaData : MonoBehaviour
     public Tile[] GetNeighboringTiles(Tile t)
     {
         List<Tile> neighbors = new List<Tile>();
-        foreach (Direction d in (Direction[])System.Enum.GetValues(typeof(Direction)))
+        foreach (Direction d in 
+            (Direction[])System.Enum.GetValues(typeof(Direction)))
         {
             neighbors.Add(GetNeighboringTile(d, t));
         }
@@ -50,35 +56,35 @@ public class AreaData : MonoBehaviour
 
     public static AreaData GetAreaDataForCurrentType()
     {
-        if (CurrentMapType.Type == MapType.World)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.World)
         {
-            return WorldData.Instance;
+            return AreaDataManager.Instance.GetWorldData();
         }
         else
         {
-            return LocationData.Instance;
+            return AreaDataManager.Instance.CurrentLocationData;
         }
     }
 
     public static Tile[] GetMapDataForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.MapData :
-            LocationData.Instance.MapData;
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().MapData :
+            AreaDataManager.Instance.CurrentLocationData.MapData;
     }
 
     public static List<Entity> GetEntitiesForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.Entities :
-            LocationData.Instance.Entities;
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().Entities :
+            AreaDataManager.Instance.CurrentLocationData.Entities;
     }
 
     public static List<Feature> GetFeaturesForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.Features :
-            LocationData.Instance.Features;
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().Features :
+            AreaDataManager.Instance.CurrentLocationData.Features;
     }
 
     public Tile GetRandomWalkableTile()
@@ -151,13 +157,10 @@ public class AreaData : MonoBehaviour
     /// </summary>
     public void SetTileNeighbors()
     {
-        AreaData areaData = GetAreaDataForCurrentType();
-
-        for (int i = 0; i < areaData.MapData.Length; i++)
+        for (int i = 0; i < MapData.Length; i++)
         {
-            Tile[] neighbors =
-                areaData.GetNeighboringTiles(areaData.MapData[i]);
-            areaData.MapData[i].SetNeighbors(neighbors);
+            Tile[] neighbors = GetNeighboringTiles(MapData[i]);
+            MapData[i].SetNeighbors(neighbors);
         }
     }
 

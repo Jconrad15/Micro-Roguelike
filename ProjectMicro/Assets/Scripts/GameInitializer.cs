@@ -6,7 +6,11 @@ public class GameInitializer : MonoBehaviour
 {
     [SerializeField]
     public int Seed { get; private set; } = 0;
-    
+    [SerializeField]
+    private int worldWidth = 100;
+    [SerializeField]
+    private int worldHeight = 100;
+
     public static GameInitializer Instance { get; private set; }
     private void Awake()
     {
@@ -22,6 +26,10 @@ public class GameInitializer : MonoBehaviour
 
     private void Start()
     {
+        ItemDatabase.CreateDatabase();
+
+        AreaDataManager.Instance.Initiate(worldWidth, worldHeight);
+
         // Check if player wanted to load game
         if (SceneBus.Instance != null)
         {
@@ -32,10 +40,9 @@ public class GameInitializer : MonoBehaviour
             }
         }
 
-        // Normal world generation process
+        // Otherwise, normal world generation process
         Seed = Random.Range(-10000, 10000);
-
-        WorldGenerator.Instance.StartGeneration();
+        WorldGenerator.Instance.StartGeneration(worldWidth, worldHeight);
     }
 
     public void OnDataLoaded(MapType loadedMapType, int loadedSeed)

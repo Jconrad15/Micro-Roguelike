@@ -278,6 +278,12 @@ public class Entity
     public virtual void ClearData()
     {
         InventoryItems = null;
+
+        if (T != null)
+        {
+            T.entity = null;
+        }
+
         T = null;
         EntityName = null;
         CharacterName = null;

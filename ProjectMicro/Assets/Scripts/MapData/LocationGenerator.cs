@@ -26,18 +26,38 @@ public class LocationGenerator : MonoBehaviour
         }
     }
 
+    public void GenerateOrLoadLocation(
+        int worldX, int worldY, TileType locationTileType,
+        Player player, Feature locationFeature)
+    {
+        // Check if location data already exists
+        bool locationDataExists =
+            AreaDataManager.Instance.TryGetLocationData(
+                worldX, worldY, out AreaData locationData);
+
+        if (locationDataExists)
+        {
+            LoadLocation(locationData, player);
+        }
+        else
+        {
+            // if not, generate
+            StartGenerateLocation(worldX, worldY, locationTileType,
+                player, locationFeature);
+        }
+    }
+
     /// <summary>
     /// Initiate generation of this location.
     /// </summary>
     /// <param name="seed"></param>
-    public void StartGenerateLocation(
+    private void StartGenerateLocation(
         int worldX, int worldY, TileType locationTileType, Player player,
         Feature locationFeature)
     {
-        int seed = GameInitializer.Instance.Seed;
-
-        CurrentMapType.SetCurrentMapType(MapType.Location);
+        AreaDataManager.Instance.SetCurrentMapType(MapType.Location);
         
+        int seed = GameInitializer.Instance.Seed;
         // Modify seed for this generation to relate to world pos
         seed = (seed + worldX + worldY) * 10;
 
@@ -53,6 +73,22 @@ public class LocationGenerator : MonoBehaviour
         AIEntityInstantiation.CreateLocationAIEntities(seed);
 
         Random.state = oldState;
+
+        cbOnLocationCreated?.Invoke();
+    }
+
+    /// <summary>
+    /// Load previously generated data of this location.
+    /// </summary>
+    /// <param name="seed"></param>
+    private void LoadLocation(AreaData locationData, Player player)
+    {
+        AreaDataManager.Instance.SetCurrentMapType(MapType.Location);
+        AreaDataManager.Instance.CurrentLocationData = locationData;
+
+        PlayerInstantiation.TransitionPlayerToMap(
+            player, locationWidth / 2, locationHeight / 2);
+        AIEntityInstantiation.LoadLocationAIEntities(locationData);
 
         cbOnLocationCreated?.Invoke();
     }
@@ -77,7 +113,7 @@ public class LocationGenerator : MonoBehaviour
             Random.Range(10, 14) :
             Random.Range(5, 8);
 
-        Tile[] mapData = LocationData.Instance.MapData;
+        Tile[] mapData = AreaDataManager.Instance.CurrentLocationData.MapData;
 
         bool[] isIndoor = new bool[mapData.Length];
         for (int i = 0; i < buildingCount; i++)
@@ -94,7 +130,7 @@ public class LocationGenerator : MonoBehaviour
                 int sizeX = Random.Range(6, 10);
                 int sizeY = Random.Range(6, 10);
                 (int x, int y) =
-                    LocationData.Instance.GetCoordFromIndex(index);
+                    AreaDataManager.Instance.CurrentLocationData.GetCoordFromIndex(index);
 
                 // Try placing isIndoor
                 if (isIndoor[index] == false)
@@ -113,14 +149,15 @@ public class LocationGenerator : MonoBehaviour
                             yDirection < y + (sizeY / 2); yDirection++)
                         {
                             Tile localNeighborTile =
-                                LocationData.Instance
+                                AreaDataManager.Instance.CurrentLocationData
                                 .GetTile(xDirection, yDirection);
 
                             //Check null
                             if (localNeighborTile == null) { continue; }
 
                             //Check if at edge of map
-                            if (localNeighborTile.x >= LocationData.Instance.Width - 2)
+                            if (localNeighborTile.x >=
+                                AreaDataManager.Instance.CurrentLocationData.Width - 2)
                             {
                                 doorMaxX = x;
                                 continue; 
@@ -130,7 +167,8 @@ public class LocationGenerator : MonoBehaviour
                                 doorMinX = x;
                                 continue;
                             }
-                            if (localNeighborTile.y >= LocationData.Instance.Height - 2)
+                            if (localNeighborTile.y >=
+                                AreaDataManager.Instance.CurrentLocationData.Height - 2)
                             { 
                                 doorMaxY = y;
                                 continue; 
@@ -141,7 +179,7 @@ public class LocationGenerator : MonoBehaviour
                                 continue;
                             }
 
-                            isIndoor[LocationData.Instance.GetIndexFromCoord(xDirection, yDirection)] = true;
+                            isIndoor[AreaDataManager.Instance.CurrentLocationData.GetIndexFromCoord(xDirection, yDirection)] = true;
                         }
                     }
 
@@ -176,12 +214,14 @@ public class LocationGenerator : MonoBehaviour
                         }
                     }
 
-                    // Clamp door position based on potentially previously determined min/max values
+                    // Clamp door position based on potentially
+                    // previously determined min/max values
                     doorX = Mathf.Clamp(doorX, doorMinX, doorMaxX);
                     doorY = Mathf.Clamp(doorY, doorMinY, doorMaxY);
 
-                    int doorIndex = LocationData.Instance.GetIndexFromCoord(doorX, doorY);
-                    mapData[doorIndex].TileFeature = new Feature(FeatureType.Door, mapData[doorIndex]);
+                    int doorIndex = AreaDataManager.Instance.CurrentLocationData.GetIndexFromCoord(doorX, doorY);
+                    mapData[doorIndex].TileFeature =
+                        new Feature(FeatureType.Door, mapData[doorIndex]);
                     // Change door to open area
                     mapData[doorIndex].Type = TileType.OpenArea;
                 }
@@ -189,11 +229,11 @@ public class LocationGenerator : MonoBehaviour
         }
 
         // Apply isIndoor data to mapData
-        for (int x = 0; x < LocationData.Instance.Width; x++)
+        for (int x = 0; x < AreaDataManager.Instance.CurrentLocationData.Width; x++)
         {
-            for (int y = 0; y < LocationData.Instance.Height; y++)
+            for (int y = 0; y < AreaDataManager.Instance.CurrentLocationData.Height; y++)
             {
-                int index = LocationData.Instance.GetIndexFromCoord(x, y);
+                int index = AreaDataManager.Instance.CurrentLocationData.GetIndexFromCoord(x, y);
 
                 // If this was designated as a feature, then just continue
                 if (mapData[index].TileFeature != null)
@@ -207,22 +247,26 @@ public class LocationGenerator : MonoBehaviour
                     // Get isIndoor neighbors
                     List<bool> isIndoorNeighbor = new List<bool>();
 
-                    int index1 = LocationData.Instance.GetIndexFromCoord(x, y + 1);
+                    int index1 = AreaDataManager.Instance.CurrentLocationData
+                        .GetIndexFromCoord(x, y + 1);
                     if (index1 >= 0 && index1 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index1]);
                     }
-                    int index2 = LocationData.Instance.GetIndexFromCoord(x + 1, y);
+                    int index2 = AreaDataManager.Instance.CurrentLocationData
+                        .GetIndexFromCoord(x + 1, y);
                     if (index2 >= 0 && index2 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index2]);
                     }
-                    int index3 = LocationData.Instance.GetIndexFromCoord(x, y - 1);
+                    int index3 = AreaDataManager.Instance.CurrentLocationData
+                        .GetIndexFromCoord(x, y - 1);
                     if (index3 >= 0 && index3 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index3]);
                     }
-                    int index4 = LocationData.Instance.GetIndexFromCoord(x - 1, y);
+                    int index4 = AreaDataManager.Instance.CurrentLocationData
+                        .GetIndexFromCoord(x - 1, y);
                     if (index4 >= 0 && index4 <= mapData.Length)
                     {
                         isIndoorNeighbor.Add(isIndoor[index4]);
@@ -237,8 +281,8 @@ public class LocationGenerator : MonoBehaviour
                             // Place wall here, but only 90% of the time
                             if (Random.value < 0.9f)
                             {
-                                mapData[index].TileFeature =
-                                    new Feature(FeatureType.Wall, mapData[index]);
+                                mapData[index].TileFeature = new Feature(
+                                    FeatureType.Wall, mapData[index]);
                                 // Also set tile to open area
                                 mapData[index].Type = TileType.OpenArea;
                                 break;
@@ -251,7 +295,8 @@ public class LocationGenerator : MonoBehaviour
                         }
                         else
                         {
-                            // if all neighbors are inside, then this should be openarea
+                            // if all neighbors are inside,
+                            // then this should be openarea
                             mapData[index].Type = TileType.OpenArea;
                         }
                     }
@@ -265,31 +310,32 @@ public class LocationGenerator : MonoBehaviour
     private void CreateLocationMapData(
         TileType locationTileType, int worldX, int worldY)
     {
-        LocationData.Instance.MapData = new Tile[locationWidth * locationHeight];
-        LocationData.Instance.Width = locationWidth;
-        LocationData.Instance.Height = locationHeight;
+        AreaDataManager.Instance.CurrentLocationData.MapData =
+            new Tile[locationWidth * locationHeight];
+        AreaDataManager.Instance.CurrentLocationData.Width = locationWidth;
+        AreaDataManager.Instance.CurrentLocationData.Height = locationHeight;
 
         int seed = GameInitializer.Instance.Seed;
 
         // Create raw base tile type map
-        RawMapData rawMapData =
-            new RawMapData(locationWidth, locationHeight, seed, locationTileType,
-            worldX, worldY);
+        RawMapData rawMapData = new RawMapData(
+            locationWidth, locationHeight, seed,
+            locationTileType, worldX, worldY);
 
         // Perform any edits to the raw base tile type map
 
         // Edit any tile types
-        for (int i = 0; i < LocationData.Instance.MapData.Length; i++)
+        for (int i = 0; i < AreaDataManager.Instance.CurrentLocationData.MapData.Length; i++)
         {
-            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = AreaDataManager.Instance.CurrentLocationData.GetCoordFromIndex(i);
 
             // Otherwise set to raw map tile
-            LocationData.Instance.MapData[i] =
+            AreaDataManager.Instance.CurrentLocationData.MapData[i] =
                 new Tile(x, y, rawMapData.rawMap[i]);
         }
 
-        LocationData.Instance.SetTileNeighbors();
-        LocationData.Instance.GenerateTileGraph();
+        AreaDataManager.Instance.CurrentLocationData.SetTileNeighbors();
+        AreaDataManager.Instance.CurrentLocationData.GenerateTileGraph();
     }
 
     /// <summary>
@@ -297,10 +343,10 @@ public class LocationGenerator : MonoBehaviour
     /// </summary>
     private void CreateExitLocationFeatures()
     {
-        Tile[] mapdata = LocationData.Instance.MapData;
+        Tile[] mapdata = AreaDataManager.Instance.CurrentLocationData.MapData;
         for (int i = 0; i < mapdata.Length; i++)
         {
-            (int x, int y) = LocationData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = AreaDataManager.Instance.CurrentLocationData.GetCoordFromIndex(i);
 
             // Set edges to exit area
             if (x == 0 || y == 0)

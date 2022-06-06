@@ -19,7 +19,7 @@ public class EnterLocationNotification : MonoBehaviour
     void Update()
     {
         // Only update if in world
-        if (CurrentMapType.Type != MapType.World)
+        if (AreaDataManager.Instance.CurrentMapType != MapType.World)
         {
             return;
         }

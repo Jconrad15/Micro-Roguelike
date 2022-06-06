@@ -83,7 +83,7 @@ public class SeasonManager : MonoBehaviour
     private void OnPlayerMoved(int x, int y)
     {
         // Only increment days when on world map
-        if (CurrentMapType.Type != MapType.World) { return; }
+        if (AreaDataManager.Instance.CurrentMapType != MapType.World) { return; }
 
         Day += 1;
     }

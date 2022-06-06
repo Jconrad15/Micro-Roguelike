@@ -12,21 +12,23 @@ public static class AIEntityInstantiation
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
+        AreaData worldData = AreaDataManager.Instance.GetWorldData();
+
         // Create travelling merchants
-        int width = WorldData.Instance.Width;
-        int height = WorldData.Instance.Height;
+        int width = worldData.Width;
+        int height = worldData.Height;
         int merchantCount = 10;
 
         for (int i = 0; i < merchantCount; i++)
         {
-            DetermineOpenLocation(WorldData.Instance, out int x, out int y);
+            DetermineOpenLocation(worldData, out int x, out int y);
             if (x == int.MinValue || y == int.MinValue) { break; }
 
             int merchantStartMoney = Random.value < 0.9 ?
                 Random.Range(5, 12) :
                 Random.Range(20, 30);
 
-            Tile merchantTile = WorldData.Instance.GetTile(x, y);
+            Tile merchantTile = worldData.GetTile(x, y);
             Merchant merchant = new Merchant(
                 merchantTile,
                 EntityType.AI,
@@ -38,12 +40,40 @@ public static class AIEntityInstantiation
         }
 
         // Also create a dog to wander around
-        Tile dogTile = WorldData.Instance.GetTile(1, 1);
+        Tile dogTile = worldData.GetTile(1, 1);
         Dog dog = new Dog(dogTile, EntityType.AI, 0);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
         Random.state = oldState;
+    }
+
+    public static void LoadLocationAIEntities(AreaData locationData)
+    {
+        List<Entity> entities = locationData.Entities;
+
+        for (int i = 0; i < entities.Count; i++)
+        {
+            Entity e = entities[i];
+
+            if (Utility.IsSameOrSubclass(typeof(AIEntity), e.GetType()))
+            {
+                // Set new tile so that the old tiles reference is lost
+                e.SetTile(locationData.GetTile(e.X, e.Y));
+                // Convert AIEntity to subclass
+                dynamic obj = Convert.ChangeType(e, e.GetType());
+                cbOnAIEntityCreated?.Invoke(obj);
+                continue;
+            }
+
+            // Delete the player entity 
+            if (Utility.IsSameOrSubclass(typeof(Player), e.GetType()))
+            {
+                e.ClearData();
+                locationData.Entities.Remove(e);
+                continue;
+            }
+        }
     }
 
     public static void CreateLocationAIEntities(int seed)
@@ -114,17 +144,19 @@ public static class AIEntityInstantiation
         }
     }
 
-    public static void GetPreviousWorldEntities()
+    public static void LoadPreviousWorldEntities()
     {
         List<Entity> prevEntities =
             AreaData.GetEntitiesForCurrentType();
+
+        AreaData worldData = AreaDataManager.Instance.GetWorldData();
 
         foreach (Entity entity in prevEntities)
         {
             if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
             {
                 // Set new tile so that the old tiles reference is lost
-                entity.SetTile(WorldData.Instance.GetTile(entity.X, entity.Y));
+                entity.SetTile(worldData.GetTile(entity.X, entity.Y));
                 // Convert AIEntity to subclass
                 dynamic obj = Convert.ChangeType(entity, entity.GetType());
                 cbOnAIEntityCreated?.Invoke(obj);

@@ -9,20 +9,23 @@ public static class PlayerInstantiation
     {
         // Get the tile at the new player location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
         {
-            playerTile =
-                LocationData.Instance.GetTile(playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(playerStartX, playerStartY);
         }
         else
         {
-            playerTile =
-                WorldData.Instance.GetTile(playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
         playerTile.entity = player;
         player.SetTile(playerTile);
+
+        // Add player to entities list
+        //AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         cbOnPlayerCreated?.Invoke(player);
     }
@@ -31,20 +34,23 @@ public static class PlayerInstantiation
     {
         // Get the tile at the location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location) 
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location) 
         {
-            playerTile = LocationData.Instance.GetTile(
-                playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(playerStartX, playerStartY);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(
-                playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
         Player player = new Player(playerTile, EntityType.Player, 10);
         playerTile.entity = player;
+
+        // Add player to entities list
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         // TODO: Starting player items
         player.InventoryItems.Add(ItemDatabase.GetRandomItem());
@@ -56,15 +62,15 @@ public static class PlayerInstantiation
     {
         // Get the tile at the location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
         {
-            playerTile = LocationData.Instance.GetTile(
-                entityToLoad.X, entityToLoad.Y);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(entityToLoad.X, entityToLoad.Y);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(
-                entityToLoad.X, entityToLoad.Y);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(entityToLoad.X, entityToLoad.Y);
         }
 
         // Place the player at the tile, and the tile to the player
@@ -75,6 +81,10 @@ public static class PlayerInstantiation
             playerTile);
 
         playerTile.entity = player;
+                AreaData.GetAreaDataForCurrentType().AddEntity(player);
+
+        // Add player to entities list
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         cbOnPlayerCreated?.Invoke(player);
     }

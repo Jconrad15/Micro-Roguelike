@@ -113,7 +113,7 @@ public class SaveSerial : MonoBehaviour
             mapData = serializedTileData,
             width = areaData.Width,
             height = areaData.Height,
-            mapType = CurrentMapType.Type,
+            mapType = AreaDataManager.Instance.CurrentMapType,
             seed = GameInitializer.Instance.Seed,
         };
 
