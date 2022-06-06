@@ -24,6 +24,9 @@ public static class PlayerInstantiation
         playerTile.entity = player;
         player.SetTile(playerTile);
 
+        // Add player to entities list
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
+
         cbOnPlayerCreated?.Invoke(player);
     }
 
@@ -45,6 +48,9 @@ public static class PlayerInstantiation
         // Place the player at the tile, and the tile to the player
         Player player = new Player(playerTile, EntityType.Player, 10);
         playerTile.entity = player;
+
+        // Add player to entities list
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         // TODO: Starting player items
         player.InventoryItems.Add(ItemDatabase.GetRandomItem());
@@ -75,6 +81,10 @@ public static class PlayerInstantiation
             playerTile);
 
         playerTile.entity = player;
+                AreaData.GetAreaDataForCurrentType().AddEntity(player);
+
+        // Add player to entities list
+        AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         cbOnPlayerCreated?.Invoke(player);
     }

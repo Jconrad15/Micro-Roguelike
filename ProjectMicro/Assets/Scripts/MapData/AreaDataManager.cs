@@ -29,7 +29,6 @@ public class AreaDataManager : MonoBehaviour
     {
         if (CurrentMapType != type)
         {
-            Debug.Log("Change map type to " + type);
             cbOnCurrentMapTypeChange?.Invoke(type);
         }
 
@@ -61,10 +60,17 @@ public class AreaDataManager : MonoBehaviour
 
     public void StoreLocationData()
     {
+        Debug.Log("Store location Data");
+
         (int worldX, int worldY) = 
             WorldGenerator.Instance.GetSavedPlayerWorldPosition();
         // Get the world index for this location area data
         int index = WorldData.GetIndexFromCoord(worldX, worldY);
+
+        // When stored, need to remove old player from tile location's entity
+        Player player = FindObjectOfType<PlayerController>().GetPlayer();
+        player.T.entity = null;
+        CurrentLocationData.Entities.Remove(player);
 
         AllLocationData[index] = CurrentLocationData;
     }

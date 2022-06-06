@@ -26,18 +26,40 @@ public class LocationGenerator : MonoBehaviour
         }
     }
 
+    public void GenerateOrLoadLocation(
+        int worldX, int worldY, TileType locationTileType,
+        Player player, Feature locationFeature)
+    {
+        // Check if location data already exists
+        bool locationDataExists =
+            AreaDataManager.Instance.TryGetLocationData(
+                worldX, worldY, out AreaData locationData);
+
+        if (locationDataExists)
+        {
+            Debug.Log("Load Location");
+            LoadLocation(locationData, player);
+        }
+        else
+        {
+            Debug.Log("Generate Location");
+            // if not, generate
+            StartGenerateLocation(worldX, worldY, locationTileType,
+                player, locationFeature);
+        }
+    }
+
     /// <summary>
     /// Initiate generation of this location.
     /// </summary>
     /// <param name="seed"></param>
-    public void StartGenerateLocation(
+    private void StartGenerateLocation(
         int worldX, int worldY, TileType locationTileType, Player player,
         Feature locationFeature)
     {
-        int seed = GameInitializer.Instance.Seed;
-
         AreaDataManager.Instance.SetCurrentMapType(MapType.Location);
         
+        int seed = GameInitializer.Instance.Seed;
         // Modify seed for this generation to relate to world pos
         seed = (seed + worldX + worldY) * 10;
 
@@ -53,6 +75,22 @@ public class LocationGenerator : MonoBehaviour
         AIEntityInstantiation.CreateLocationAIEntities(seed);
 
         Random.state = oldState;
+
+        cbOnLocationCreated?.Invoke();
+    }
+
+    /// <summary>
+    /// Load previously generated data of this location.
+    /// </summary>
+    /// <param name="seed"></param>
+    private void LoadLocation(AreaData locationData, Player player)
+    {
+        AreaDataManager.Instance.SetCurrentMapType(MapType.Location);
+        AreaDataManager.Instance.CurrentLocationData = locationData;
+
+        PlayerInstantiation.TransitionPlayerToMap(
+            player, locationWidth / 2, locationHeight / 2);
+        AIEntityInstantiation.LoadLocationAIEntities(locationData);
 
         cbOnLocationCreated?.Invoke();
     }

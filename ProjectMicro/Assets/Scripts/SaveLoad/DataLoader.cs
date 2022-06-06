@@ -20,7 +20,7 @@ public class DataLoader : MonoBehaviour
             areaData = AreaDataManager.Instance.CurrentLocationData;
         }
 
-        ClearAllOldData();
+        ResetAllOldData();
         AreaDataManager.Instance.SetCurrentMapType(loadedAreaData.MapType);
 
         areaData.Width = loadedAreaData.Width;
@@ -61,12 +61,15 @@ public class DataLoader : MonoBehaviour
             loadedAreaData.MapType, loadedAreaData.Seed);
     }
 
-    public static void ClearAllOldData()
+    public static void ResetAllOldData()
     {
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
 
-        //AreaDataManager.Instance.CurrentLocationData.ClearAll();
-        AreaDataManager.Instance.StoreLocationData();
+        // If in location, store the location
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
+        {
+            AreaDataManager.Instance.StoreLocationData();
+        }
     }
 }

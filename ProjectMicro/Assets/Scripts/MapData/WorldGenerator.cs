@@ -67,10 +67,9 @@ public class WorldGenerator : MonoBehaviour
     {
         int seed = GameInitializer.Instance.Seed;
 
-        AreaDataManager.Instance.SetCurrentMapType(MapType.World);
-
         // First need to destroy all current info
-        DataLoader.ClearAllOldData();
+        DataLoader.ResetAllOldData();
+        AreaDataManager.Instance.SetCurrentMapType(MapType.World);
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
@@ -79,7 +78,7 @@ public class WorldGenerator : MonoBehaviour
             player, playerWorldX, playerWorldY);
 
         // TODO: generate entites in correct places, not randomly
-        AIEntityInstantiation.GetPreviousWorldEntities();
+        AIEntityInstantiation.LoadPreviousWorldEntities();
 
         Random.state = oldState;
 

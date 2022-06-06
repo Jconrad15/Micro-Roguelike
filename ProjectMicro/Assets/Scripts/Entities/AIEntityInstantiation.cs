@@ -48,6 +48,34 @@ public static class AIEntityInstantiation
         Random.state = oldState;
     }
 
+    public static void LoadLocationAIEntities(AreaData locationData)
+    {
+        List<Entity> entities = locationData.Entities;
+
+        for (int i = 0; i < entities.Count; i++)
+        {
+            Entity e = entities[i];
+
+            if (Utility.IsSameOrSubclass(typeof(AIEntity), e.GetType()))
+            {
+/*                // Set new tile so that the old tiles reference is lost
+                e.SetTile(locationData.GetTile(e.X, e.Y));*/
+                // Convert AIEntity to subclass
+                dynamic obj = Convert.ChangeType(e, e.GetType());
+                cbOnAIEntityCreated?.Invoke(obj);
+                continue;
+            }
+
+            // Delete the player entity 
+            if (Utility.IsSameOrSubclass(typeof(Player), e.GetType()))
+            {
+                e.ClearData();
+                locationData.Entities.Remove(e);
+                continue;
+            }
+        }
+    }
+
     public static void CreateLocationAIEntities(int seed)
     {
         Random.State oldState = Random.state;
@@ -116,7 +144,7 @@ public static class AIEntityInstantiation
         }
     }
 
-    public static void GetPreviousWorldEntities()
+    public static void LoadPreviousWorldEntities()
     {
         List<Entity> prevEntities =
             AreaData.GetEntitiesForCurrentType();

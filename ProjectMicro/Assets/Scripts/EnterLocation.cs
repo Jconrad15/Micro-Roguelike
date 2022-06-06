@@ -28,10 +28,10 @@ public class EnterLocation : MonoBehaviour
         WorldGenerator.Instance.SavePlayerWorldPosition(player.X, player.Y);
 
         // First need to destroy all current info
-        DataLoader.ClearAllOldData();
+        DataLoader.ResetAllOldData();
 
         // Then load the location
-        LocationGenerator.Instance.StartGenerateLocation(
+        LocationGenerator.Instance.GenerateOrLoadLocation(
             player.X, player.Y,
             tileType, player,
             player.T.TileFeature);

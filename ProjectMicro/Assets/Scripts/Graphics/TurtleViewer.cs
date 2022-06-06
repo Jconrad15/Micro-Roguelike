@@ -16,8 +16,6 @@ public class TurtleViewer : MonoBehaviour
 
     private void OnCurrentMapTypeChange(MapType mapType)
     {
-        Debug.Log("Turtle - maptype is " + mapType);
-
         if (mapType == MapType.World)
         {
             ShowTurtle();
