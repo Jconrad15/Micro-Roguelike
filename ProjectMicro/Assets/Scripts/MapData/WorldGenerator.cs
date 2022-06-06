@@ -48,12 +48,12 @@ public class WorldGenerator : MonoBehaviour
         playerWorldX = worldWidth / 2;
         playerWorldY = worldHeight / 2;
 
-        CurrentMapType.SetCurrentMapType(MapType.World);
+        AreaDataManager.Instance.SetCurrentMapType(MapType.World);
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        CreateWorldMapData(seed);
+        AreaDataManager.Instance.SetWorldData(CreateWorldMapData(seed));
 
         PlayerInstantiation.CreatePlayer(playerWorldX, playerWorldY);
         AIEntityInstantiation.CreateInitialWorldEntities(seed);
@@ -67,15 +67,13 @@ public class WorldGenerator : MonoBehaviour
     {
         int seed = GameInitializer.Instance.Seed;
 
-        CurrentMapType.SetCurrentMapType(MapType.World);
+        AreaDataManager.Instance.SetCurrentMapType(MapType.World);
 
         // First need to destroy all current info
         DataLoader.ClearAllOldData();
 
         Random.State oldState = Random.state;
         Random.InitState(seed);
-
-        //CreateWorldMapData();
 
         PlayerInstantiation.TransitionPlayerToMap(
             player, playerWorldX, playerWorldY);
@@ -94,14 +92,22 @@ public class WorldGenerator : MonoBehaviour
         playerWorldY = y;
     }
 
-    private void CreateWorldMapData(int seed)
+    public (int, int) GetSavedPlayerWorldPosition()
+    {
+        return (playerWorldX, playerWorldY);
+    }
+
+    private AreaData CreateWorldMapData(int seed)
     {
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        AreaDataManager.Instance.WorldData.MapData = new Tile[worldWidth * worldHeight];
-        AreaDataManager.Instance.WorldData.Width = worldWidth;
-        AreaDataManager.Instance.WorldData.Height = worldHeight;
+        AreaData worldData = new AreaData
+        {
+            MapData = new Tile[worldWidth * worldHeight],
+            Width = worldWidth,
+            Height = worldHeight
+        };
 
         // Create tile types
 
@@ -110,37 +116,38 @@ public class WorldGenerator : MonoBehaviour
             new RawMapData(worldWidth, worldHeight, seed);
 
         // Set tile types from raw map
-        for (int i = 0; i < AreaDataManager.Instance.WorldData.MapData.Length; i++)
+        for (int i = 0; i < worldData.MapData.Length; i++)
         {
-            (int x, int y) = AreaDataManager.Instance.WorldData.GetCoordFromIndex(i);
+            (int x, int y) = worldData.GetCoordFromIndex(i);
 
-            AreaDataManager.Instance.WorldData.MapData[i] =
+            worldData.MapData[i] =
                 new Tile(x, y, rawMapData.rawMap[i]);
         }
 
         // Edit tile type map
-        for (int i = 0; i < AreaDataManager.Instance.WorldData.MapData.Length; i++)
+        for (int i = 0; i < worldData.MapData.Length; i++)
         {
             // 1% small chance to randomly mutate tile type to open
             if (Random.value < 0.01f)
             {
-                AreaDataManager.Instance.WorldData.MapData[i].Type =
-                    TileType.OpenArea;
+                worldData.MapData[i].Type = TileType.OpenArea;
             }
         }
 
-        AreaDataManager.Instance.WorldData.SetTileNeighbors();
-        AreaDataManager.Instance.WorldData.GenerateTileGraph();
+        worldData.SetTileNeighbors();
+        worldData.GenerateTileGraph();
 
         // Create features
 
         // Place urban area tiles
-        PlaceUrbanCenter(rawMapData, seed);
+        PlaceUrbanCenter(worldData, rawMapData, seed);
 
         Random.state = oldState;
+        return worldData;
     }
 
-    private static void PlaceUrbanCenter(RawMapData rawMapData, int seed)
+    private AreaData PlaceUrbanCenter(
+        AreaData worldData, RawMapData rawMapData, int seed)
     {
         Random.State oldState = Random.state;
         Random.InitState(seed);
@@ -153,27 +160,28 @@ public class WorldGenerator : MonoBehaviour
             if (Random.value < 0.8f) { continue; }
 
             // Don't place cities in the water
-            if (AreaDataManager.Instance.WorldData.MapData[index].Type != TileType.Water)
+            if (worldData.MapData[index].Type != TileType.Water)
             {
                 // Choose between city and town
                 if (Random.value > 0.5)
                 {
-                    AreaDataManager.Instance.WorldData.MapData[index].TileFeature =
+                    worldData.MapData[index].TileFeature =
                     new Feature(
                         FeatureType.Town,
-                        AreaDataManager.Instance.WorldData.MapData[index]);
+                        worldData.MapData[index]);
                 }
                 else
                 {
-                    AreaDataManager.Instance.WorldData.MapData[index].TileFeature =
+                    worldData.MapData[index].TileFeature =
                         new Feature(
                             FeatureType.City,
-                            AreaDataManager.Instance.WorldData.MapData[index]);
+                            worldData.MapData[index]);
                 }
             }
         }
 
         Random.state = oldState;
+        return worldData;
     }
 
     public void OnDataLoaded()

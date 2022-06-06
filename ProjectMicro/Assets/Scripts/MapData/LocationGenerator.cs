@@ -36,7 +36,7 @@ public class LocationGenerator : MonoBehaviour
     {
         int seed = GameInitializer.Instance.Seed;
 
-        CurrentMapType.SetCurrentMapType(MapType.Location);
+        AreaDataManager.Instance.SetCurrentMapType(MapType.Location);
         
         // Modify seed for this generation to relate to world pos
         seed = (seed + worldX + worldY) * 10;

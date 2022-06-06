@@ -31,7 +31,7 @@ public class DialogueUI : MonoBehaviour
     {
         FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
         FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
-        CurrentMapType.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
 
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -60,7 +60,7 @@ public class DialogueUI : MonoBehaviour
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = AreaDataManager.Instance.WorldData.Entities;
+            entities = AreaDataManager.Instance.GetWorldData().Entities;
         }
         else
         {
@@ -79,12 +79,12 @@ public class DialogueUI : MonoBehaviour
 
     private void UnregisterToClicksOnEntities()
     {
-        MapType mapType = CurrentMapType.Type;
+        MapType mapType = AreaDataManager.Instance.CurrentMapType;
 
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = AreaDataManager.Instance.WorldData.Entities;
+            entities = AreaDataManager.Instance.GetWorldData().Entities;
         }
         else
         {

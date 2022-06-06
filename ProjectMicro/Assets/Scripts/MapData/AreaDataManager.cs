@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public enum MapType { World, Location };
 public class AreaDataManager : MonoBehaviour
 {
-
     public static AreaDataManager Instance { get; private set; }
     private void Awake()
     {
@@ -19,10 +21,35 @@ public class AreaDataManager : MonoBehaviour
         }
     }
 
-    public AreaData CurrentLocationData;
-    public AreaData WorldData;
+    private static Action<MapType> cbOnCurrentMapTypeChange;
 
-    public AreaData[] AllLocationData;
+    public MapType CurrentMapType { get; private set; }
+
+    public void SetCurrentMapType(MapType type)
+    {
+        if (CurrentMapType != type)
+        {
+            Debug.Log("Change map type to " + type);
+            cbOnCurrentMapTypeChange?.Invoke(type);
+        }
+
+        CurrentMapType = type;
+    }
+
+    public AreaData CurrentLocationData;
+    private AreaData WorldData;
+
+    private AreaData[] AllLocationData;
+
+    public void SetWorldData(AreaData worldData)
+    {
+        WorldData = worldData;
+    }
+
+    public AreaData GetWorldData()
+    {
+        return WorldData;
+    }
 
     public void Initiate(int worldWidth, int worldHeight)
     {
@@ -30,5 +57,41 @@ public class AreaDataManager : MonoBehaviour
         WorldData = new AreaData();
 
         AllLocationData = new AreaData[worldWidth * worldHeight];
+    }
+
+    public void StoreLocationData()
+    {
+        (int worldX, int worldY) = 
+            WorldGenerator.Instance.GetSavedPlayerWorldPosition();
+        // Get the world index for this location area data
+        int index = WorldData.GetIndexFromCoord(worldX, worldY);
+
+        AllLocationData[index] = CurrentLocationData;
+    }
+
+    public bool TryGetLocationData(int worldX, int worldY,
+        out AreaData locationData)
+    {
+        locationData = null;
+
+        int index = WorldData.GetIndexFromCoord(worldX, worldY);
+
+        if (index < 0 || index >= AllLocationData.Length) { return false; }
+
+        locationData = AllLocationData[index];
+        if (locationData == null) { return false; }
+        return true;
+    }
+
+    public void RegisterOnCurrentMapTypeChange(
+        Action<MapType> callbackfunc)
+    {
+        cbOnCurrentMapTypeChange += callbackfunc;
+    }
+
+    public void UnregisterOnCurrentMapTypeChange(
+        Action<MapType> callbackfunc)
+    {
+        cbOnCurrentMapTypeChange -= callbackfunc;
     }
 }

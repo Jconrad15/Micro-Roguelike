@@ -19,7 +19,7 @@ public class AreaData
 
     public void GenerateTileGraph()
     {
-        TileGraph = new Path_TileGraph();
+        TileGraph = new Path_TileGraph(this);
     }
 
     public void AddEntity(Entity e)
@@ -56,9 +56,9 @@ public class AreaData
 
     public static AreaData GetAreaDataForCurrentType()
     {
-        if (CurrentMapType.Type == MapType.World)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.World)
         {
-            return AreaDataManager.Instance.WorldData;
+            return AreaDataManager.Instance.GetWorldData();
         }
         else
         {
@@ -68,22 +68,22 @@ public class AreaData
 
     public static Tile[] GetMapDataForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            AreaDataManager.Instance.WorldData.MapData :
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().MapData :
             AreaDataManager.Instance.CurrentLocationData.MapData;
     }
 
     public static List<Entity> GetEntitiesForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            AreaDataManager.Instance.WorldData.Entities :
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().Entities :
             AreaDataManager.Instance.CurrentLocationData.Entities;
     }
 
     public static List<Feature> GetFeaturesForCurrentType()
     {
-        return CurrentMapType.Type == MapType.World ?
-            AreaDataManager.Instance.WorldData.Features :
+        return AreaDataManager.Instance.CurrentMapType == MapType.World ?
+            AreaDataManager.Instance.GetWorldData().Features :
             AreaDataManager.Instance.CurrentLocationData.Features;
     }
 
@@ -157,13 +157,10 @@ public class AreaData
     /// </summary>
     public void SetTileNeighbors()
     {
-        AreaData areaData = GetAreaDataForCurrentType();
-
-        for (int i = 0; i < areaData.MapData.Length; i++)
+        for (int i = 0; i < MapData.Length; i++)
         {
-            Tile[] neighbors =
-                areaData.GetNeighboringTiles(areaData.MapData[i]);
-            areaData.MapData[i].SetNeighbors(neighbors);
+            Tile[] neighbors = GetNeighboringTiles(MapData[i]);
+            MapData[i].SetNeighbors(neighbors);
         }
     }
 

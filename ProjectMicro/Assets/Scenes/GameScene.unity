@@ -7096,6 +7096,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3220d146ce677143aea440716dc46c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldWidth: 100
+  worldHeight: 100
 --- !u!4 &1753003650
 Transform:
   m_ObjectHideFlags: 0
@@ -7153,8 +7155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48efe9c22eac5e24ea77d53cfa5f5fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 100
-  worldHeight: 100
 --- !u!1 &1773019300
 GameObject:
   m_ObjectHideFlags: 0
@@ -7495,8 +7495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bb4c8378ec85845877f3939c3164c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentLocationData: {fileID: 0}
-  WorldData: {fileID: 0}
 --- !u!4 &1883750921
 Transform:
   m_ObjectHideFlags: 0

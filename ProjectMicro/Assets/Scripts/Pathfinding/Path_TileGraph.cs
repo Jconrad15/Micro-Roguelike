@@ -10,11 +10,8 @@ public class Path_TileGraph
 
     public Dictionary<Tile, Path_Node<Tile>> NodesDict { get; protected set; }
 
-    public Path_TileGraph()
+    public Path_TileGraph(AreaData areaData)
     {
-        // Get map data from areaData
-        AreaData areaData = AreaData.GetAreaDataForCurrentType();
-
         // Loop through all tiles of the areaData
         // For each tile, create a node
 

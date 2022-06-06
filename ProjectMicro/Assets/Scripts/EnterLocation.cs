@@ -7,7 +7,7 @@ public class EnterLocation : MonoBehaviour
     void Update()
     {
         // If on world map
-        if (CurrentMapType.Type == MapType.World)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.World)
         {
             // If hit space bar
             if (Input.GetKeyDown(KeyCode.Space))

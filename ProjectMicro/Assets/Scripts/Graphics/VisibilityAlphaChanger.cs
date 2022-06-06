@@ -11,7 +11,7 @@ public class VisibilityAlphaChanger: MonoBehaviour
 
     private void OnEnable()
     {
-        CurrentMapType.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
     }
 
     public void ChangeVisibilityAlpha(Feature feature, SpriteRenderer sr)

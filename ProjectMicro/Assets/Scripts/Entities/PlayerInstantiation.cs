@@ -9,15 +9,15 @@ public static class PlayerInstantiation
     {
         // Get the tile at the new player location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
         {
-            playerTile =
-                AreaDataManager.Instance.CurrentLocationData.GetTile(playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(playerStartX, playerStartY);
         }
         else
         {
-            playerTile =
-                AreaDataManager.Instance.WorldData.GetTile(playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
@@ -31,15 +31,15 @@ public static class PlayerInstantiation
     {
         // Get the tile at the location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location) 
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location) 
         {
-            playerTile = AreaDataManager.Instance.CurrentLocationData.GetTile(
-                playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(playerStartX, playerStartY);
         }
         else
         {
-            playerTile = AreaDataManager.Instance.WorldData.GetTile(
-                playerStartX, playerStartY);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
@@ -56,15 +56,15 @@ public static class PlayerInstantiation
     {
         // Get the tile at the location
         Tile playerTile;
-        if (CurrentMapType.Type == MapType.Location)
+        if (AreaDataManager.Instance.CurrentMapType == MapType.Location)
         {
-            playerTile = AreaDataManager.Instance.CurrentLocationData.GetTile(
-                entityToLoad.X, entityToLoad.Y);
+            playerTile = AreaDataManager.Instance.CurrentLocationData
+                .GetTile(entityToLoad.X, entityToLoad.Y);
         }
         else
         {
-            playerTile = AreaDataManager.Instance.WorldData.GetTile(
-                entityToLoad.X, entityToLoad.Y);
+            playerTile = AreaDataManager.Instance.GetWorldData()
+                .GetTile(entityToLoad.X, entityToLoad.Y);
         }
 
         // Place the player at the tile, and the tile to the player

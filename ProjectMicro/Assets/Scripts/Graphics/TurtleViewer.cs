@@ -10,12 +10,14 @@ public class TurtleViewer : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        CurrentMapType.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
         ShowTurtle();
     }
 
     private void OnCurrentMapTypeChange(MapType mapType)
     {
+        Debug.Log("Turtle - maptype is " + mapType);
+
         if (mapType == MapType.World)
         {
             ShowTurtle();

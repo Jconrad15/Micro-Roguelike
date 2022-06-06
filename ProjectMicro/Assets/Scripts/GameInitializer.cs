@@ -7,9 +7,9 @@ public class GameInitializer : MonoBehaviour
     [SerializeField]
     public int Seed { get; private set; } = 0;
     [SerializeField]
-    private int worldWidth = 50;
+    private int worldWidth = 100;
     [SerializeField]
-    private int worldHeight = 50;
+    private int worldHeight = 100;
 
     public static GameInitializer Instance { get; private set; }
     private void Awake()
