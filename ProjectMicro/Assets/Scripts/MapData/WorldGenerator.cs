@@ -164,17 +164,25 @@ public class WorldGenerator : MonoBehaviour
                 // Choose between city and town
                 if (Random.value > 0.5)
                 {
-                    worldData.MapData[index].TileFeature =
-                    new Feature(
+                    Feature f = new Feature(
                         FeatureType.Town,
                         worldData.MapData[index]);
+
+                    worldData.MapData[index].TileFeature = f;
+                    
+                    // Add feature to feature list
+                    worldData.AddFeature(f);
                 }
                 else
                 {
-                    worldData.MapData[index].TileFeature =
-                        new Feature(
+                    Feature f = new Feature(
                             FeatureType.City,
                             worldData.MapData[index]);
+
+                    worldData.MapData[index].TileFeature = f;
+
+                    // Add feature to feature list
+                    worldData.AddFeature(f);
                 }
             }
         }

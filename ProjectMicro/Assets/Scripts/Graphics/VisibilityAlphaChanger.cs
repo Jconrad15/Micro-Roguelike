@@ -9,7 +9,7 @@ public class VisibilityAlphaChanger: MonoBehaviour
 
     private readonly float alphaChangeSpeed = 0.8f;
 
-    private void OnEnable()
+    private void Start()
     {
         AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
     }

@@ -220,8 +220,11 @@ public class LocationGenerator : MonoBehaviour
                     doorY = Mathf.Clamp(doorY, doorMinY, doorMaxY);
 
                     int doorIndex = AreaDataManager.Instance.CurrentLocationData.GetIndexFromCoord(doorX, doorY);
-                    mapData[doorIndex].TileFeature =
-                        new Feature(FeatureType.Door, mapData[doorIndex]);
+
+                    Feature f = new Feature(FeatureType.Door, mapData[doorIndex]);
+                    mapData[doorIndex].TileFeature = f;
+                    AreaDataManager.Instance.CurrentLocationData.Features.Add(f);
+
                     // Change door to open area
                     mapData[doorIndex].Type = TileType.OpenArea;
                 }
@@ -281,8 +284,9 @@ public class LocationGenerator : MonoBehaviour
                             // Place wall here, but only 90% of the time
                             if (Random.value < 0.9f)
                             {
-                                mapData[index].TileFeature = new Feature(
-                                    FeatureType.Wall, mapData[index]);
+                                Feature f = new Feature(FeatureType.Wall, mapData[index]);
+                                mapData[index].TileFeature = f;
+                                AreaDataManager.Instance.CurrentLocationData.Features.Add(f);
                                 // Also set tile to open area
                                 mapData[index].Type = TileType.OpenArea;
                                 break;
@@ -351,14 +355,16 @@ public class LocationGenerator : MonoBehaviour
             // Set edges to exit area
             if (x == 0 || y == 0)
             {
-                mapdata[i].TileFeature =
-                    new Feature(FeatureType.ExitLocation, mapdata[i]);
+                Feature f = new Feature(FeatureType.ExitLocation, mapdata[i]);
+                mapdata[i].TileFeature = f;
+                AreaDataManager.Instance.CurrentLocationData.Features.Add(f);
                 continue;
             }
             if (x == locationWidth - 1 || y == locationHeight - 1)
             {
-                mapdata[i].TileFeature =
-                    new Feature(FeatureType.ExitLocation, mapdata[i]);
+                Feature f = new Feature(FeatureType.ExitLocation, mapdata[i]);
+                mapdata[i].TileFeature = f;
+                AreaDataManager.Instance.CurrentLocationData.Features.Add(f);
                 continue;
             }
         }

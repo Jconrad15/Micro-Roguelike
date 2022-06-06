@@ -38,9 +38,9 @@ public class Feature
         T = t;
         Visibility = VisibilityLevel.NotVisible;
 
-        // Add self to feature list
+/*        // Add self to feature list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
-        areaData.AddFeature(this);
+        areaData.AddFeature(this);*/
     }
 
     /// <summary>
