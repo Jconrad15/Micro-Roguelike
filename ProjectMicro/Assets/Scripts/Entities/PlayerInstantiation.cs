@@ -12,12 +12,12 @@ public static class PlayerInstantiation
         if (CurrentMapType.Type == MapType.Location)
         {
             playerTile =
-                LocationData.Instance.GetTile(playerStartX, playerStartY);
+                AreaDataManager.Instance.CurrentLocationData.GetTile(playerStartX, playerStartY);
         }
         else
         {
             playerTile =
-                WorldData.Instance.GetTile(playerStartX, playerStartY);
+                AreaDataManager.Instance.WorldData.GetTile(playerStartX, playerStartY);
         }
 
         // Place the player at the tile, and the tile to the player
@@ -33,12 +33,12 @@ public static class PlayerInstantiation
         Tile playerTile;
         if (CurrentMapType.Type == MapType.Location) 
         {
-            playerTile = LocationData.Instance.GetTile(
+            playerTile = AreaDataManager.Instance.CurrentLocationData.GetTile(
                 playerStartX, playerStartY);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(
+            playerTile = AreaDataManager.Instance.WorldData.GetTile(
                 playerStartX, playerStartY);
         }
 
@@ -58,12 +58,12 @@ public static class PlayerInstantiation
         Tile playerTile;
         if (CurrentMapType.Type == MapType.Location)
         {
-            playerTile = LocationData.Instance.GetTile(
+            playerTile = AreaDataManager.Instance.CurrentLocationData.GetTile(
                 entityToLoad.X, entityToLoad.Y);
         }
         else
         {
-            playerTile = WorldData.Instance.GetTile(
+            playerTile = AreaDataManager.Instance.WorldData.GetTile(
                 entityToLoad.X, entityToLoad.Y);
         }
 

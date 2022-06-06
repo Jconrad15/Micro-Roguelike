@@ -60,11 +60,11 @@ public class DialogueUI : MonoBehaviour
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = WorldData.Instance.Entities;
+            entities = AreaDataManager.Instance.WorldData.Entities;
         }
         else
         {
-            entities = LocationData.Instance.Entities;
+            entities = AreaDataManager.Instance.CurrentLocationData.Entities;
         }
 
         // Register to all merchants
@@ -84,11 +84,11 @@ public class DialogueUI : MonoBehaviour
         List<Entity> entities;
         if (mapType == MapType.World)
         {
-            entities = WorldData.Instance.Entities;
+            entities = AreaDataManager.Instance.WorldData.Entities;
         }
         else
         {
-            entities = LocationData.Instance.Entities;
+            entities = AreaDataManager.Instance.CurrentLocationData.Entities;
         }
 
         // Unregister to all merchants

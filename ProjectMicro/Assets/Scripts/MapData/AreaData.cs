@@ -1,8 +1,9 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class AreaData : MonoBehaviour
+public class AreaData
 {
     public bool IsWorld { get; private set; }
 
@@ -57,33 +58,33 @@ public class AreaData : MonoBehaviour
     {
         if (CurrentMapType.Type == MapType.World)
         {
-            return WorldData.Instance;
+            return AreaDataManager.Instance.WorldData;
         }
         else
         {
-            return LocationData.Instance;
+            return AreaDataManager.Instance.CurrentLocationData;
         }
     }
 
     public static Tile[] GetMapDataForCurrentType()
     {
         return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.MapData :
-            LocationData.Instance.MapData;
+            AreaDataManager.Instance.WorldData.MapData :
+            AreaDataManager.Instance.CurrentLocationData.MapData;
     }
 
     public static List<Entity> GetEntitiesForCurrentType()
     {
         return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.Entities :
-            LocationData.Instance.Entities;
+            AreaDataManager.Instance.WorldData.Entities :
+            AreaDataManager.Instance.CurrentLocationData.Entities;
     }
 
     public static List<Feature> GetFeaturesForCurrentType()
     {
         return CurrentMapType.Type == MapType.World ?
-            WorldData.Instance.Features :
-            LocationData.Instance.Features;
+            AreaDataManager.Instance.WorldData.Features :
+            AreaDataManager.Instance.CurrentLocationData.Features;
     }
 
     public Tile GetRandomWalkableTile()

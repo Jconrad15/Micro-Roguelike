@@ -1,5 +1,7 @@
 using System;
 
+[Serializable]
+public enum MapType { World, Location };
 public static class CurrentMapType
 {
     private static Action<MapType> cbOnCurrentMapTypeChange;

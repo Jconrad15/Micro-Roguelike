@@ -5,10 +5,8 @@ using Random = UnityEngine.Random;
 
 public class WorldGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private int worldWidth = 50;
-    [SerializeField]
-    private int worldHeight = 50;
+    private int worldWidth;
+    private int worldHeight;
 
     private Action cbOnWorldCreated;
 
@@ -35,8 +33,11 @@ public class WorldGenerator : MonoBehaviour
             .RegisterOnPlayerGoToExitTile(OnPlayerGoToExitTile);
     }
 
-    public void StartGeneration()
+    public void StartGeneration(int worldWidth, int worldHeight)
     {
+        this.worldHeight = worldHeight;
+        this.worldWidth = worldWidth;
+
         StartGenerateWorld();
     }
 
@@ -98,9 +99,9 @@ public class WorldGenerator : MonoBehaviour
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        WorldData.Instance.MapData = new Tile[worldWidth * worldHeight];
-        WorldData.Instance.Width = worldWidth;
-        WorldData.Instance.Height = worldHeight;
+        AreaDataManager.Instance.WorldData.MapData = new Tile[worldWidth * worldHeight];
+        AreaDataManager.Instance.WorldData.Width = worldWidth;
+        AreaDataManager.Instance.WorldData.Height = worldHeight;
 
         // Create tile types
 
@@ -109,27 +110,27 @@ public class WorldGenerator : MonoBehaviour
             new RawMapData(worldWidth, worldHeight, seed);
 
         // Set tile types from raw map
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
+        for (int i = 0; i < AreaDataManager.Instance.WorldData.MapData.Length; i++)
         {
-            (int x, int y) = WorldData.Instance.GetCoordFromIndex(i);
+            (int x, int y) = AreaDataManager.Instance.WorldData.GetCoordFromIndex(i);
 
-            WorldData.Instance.MapData[i] =
+            AreaDataManager.Instance.WorldData.MapData[i] =
                 new Tile(x, y, rawMapData.rawMap[i]);
         }
 
         // Edit tile type map
-        for (int i = 0; i < WorldData.Instance.MapData.Length; i++)
+        for (int i = 0; i < AreaDataManager.Instance.WorldData.MapData.Length; i++)
         {
             // 1% small chance to randomly mutate tile type to open
             if (Random.value < 0.01f)
             {
-                WorldData.Instance.MapData[i].Type =
+                AreaDataManager.Instance.WorldData.MapData[i].Type =
                     TileType.OpenArea;
             }
         }
 
-        WorldData.Instance.SetTileNeighbors();
-        WorldData.Instance.GenerateTileGraph();
+        AreaDataManager.Instance.WorldData.SetTileNeighbors();
+        AreaDataManager.Instance.WorldData.GenerateTileGraph();
 
         // Create features
 
@@ -152,22 +153,22 @@ public class WorldGenerator : MonoBehaviour
             if (Random.value < 0.8f) { continue; }
 
             // Don't place cities in the water
-            if (WorldData.Instance.MapData[index].Type != TileType.Water)
+            if (AreaDataManager.Instance.WorldData.MapData[index].Type != TileType.Water)
             {
                 // Choose between city and town
                 if (Random.value > 0.5)
                 {
-                    WorldData.Instance.MapData[index].TileFeature =
+                    AreaDataManager.Instance.WorldData.MapData[index].TileFeature =
                     new Feature(
                         FeatureType.Town,
-                        WorldData.Instance.MapData[index]);
+                        AreaDataManager.Instance.WorldData.MapData[index]);
                 }
                 else
                 {
-                    WorldData.Instance.MapData[index].TileFeature =
+                    AreaDataManager.Instance.WorldData.MapData[index].TileFeature =
                         new Feature(
                             FeatureType.City,
-                            WorldData.Instance.MapData[index]);
+                            AreaDataManager.Instance.WorldData.MapData[index]);
                 }
             }
         }

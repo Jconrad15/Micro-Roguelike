@@ -13,11 +13,11 @@ public class DataLoader : MonoBehaviour
         AreaData areaData;
         if (loadedAreaData.MapType == MapType.World)
         {
-            areaData = WorldData.Instance;
+            areaData = AreaDataManager.Instance.WorldData;
         }
         else
         {
-            areaData = LocationData.Instance;
+            areaData = AreaDataManager.Instance.CurrentLocationData;
         }
 
         ClearAllOldData();
@@ -66,6 +66,6 @@ public class DataLoader : MonoBehaviour
         FindObjectOfType<AIController>().ClearAll();
         FindObjectOfType<SpriteDisplay>().ClearAll();
 
-        LocationData.Instance.ClearAll();
+        AreaDataManager.Instance.CurrentLocationData.ClearAll();
     }
 }

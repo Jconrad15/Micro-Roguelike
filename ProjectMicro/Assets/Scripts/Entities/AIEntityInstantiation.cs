@@ -13,20 +13,20 @@ public static class AIEntityInstantiation
         Random.InitState(seed);
 
         // Create travelling merchants
-        int width = WorldData.Instance.Width;
-        int height = WorldData.Instance.Height;
+        int width = AreaDataManager.Instance.WorldData.Width;
+        int height = AreaDataManager.Instance.WorldData.Height;
         int merchantCount = 10;
 
         for (int i = 0; i < merchantCount; i++)
         {
-            DetermineOpenLocation(WorldData.Instance, out int x, out int y);
+            DetermineOpenLocation(AreaDataManager.Instance.WorldData, out int x, out int y);
             if (x == int.MinValue || y == int.MinValue) { break; }
 
             int merchantStartMoney = Random.value < 0.9 ?
                 Random.Range(5, 12) :
                 Random.Range(20, 30);
 
-            Tile merchantTile = WorldData.Instance.GetTile(x, y);
+            Tile merchantTile = AreaDataManager.Instance.WorldData.GetTile(x, y);
             Merchant merchant = new Merchant(
                 merchantTile,
                 EntityType.AI,
@@ -38,7 +38,7 @@ public static class AIEntityInstantiation
         }
 
         // Also create a dog to wander around
-        Tile dogTile = WorldData.Instance.GetTile(1, 1);
+        Tile dogTile = AreaDataManager.Instance.WorldData.GetTile(1, 1);
         Dog dog = new Dog(dogTile, EntityType.AI, 0);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
@@ -124,7 +124,7 @@ public static class AIEntityInstantiation
             if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
             {
                 // Set new tile so that the old tiles reference is lost
-                entity.SetTile(WorldData.Instance.GetTile(entity.X, entity.Y));
+                entity.SetTile(AreaDataManager.Instance.WorldData.GetTile(entity.X, entity.Y));
                 // Convert AIEntity to subclass
                 dynamic obj = Convert.ChangeType(entity, entity.GetType());
                 cbOnAIEntityCreated?.Invoke(obj);
