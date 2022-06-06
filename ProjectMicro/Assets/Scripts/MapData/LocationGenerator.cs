@@ -37,12 +37,10 @@ public class LocationGenerator : MonoBehaviour
 
         if (locationDataExists)
         {
-            Debug.Log("Load Location");
             LoadLocation(locationData, player);
         }
         else
         {
-            Debug.Log("Generate Location");
             // if not, generate
             StartGenerateLocation(worldX, worldY, locationTileType,
                 player, locationFeature);

@@ -60,8 +60,6 @@ public class AreaDataManager : MonoBehaviour
 
     public void StoreLocationData()
     {
-        Debug.Log("Store location Data");
-
         (int worldX, int worldY) = 
             WorldGenerator.Instance.GetSavedPlayerWorldPosition();
         // Get the world index for this location area data
@@ -73,6 +71,7 @@ public class AreaDataManager : MonoBehaviour
         CurrentLocationData.Entities.Remove(player);
 
         AllLocationData[index] = CurrentLocationData;
+        CurrentLocationData = new AreaData();
     }
 
     public bool TryGetLocationData(int worldX, int worldY,

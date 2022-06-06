@@ -58,8 +58,8 @@ public static class AIEntityInstantiation
 
             if (Utility.IsSameOrSubclass(typeof(AIEntity), e.GetType()))
             {
-/*                // Set new tile so that the old tiles reference is lost
-                e.SetTile(locationData.GetTile(e.X, e.Y));*/
+                // Set new tile so that the old tiles reference is lost
+                e.SetTile(locationData.GetTile(e.X, e.Y));
                 // Convert AIEntity to subclass
                 dynamic obj = Convert.ChangeType(e, e.GetType());
                 cbOnAIEntityCreated?.Invoke(obj);

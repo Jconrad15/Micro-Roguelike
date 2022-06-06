@@ -25,7 +25,7 @@ public static class PlayerInstantiation
         player.SetTile(playerTile);
 
         // Add player to entities list
-        AreaData.GetAreaDataForCurrentType().AddEntity(player);
+        //AreaData.GetAreaDataForCurrentType().AddEntity(player);
 
         cbOnPlayerCreated?.Invoke(player);
     }
