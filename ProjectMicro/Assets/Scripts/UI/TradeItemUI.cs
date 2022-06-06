@@ -44,8 +44,8 @@ public class TradeItemUI : MonoBehaviour
     private void OnButtonClicked()
     {
         // Check if the clicked entity object can transfer the item
-        bool itemTransfered =
-            clickedEntity.TryTransferItem(item, player, clickedEntity, isPlayerItem);
+        bool itemTransfered = clickedEntity.TryTransferItem(
+            item, player, clickedEntity, isPlayerItem);
         
         if (itemTransfered)
         {

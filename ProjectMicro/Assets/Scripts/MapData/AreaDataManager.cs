@@ -70,6 +70,9 @@ public class AreaDataManager : MonoBehaviour
         player.T.entity = null;
         CurrentLocationData.Entities.Remove(player);
 
+        // TODO: disconnect this UI reference
+        FindObjectOfType<DialogueUI>().UnregisterToClicksOnEntities();
+
         AllLocationData[index] = CurrentLocationData;
         CurrentLocationData = new AreaData();
     }

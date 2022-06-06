@@ -77,7 +77,7 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    private void UnregisterToClicksOnEntities()
+    public void UnregisterToClicksOnEntities()
     {
         MapType mapType = AreaDataManager.Instance.CurrentMapType;
 

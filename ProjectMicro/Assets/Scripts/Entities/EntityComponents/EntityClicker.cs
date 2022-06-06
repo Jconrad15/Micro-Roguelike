@@ -15,14 +15,14 @@ public class EntityClicker : MonoBehaviour
     {
         if (entity == null)
         {
-            Debug.LogError("Null entity in trader component");
+            Debug.LogError("Null entity in clicker component");
             return;
         }
 
         // If the entity is not visible, return
         if (entity.Visibility != VisibilityLevel.Visible) { return; }
 
-        // If a dialogue is already open, don't trigger click on trader
+        // If a dialogue is already open, don't trigger click on entity
         if (UIModality.Instance.IsDialogueOpen == true) { return; }
 
         if (entity.type == EntityType.Player)
