@@ -47,6 +47,8 @@ public class Merchant : AIEntity
         {
             T = t;
         }
+
+        LoadMerchantTypeRef();
     }
 
     private void LoadMerchantTypeRef()
@@ -96,8 +98,16 @@ public class Merchant : AIEntity
 
     public int GetAdjustedCost(Item itemInQuestion)
     {
-        if (itemInQuestion == null) { return int.MaxValue; }
-
+        if (itemInQuestion == null) 
+        {
+            Debug.LogError("Trying to get adjusted cost of null item");
+            return int.MaxValue;
+        }
+        if (typeRef == null) 
+        {
+            Debug.LogError("No merchant typeRef.");
+            return int.MaxValue; 
+        }
         float modifier = 1f;
 
         // If the merchant prefers to sell the item 
