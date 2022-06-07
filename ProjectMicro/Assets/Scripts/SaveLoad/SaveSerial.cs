@@ -303,7 +303,8 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.money,
                         serializableEntity.visibility,
                         serializableEntity.entityName,
-                        serializableEntity.characterName);
+                        serializableEntity.characterName,
+                        serializableEntity.faction);
                 }
                 else
                 {

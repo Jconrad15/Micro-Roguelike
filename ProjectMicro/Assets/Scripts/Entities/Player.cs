@@ -20,7 +20,12 @@ public class Player : Entity
         }
     }
 
-    // Contructor for new player
+    /// <summary>
+    /// Contructor for new player.
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="type"></param>
+    /// <param name="startingMoney"></param>
     public Player(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
@@ -31,10 +36,20 @@ public class Player : Entity
         followerManager = new FollowerManager();
     }
 
-    // Constructor for loaded player
+    /// <summary>
+    /// Constructor for loaded player.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="inventoryItems"></param>
+    /// <param name="money"></param>
+    /// <param name="visibility"></param>
+    /// <param name="entityName"></param>
+    /// <param name="characterName"></param>
+    /// <param name="t"></param>
     public Player(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, FactionType faction, Tile t = null)
+        : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -47,7 +62,7 @@ public class Player : Entity
         {
             T = t;
         }
-
+        Faction = faction;
         followerManager = new FollowerManager();
     }
 

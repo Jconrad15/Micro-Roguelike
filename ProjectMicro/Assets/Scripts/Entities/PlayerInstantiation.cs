@@ -78,7 +78,7 @@ public static class PlayerInstantiation
             EntityType.Player, entityToLoad.InventoryItems,
             entityToLoad.Money, entityToLoad.Visibility,
             entityToLoad.EntityName, entityToLoad.CharacterName,
-            playerTile);
+            entityToLoad.Faction, playerTile);
 
         playerTile.entity = player;
                 AreaData.GetAreaDataForCurrentType().AddEntity(player);

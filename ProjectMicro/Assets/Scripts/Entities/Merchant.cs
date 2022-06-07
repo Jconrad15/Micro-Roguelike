@@ -32,7 +32,16 @@ public class Merchant : AIEntity
         CreateMerchantStartingInventory();
     }
 
-    // Constructor for loaded Merchant
+    /// <summary>
+    /// Constructor for loaded Merchant.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="inventoryItems"></param>
+    /// <param name="money"></param>
+    /// <param name="visibility"></param>
+    /// <param name="entityName"></param>
+    /// <param name="characterName"></param>
+    /// <param name="t"></param>
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Tile t = null) : base(t, type, money)
