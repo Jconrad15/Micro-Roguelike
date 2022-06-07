@@ -36,8 +36,6 @@ public class RawMapData
         for (int i = 0; i < rawMap.Length; i++)
         {
             rawMap[i] = (TileType)categories[i];
-
-            Debug.Log("TileType: " + rawMap[i].ToString());
         }
 
         return (rawMap, seedIndicies);
