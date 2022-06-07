@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -23,7 +22,8 @@ public class AreaData
     /// <param name="height"></param>
     /// <param name="entities"></param>
     /// <param name="features"></param>
-    public AreaData(bool isWorld, Tile[] mapData, int width, int height, List<Entity> entities, List<Feature> features)
+    public AreaData(bool isWorld, Tile[] mapData, int width, int height,
+        List<Entity> entities, List<Feature> features)
     {
         IsWorld = isWorld;
         MapData = mapData;

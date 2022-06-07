@@ -77,7 +77,6 @@ public class WorldGenerator : MonoBehaviour
         PlayerInstantiation.TransitionPlayerToMap(
             player, x, y);
 
-        // TODO: generate entites in correct places, not randomly
         AIEntityInstantiation.LoadPreviousWorldEntities();
 
         Random.state = oldState;

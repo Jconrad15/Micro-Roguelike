@@ -13,9 +13,6 @@ public struct SaveData
     public SerializableAreaData currentLocationData;
     public SerializableAreaData worldData;
     public SerializableAreaData[] allLocationData;
-    //public SerializableTile[] mapData;
-/*    public int width;
-    public int height;*/
     public MapType currentMapType;
     public int seed;
     public int playerWorldX;
@@ -398,9 +395,6 @@ class SerializableSaveData
     public SerializableAreaData savedCurrentLocationData;
     public SerializableAreaData savedWorldData;
     public SerializableAreaData[] SavedAllLocationData;
-    //public SerializableTile[] savedAreaMapData;
-/*    public int savedWidth;
-    public int savedHeight;*/
     public MapType savedCurrentMapType;
     public int savedSeed;
     public int savedPlayerWorldX;

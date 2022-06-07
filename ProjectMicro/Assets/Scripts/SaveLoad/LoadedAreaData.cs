@@ -6,15 +6,8 @@ public class LoadedAreaData
 {
     public AreaData currentAreaData;
     public AreaData worldData;
-
     public AreaData[] allLocationData;
 
-    /*    public Tile[] MapData { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public List<Entity> Entities { get; set; }
-        public List<Feature> Features { get; set; }*/
-    
     public MapType CurrentMapType { get; set; }
     public int Seed { get; set; }
 

@@ -10,16 +10,6 @@ public class DataLoader : MonoBehaviour
 
     protected static void OnDataLoaded(LoadedAreaData loadedAreaData)
     {
-/*        AreaData areaData;
-        if (loadedAreaData.CurrentMapType == MapType.World)
-        {
-            areaData = AreaDataManager.Instance.GetWorldData();
-        }
-        else
-        {
-            areaData = AreaDataManager.Instance.CurrentLocationData;
-        }*/
-
         ResetAllOldData();
         AreaDataManager.Instance.LoadAreaData(loadedAreaData);
 
