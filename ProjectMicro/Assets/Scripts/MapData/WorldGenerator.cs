@@ -10,9 +10,6 @@ public class WorldGenerator : MonoBehaviour
 
     private Action cbOnWorldCreated;
 
-    private int playerWorldX;
-    private int playerWorldY;
-
     public static WorldGenerator Instance { get; private set; }
     private void Awake()
     {
@@ -45,8 +42,10 @@ public class WorldGenerator : MonoBehaviour
     {
         int seed = GameInitializer.Instance.Seed;
 
-        playerWorldX = worldWidth / 2;
-        playerWorldY = worldHeight / 2;
+        int startPlayerWorldX = worldWidth / 2;
+        int startPlayerWorldY = worldHeight / 2;
+        AreaDataManager.Instance.SavePlayerWorldPosition(
+            startPlayerWorldX, startPlayerWorldY);
 
         AreaDataManager.Instance.SetCurrentMapType(MapType.World);
 
@@ -55,7 +54,7 @@ public class WorldGenerator : MonoBehaviour
 
         AreaDataManager.Instance.SetWorldData(CreateWorldMapData(seed));
 
-        PlayerInstantiation.CreatePlayer(playerWorldX, playerWorldY);
+        PlayerInstantiation.CreatePlayer(startPlayerWorldX, startPlayerWorldY);
         AIEntityInstantiation.CreateInitialWorldEntities(seed);
 
         Random.state = oldState;
@@ -74,8 +73,9 @@ public class WorldGenerator : MonoBehaviour
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
+        (int x, int y) = AreaDataManager.Instance.GetPlayerWorldPosition();
         PlayerInstantiation.TransitionPlayerToMap(
-            player, playerWorldX, playerWorldY);
+            player, x, y);
 
         // TODO: generate entites in correct places, not randomly
         AIEntityInstantiation.LoadPreviousWorldEntities();
@@ -83,17 +83,6 @@ public class WorldGenerator : MonoBehaviour
         Random.state = oldState;
 
         cbOnWorldCreated?.Invoke();
-    }
-
-    public void SavePlayerWorldPosition(int x, int y)
-    {
-        playerWorldX = x;
-        playerWorldY = y;
-    }
-
-    public (int, int) GetSavedPlayerWorldPosition()
-    {
-        return (playerWorldX, playerWorldY);
     }
 
     private AreaData CreateWorldMapData(int seed)

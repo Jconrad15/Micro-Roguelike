@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Follower
 {
-    public string EntityName { get; private set; }
-    public string CharacterName { get; private set; }
+    public Entity Entity { get; private set; }
 
-    public int InventorySpace { get; protected set; }
-
-    public List<Item> Items { get; protected set; }
+    public Follower(Entity entity)
+    {
+        Entity = entity;
+    }
 
 
 }

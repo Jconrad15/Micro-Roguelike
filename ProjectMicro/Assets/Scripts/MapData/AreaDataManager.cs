@@ -25,6 +25,20 @@ public class AreaDataManager : MonoBehaviour
 
     public MapType CurrentMapType { get; private set; }
 
+    private int playerWorldX;
+    private int playerWorldY;
+
+    public void SavePlayerWorldPosition(int x, int y)
+    {
+        playerWorldX = x;
+        playerWorldY = y;
+    }
+
+    public (int, int) GetPlayerWorldPosition()
+    {
+        return (playerWorldX, playerWorldY);
+    }
+
     public void SetCurrentMapType(MapType type)
     {
         if (CurrentMapType != type)
@@ -50,6 +64,11 @@ public class AreaDataManager : MonoBehaviour
         return WorldData;
     }
 
+    public AreaData[] GetAllLocationData()
+    {
+        return AllLocationData;
+    }
+
     public void Initiate(int worldWidth, int worldHeight)
     {
         CurrentLocationData = new AreaData();
@@ -60,10 +79,8 @@ public class AreaDataManager : MonoBehaviour
 
     public void StoreLocationData()
     {
-        (int worldX, int worldY) = 
-            WorldGenerator.Instance.GetSavedPlayerWorldPosition();
         // Get the world index for this location area data
-        int index = WorldData.GetIndexFromCoord(worldX, worldY);
+        int index = WorldData.GetIndexFromCoord(playerWorldX, playerWorldY);
 
         // When stored, need to remove old player from tile location's entity
         Player player = FindObjectOfType<PlayerController>().GetPlayer();
@@ -89,6 +106,16 @@ public class AreaDataManager : MonoBehaviour
         locationData = AllLocationData[index];
         if (locationData == null) { return false; }
         return true;
+    }
+
+    public void LoadAreaData(LoadedAreaData loadedAreaData)
+    { 
+        SetCurrentMapType(loadedAreaData.CurrentMapType);
+        CurrentLocationData = loadedAreaData.currentAreaData;
+        WorldData = loadedAreaData.worldData;
+        AllLocationData = loadedAreaData.allLocationData;
+        SavePlayerWorldPosition(
+            loadedAreaData.PlayerWorldX, loadedAreaData.PlayerWorldY);
     }
 
     public void RegisterOnCurrentMapTypeChange(

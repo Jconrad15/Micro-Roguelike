@@ -25,7 +25,7 @@ public class EnterLocation : MonoBehaviour
         TileType tileType = player.T.Type;
 
         // Save world location for now
-        WorldGenerator.Instance.SavePlayerWorldPosition(player.X, player.Y);
+        AreaDataManager.Instance.SavePlayerWorldPosition(player.X, player.Y);
 
         // First need to destroy all current info
         DataLoader.ResetAllOldData();

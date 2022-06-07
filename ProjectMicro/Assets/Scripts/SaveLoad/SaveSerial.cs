@@ -10,11 +10,16 @@ using UnityEngine;
 /// </summary>
 public struct SaveData
 {
-    public SerializableTile[] mapData;
-    public int width;
-    public int height;
-    public MapType mapType;
+    public SerializableAreaData currentLocationData;
+    public SerializableAreaData worldData;
+    public SerializableAreaData[] allLocationData;
+    //public SerializableTile[] mapData;
+/*    public int width;
+    public int height;*/
+    public MapType currentMapType;
     public int seed;
+    public int playerWorldX;
+    public int playerWorldY;
 }
 
 /// <summary>
@@ -56,9 +61,57 @@ public class SaveSerial : MonoBehaviour
     private SaveData GetDataToSave()
     {
         // Get area data
-        AreaData areaData = AreaData.GetAreaDataForCurrentType();
-        Tile[] mapData = areaData.MapData;
+        AreaData currentLocationData =
+            AreaDataManager.Instance.CurrentLocationData;
+        AreaData worldData =
+            AreaDataManager.Instance.GetWorldData();
+        AreaData[] allLocationData =
+            AreaDataManager.Instance.GetAllLocationData();
 
+        SerializableAreaData[] serializedAllLocationData =
+            new SerializableAreaData[allLocationData.Length];
+        for (int i = 0; i < allLocationData.Length; i++)
+        {
+            serializedAllLocationData[i] =
+                SerializeAreaData(allLocationData[i]);
+        }
+
+        MapType currentMapType = AreaDataManager.Instance.CurrentMapType;
+        int playerWorldX, playerWorldY;
+        if (currentMapType == MapType.World)
+        {
+            // Get player to update player world pos 
+            Player player = FindObjectOfType<PlayerController>().GetPlayer();
+            playerWorldX = player.X;
+            playerWorldY = player.Y;
+        }
+        else
+        {
+            (playerWorldX, playerWorldY) =
+                AreaDataManager.Instance.GetPlayerWorldPosition();
+        }
+
+        // Serialize data to get save data
+        SaveData data = new SaveData
+        {
+            currentLocationData = SerializeAreaData(currentLocationData),
+            worldData = SerializeAreaData(worldData),
+            allLocationData = serializedAllLocationData,
+            currentMapType = currentMapType,
+            seed = GameInitializer.Instance.Seed,
+            playerWorldX = playerWorldX,
+            playerWorldY = playerWorldY,
+        };
+
+        return data;
+    }
+
+    private static SerializableAreaData SerializeAreaData(AreaData areaData)
+    {
+        if (areaData == null) { return null; }
+        if (areaData.MapData == null) { return null; }
+
+        Tile[] mapData = areaData.MapData;
         SerializableTile[] serializedTileData =
             new SerializableTile[mapData.Length];
 
@@ -79,6 +132,7 @@ public class SaveSerial : MonoBehaviour
                     money = mapData[i].entity.Money,
                     type = mapData[i].entity.type,
                     visibility = mapData[i].entity.Visibility,
+                    faction = mapData[i].entity.Faction,
                 };
             }
 
@@ -108,16 +162,14 @@ public class SaveSerial : MonoBehaviour
             };
         }
 
-        SaveData data = new SaveData
+        SerializableAreaData serializedAreaData = new SerializableAreaData
         {
+            isWorld = areaData.IsWorld,
             mapData = serializedTileData,
             width = areaData.Width,
             height = areaData.Height,
-            mapType = AreaDataManager.Instance.CurrentMapType,
-            seed = GameInitializer.Instance.Seed,
         };
-
-        return data;
+        return serializedAreaData;
     }
 
     /// <summary>
@@ -136,11 +188,13 @@ public class SaveSerial : MonoBehaviour
 
         SerializableSaveData ssd = new SerializableSaveData
         {
-            savedAreaMapData = dataToSave.mapData,
-            savedHeight = dataToSave.height,
-            savedWidth = dataToSave.width,
-            savedMapType = dataToSave.mapType,
+            savedCurrentLocationData = dataToSave.currentLocationData,
+            savedWorldData = dataToSave.worldData,
+            SavedAllLocationData = dataToSave.allLocationData,
+            savedCurrentMapType = dataToSave.currentMapType,
             savedSeed = dataToSave.seed,
+            savedPlayerWorldX = dataToSave.playerWorldX,
+            savedPlayerWorldY = dataToSave.playerWorldY,
         };
 
         bf.Serialize(file, ssd);
@@ -168,95 +222,52 @@ public class SaveSerial : MonoBehaviour
 
             SaveData loadedData = new SaveData
             {
-                mapData = ssd.savedAreaMapData,
-                width = ssd.savedWidth,
-                height = ssd.savedHeight,
-                mapType = ssd.savedMapType,
+                currentLocationData = ssd.savedCurrentLocationData,
+                worldData = ssd.savedWorldData,
+                allLocationData = ssd.SavedAllLocationData,
+                currentMapType = ssd.savedCurrentMapType,
                 seed = ssd.savedSeed,
+                playerWorldX = ssd.savedPlayerWorldX,
+                playerWorldY = ssd.savedPlayerWorldY,
             };
 
-            // Convert back to mapData tile array
-            Tile[] loadedMapData = new Tile[loadedData.mapData.Length];
-            List<Entity> entities = new List<Entity>();
-            List<Feature> features = new List<Feature>();
-
-            for (int i = 0; i < loadedMapData.Length; i++)
+            // Convert back to mapData tile arrays
+            AreaData currentAreaData =
+                ReconstructAreaData(loadedData.currentLocationData);
+            // If there is no current area data,
+            // need to switch it to a blank area data object
+            if (currentAreaData == null)
             {
-                Entity e = null;
-                if (loadedData.mapData[i].entity != null)
-                {
-                    SerializableEntity serializableEntity =
-                        loadedData.mapData[i].entity;
+                currentAreaData = new AreaData();
+            }
 
-                    if (serializableEntity.type == EntityType.Player)
-                    {
-                        // Recreate entity
-                        e = new Player(serializableEntity.type,
-                            serializableEntity.inventoryItems,
-                            serializableEntity.money,
-                            serializableEntity.visibility,
-                            serializableEntity.entityName,
-                            serializableEntity.characterName);
-                    }
-                    else
-                    {
-                        e = new AIEntity(serializableEntity.type,
-                            serializableEntity.inventoryItems,
-                            serializableEntity.money,
-                            serializableEntity.visibility,
-                            serializableEntity.entityName,
-                            serializableEntity.characterName);
-                    }
-                }
-                // Recreate feature
-                Feature f = null;
-                if (loadedData.mapData[i].feature != null)
-                {
-                    SerialziableFeature serialziableFeature =
-                        loadedData.mapData[i].feature;
+            AreaData worldData =
+                ReconstructAreaData(loadedData.worldData);
+            if (worldData == null)
+            {
+                Debug.LogError("Why are we loading null world data");
+                worldData = new AreaData();
+            }
 
-                    f = new Feature(serialziableFeature.type,
-                        serialziableFeature.visibility);
-                }
-
-                loadedMapData[i] =
-                    new Tile
-                    (
-                        loadedData.mapData[i].x,
-                        loadedData.mapData[i].y,
-                        loadedData.mapData[i].type,
-                        e,
-                        f,
-                        loadedData.mapData[i].item,
-                        loadedData.mapData[i].isWalkable,
-                        loadedData.mapData[i].visibility
-                    );
-
-                // Now that the tile is created,
-                // need to set tile on entity and feature
-                if (e != null)
-                {
-                    e.SetTile(loadedMapData[i]);
-                    entities.Add(e);
-                }
-                if (f != null)
-                {
-                    f.SetTile(loadedMapData[i]);
-                    features.Add(f);
-                }
+            AreaData[] allLocationData =
+                new AreaData[loadedData.allLocationData.Length];
+            for (int i = 0; i < allLocationData.Length; i++)
+            {
+                allLocationData[i] =
+                    ReconstructAreaData(loadedData.allLocationData[i]);
             }
 
             // Create loaded area data container for all loaded data
             LoadedAreaData loadedAreaData =
                 new LoadedAreaData
                 (
-                    loadedMapData,
-                    loadedData.width,
-                    loadedData.height,
-                    entities,
-                    features,
-                    loadedData.mapType,
-                    loadedData.seed
+                    currentAreaData,
+                    worldData,
+                    allLocationData,
+                    loadedData.currentMapType,
+                    loadedData.seed,
+                    loadedData.playerWorldX,
+                    loadedData.playerWorldY
                 );
 
             cbOnDataLoadedFromFile?.Invoke(loadedAreaData);
@@ -265,6 +276,96 @@ public class SaveSerial : MonoBehaviour
         {
             Debug.LogError("There is no save data!");
         }
+    }
+
+    private static AreaData ReconstructAreaData(
+        SerializableAreaData serializableAreaData)
+    {
+        if (serializableAreaData == null) { return null; }
+        if (serializableAreaData.mapData == null) { return null; }
+
+        SerializableTile[] serializedMapData = serializableAreaData.mapData;
+
+        Tile[] loadedMapData = new Tile[serializedMapData.Length];
+        List<Entity> entities = new List<Entity>();
+        List<Feature> features = new List<Feature>();
+
+        for (int i = 0; i < loadedMapData.Length; i++)
+        {
+            Entity e = null;
+            if (serializedMapData[i].entity != null)
+            {
+                SerializableEntity serializableEntity =
+                    serializedMapData[i].entity;
+
+                if (serializableEntity.type == EntityType.Player)
+                {
+                    // Recreate entity
+                    e = new Player(serializableEntity.type,
+                        serializableEntity.inventoryItems,
+                        serializableEntity.money,
+                        serializableEntity.visibility,
+                        serializableEntity.entityName,
+                        serializableEntity.characterName);
+                }
+                else
+                {
+                    e = new AIEntity(serializableEntity.type,
+                        serializableEntity.inventoryItems,
+                        serializableEntity.money,
+                        serializableEntity.visibility,
+                        serializableEntity.entityName,
+                        serializableEntity.characterName,
+                        serializableEntity.faction);
+                }
+            }
+            // Recreate feature
+            Feature f = null;
+            if (serializedMapData[i].feature != null)
+            {
+                SerialziableFeature serialziableFeature =
+                    serializedMapData[i].feature;
+
+                f = new Feature(serialziableFeature.type,
+                    serialziableFeature.visibility);
+            }
+
+            loadedMapData[i] =
+                new Tile
+                (
+                    serializedMapData[i].x,
+                    serializedMapData[i].y,
+                    serializedMapData[i].type,
+                    e,
+                    f,
+                    serializedMapData[i].item,
+                    serializedMapData[i].isWalkable,
+                    serializedMapData[i].visibility
+                );
+
+            // Now that the tile is created,
+            // need to set tile on entity and feature
+            if (e != null)
+            {
+                e.SetTile(loadedMapData[i]);
+                entities.Add(e);
+            }
+            if (f != null)
+            {
+                f.SetTile(loadedMapData[i]);
+                features.Add(f);
+            }
+        }
+
+        AreaData reconstructedAreaData = new AreaData(
+            serializableAreaData.isWorld,
+            loadedMapData,
+            serializableAreaData.width,
+            serializableAreaData.height,
+            entities,
+            features);
+
+        return reconstructedAreaData;
     }
 
     public void RegisterOnDataLoaded(Action<LoadedAreaData> callbackFunc)
@@ -294,9 +395,14 @@ public class SaveSerial : MonoBehaviour
 [Serializable]
 class SerializableSaveData
 {
-    public SerializableTile[] savedAreaMapData;
-    public int savedWidth;
-    public int savedHeight;
-    public MapType savedMapType;
+    public SerializableAreaData savedCurrentLocationData;
+    public SerializableAreaData savedWorldData;
+    public SerializableAreaData[] SavedAllLocationData;
+    //public SerializableTile[] savedAreaMapData;
+/*    public int savedWidth;
+    public int savedHeight;*/
+    public MapType savedCurrentMapType;
     public int savedSeed;
+    public int savedPlayerWorldX;
+    public int savedPlayerWorldY;
 }

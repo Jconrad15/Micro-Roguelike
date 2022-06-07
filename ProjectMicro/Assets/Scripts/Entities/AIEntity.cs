@@ -14,13 +14,15 @@ public class AIEntity : Entity
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, FactionType faction, Tile t = null) 
+        : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        Faction = faction;
         T = t;
     }
 

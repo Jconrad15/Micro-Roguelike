@@ -4,24 +4,34 @@ using UnityEngine;
 
 public class LoadedAreaData
 {
-    public Tile[] MapData { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public List<Entity> Entities { get; set; }
-    public List<Feature> Features { get; set; }
-    public MapType MapType { get; set; }
+    public AreaData currentAreaData;
+    public AreaData worldData;
+
+    public AreaData[] allLocationData;
+
+    /*    public Tile[] MapData { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public List<Entity> Entities { get; set; }
+        public List<Feature> Features { get; set; }*/
+    
+    public MapType CurrentMapType { get; set; }
     public int Seed { get; set; }
 
-    public LoadedAreaData(Tile[] mapData, int width, int height,
-        List<Entity> entities, List<Feature> features,
-        MapType mapType, int seed)
+    public int PlayerWorldX { get; set; }
+    public int PlayerWorldY { get; set; }
+
+    public LoadedAreaData(
+        AreaData currentAreaData, AreaData worldData,
+        AreaData[] allLocationData, MapType currentMapType,
+        int seed, int playerWorldX, int playerWorldY)
     {
-        MapData = mapData;
-        Width = width;
-        Height = height;
-        Entities = entities;
-        Features = features;
-        MapType = mapType;
+        this.currentAreaData = currentAreaData;
+        this.worldData = worldData;
+        this.allLocationData = allLocationData;
+        CurrentMapType = currentMapType;
         Seed = seed;
+        PlayerWorldX = playerWorldX;
+        PlayerWorldY = playerWorldY;
     }
 }
