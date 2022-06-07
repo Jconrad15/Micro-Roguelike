@@ -18,7 +18,7 @@ public static class Voronoi
             this.index = index;
             seedCell = null;
             IsSeedCell = false;
-            currentCategory = 0;
+            currentCategory = -1;
         }
     }
 
@@ -50,7 +50,7 @@ public static class Voronoi
             new Vector2(-1, 1),
 
             new Vector2(0, -1),
-            //new Vector2(0, 0),
+            //new Vector2(0, 0), itself
             new Vector2(0, 1),
 
             new Vector2(1, -1),
@@ -58,7 +58,7 @@ public static class Voronoi
             new Vector2(1, 1)
         };
 
-        int defaultCategory = 0;
+        int defaultCategory = -1;
 
         // Iterate over each step size
         for (int k = 0; k < steps.Length; k++)
@@ -85,20 +85,20 @@ public static class Voronoi
                         if (cell.IsSeedCell) { continue; }
                         Cell neighborCell = GetCell(neighborX, neighborZ, width, height, cells);
 
-                        // Compare neighbor color to cell color
+                        // Compare neighbor catecory to cell catecory
                         if (cell.currentCategory == defaultCategory)
                         {
                             if (neighborCell.currentCategory != defaultCategory)
                             {
-                                // Change cell's color to neighbor's color
+                                // Change cell's catecory to neighbor's catecory
                                 cell.currentCategory = neighborCell.currentCategory;
                                 cell.seedCell = neighborCell.seedCell;
                             }
-                            // Otherwise do nothing if both are default color
+                            // Otherwise do nothing if both are default catecory
                         }
                         else
                         {
-                            // The cell does not have a default color
+                            // The cell does not have a default catecory
                             if (neighborCell.currentCategory != defaultCategory)
                             {
                                 if (cell.seedCell == null)
@@ -145,7 +145,8 @@ public static class Voronoi
         int[] seedIndices = SelectSeedCells(seed, seedCount, cellCount);
         foreach (int seedIndex in seedIndices)
         {
-            cells[seedIndex].currentCategory = Random.Range(0, maxCategoryTypes);
+            cells[seedIndex].currentCategory =
+                Random.Range(0, maxCategoryTypes);
             cells[seedIndex].IsSeedCell = true;
             cells[seedIndex].seedCell = cells[seedIndex];
         }
