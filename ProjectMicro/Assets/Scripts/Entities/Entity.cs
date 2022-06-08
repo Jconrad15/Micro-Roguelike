@@ -118,6 +118,9 @@ public class Entity
 
         CreateCharacterName();
 
+        // TODO: better guild assigning
+        CurrentGuild = Utility.GetRandomEnum<Guild>();
+
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
         areaData.AddEntity(this);
@@ -213,7 +216,8 @@ public class Entity
         Entity clickedEntity, bool isPlayerItem)
     {
         Merchant m = (Merchant)clickedEntity;
-        int adjustedItemCost = m.GetAdjustedCost(itemToTransfer);
+        int adjustedItemCost = m.GetAdjustedCost(
+            itemToTransfer, player, isPlayerItem);
 
         // Transfer to the trader if possible
         if (isPlayerItem)

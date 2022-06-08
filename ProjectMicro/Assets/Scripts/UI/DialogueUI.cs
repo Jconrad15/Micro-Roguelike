@@ -22,6 +22,11 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private GameObject tradeItemPrefab;
 
+    [SerializeField]
+    private TextMeshProUGUI playerGuildText;
+    [SerializeField]
+    private TextMeshProUGUI aiGuildText;
+
     private Player player;
 
     private GameObject[] createdPlayerItems;
@@ -115,6 +120,7 @@ public class DialogueUI : MonoBehaviour
         // Show player and trader money
         UpdateShownMoney(clickedEntity);
         UpdateTitle(clickedEntity);
+        UpdateShownGuilds(clickedEntity);
         dialogueArea.SetActive(true);
     }
 
@@ -174,6 +180,12 @@ public class DialogueUI : MonoBehaviour
     {
         playerMoneyText.SetText("$" + player.Money.ToString());
         merchantMoneyText.SetText("$" + clickedEntity.Money.ToString());
+    }
+
+    private void UpdateShownGuilds(Entity clickedEntity)
+    {
+        playerGuildText.SetText(player.CurrentGuild.ToString());
+        aiGuildText.SetText(clickedEntity.CurrentGuild.ToString());
     }
 
     public void Hide()

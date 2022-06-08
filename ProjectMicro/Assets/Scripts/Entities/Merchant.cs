@@ -19,7 +19,9 @@ public enum MerchantType
 
 public class Merchant : AIEntity
 {
-    private const float sellModifier = 0.2f;
+    private const float sellPreferedItemModifier = 0.2f;
+    private const float sellSameGuildModifier = 0.2f;
+
     protected int waitAtTileTurns;
     public MerchantType MType { get; protected set; }
     protected MerchantTypeRef typeRef;
@@ -108,7 +110,8 @@ public class Merchant : AIEntity
         }
     }
 
-    public int GetAdjustedCost(Item itemInQuestion)
+    public int GetAdjustedCost(
+        Item itemInQuestion, Player player, bool isPlayerItem)
     {
         if (itemInQuestion == null) 
         {
@@ -132,7 +135,7 @@ public class Merchant : AIEntity
                 if (itemInQuestion.itemName ==
                     typeRef.preferredSell[i].itemName)
                 {
-                    modifier -= sellModifier;
+                    modifier -= sellPreferedItemModifier;
                     break;
                 }
             }
@@ -148,9 +151,23 @@ public class Merchant : AIEntity
                 if (itemInQuestion.itemName ==
                     typeRef.preferredBuy[i].itemName)
                 {
-                    modifier += sellModifier;
+                    modifier += sellPreferedItemModifier;
                     break;
                 }
+            }
+        }
+
+        // Adjust the modifier based on whether or not the merchant
+        // is in the same guild as the player
+        if (player.CurrentGuild == CurrentGuild)
+        {
+            if (isPlayerItem)
+            {
+                modifier += sellSameGuildModifier;
+            }
+            else
+            {
+                modifier -= sellSameGuildModifier;
             }
         }
 

@@ -33,7 +33,7 @@ public class TradeItemUI : MonoBehaviour
         itemNameText.SetText(item.itemName);
 
         Merchant m = (Merchant)clickedEntity;
-        int adjustedCost = m.GetAdjustedCost(item);
+        int adjustedCost = m.GetAdjustedCost(item, player, isPlayerItem);
 
         buttonText.SetText("$" + adjustedCost.ToString());
 
@@ -55,12 +55,14 @@ public class TradeItemUI : MonoBehaviour
         }
     }
 
-    public void RegisterOnItemTransfered(Action<Player, Entity> callbackfunc)
+    public void RegisterOnItemTransfered(
+        Action<Player, Entity> callbackfunc)
     {
         onItemTransfered += callbackfunc;
     }
 
-    public void UnregisterOnItemTransfered(Action<Player, Entity> callbackfunc)
+    public void UnregisterOnItemTransfered(
+        Action<Player, Entity> callbackfunc)
     {
         onItemTransfered -= callbackfunc;
     }
