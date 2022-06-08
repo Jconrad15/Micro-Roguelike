@@ -9,7 +9,7 @@ public class Guild
     public Guild(int id)
     {
         Id = id;
-        GuildName = id.ToString();
+        GuildName = GuildNameGenerator.GenerateName();
     }
 
 }
