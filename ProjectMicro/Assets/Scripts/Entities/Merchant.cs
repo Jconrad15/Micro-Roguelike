@@ -12,8 +12,11 @@ Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
 Fresh Produce Cartographer Stables University Hatter Bank Spice 
 Shipwrights Wineries*/
 
-public enum MerchantType {
-    WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer };
+public enum MerchantType 
+{
+    WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer
+};
+
 public class Merchant : AIEntity
 {
     private const float sellModifier = 0.2f;

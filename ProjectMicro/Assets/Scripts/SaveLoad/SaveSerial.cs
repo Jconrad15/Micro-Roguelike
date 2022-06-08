@@ -129,7 +129,7 @@ public class SaveSerial : MonoBehaviour
                     money = mapData[i].entity.Money,
                     type = mapData[i].entity.type,
                     visibility = mapData[i].entity.Visibility,
-                    faction = mapData[i].entity.Faction,
+                    guild = mapData[i].entity.CurrentGuild,
                 };
             }
 
@@ -304,7 +304,7 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.visibility,
                         serializableEntity.entityName,
                         serializableEntity.characterName,
-                        serializableEntity.faction);
+                        serializableEntity.guild);
                 }
                 else
                 {
@@ -314,7 +314,7 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.visibility,
                         serializableEntity.entityName,
                         serializableEntity.characterName,
-                        serializableEntity.faction);
+                        serializableEntity.guild);
                 }
             }
             // Recreate feature

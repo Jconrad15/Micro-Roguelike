@@ -15,13 +15,13 @@ public class SerializableEntity
     public int money;
     public EntityType type;
     public VisibilityLevel visibility;
-    public FactionType faction;
+    public Guild guild;
 }
 
 public class Entity
 {
     public int PlayerBondLevel { get; protected set; }
-    public FactionType Faction { get; protected set; }
+    public Guild CurrentGuild { get; protected set; }
 
     /// <summary>
     /// Helps indicate the type of entity

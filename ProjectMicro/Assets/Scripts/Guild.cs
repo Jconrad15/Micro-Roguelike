@@ -1,9 +1,9 @@
 using System;
 
 [Serializable]
-public enum FactionType
+public enum Guild
 {
-    A, 
+    A,
     B,
     C,
     None
