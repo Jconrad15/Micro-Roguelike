@@ -161,14 +161,7 @@ public class Merchant : AIEntity
         // is in the same guild as the player
         if (player.CurrentGuild == CurrentGuild)
         {
-            if (isPlayerItem)
-            {
-                modifier += sellSameGuildModifier;
-            }
-            else
-            {
-                modifier -= sellSameGuildModifier;
-            }
+            modifier -= sellSameGuildModifier;
         }
 
         // Return the base cost mutlipled by any modifier,

@@ -34,9 +34,12 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
-        FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
-        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        FindObjectOfType<LocationGenerator>()
+            .RegisterOnLocationCreated(OnLocationCreated);
+        FindObjectOfType<WorldGenerator>()
+            .RegisterOnWorldCreated(OnWorldCreated);
+        AreaDataManager.Instance
+            .RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
 
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -184,8 +187,8 @@ public class DialogueUI : MonoBehaviour
 
     private void UpdateShownGuilds(Entity clickedEntity)
     {
-        playerGuildText.SetText(player.CurrentGuild.ToString());
-        aiGuildText.SetText(clickedEntity.CurrentGuild.ToString());
+        playerGuildText.SetText(player.CurrentGuild.GuildName);
+        aiGuildText.SetText(clickedEntity.CurrentGuild.GuildName);
     }
 
     public void Hide()

@@ -1,10 +1,15 @@
 using System;
 
 [Serializable]
-public enum Guild
+public class Guild
 {
-    A,
-    B,
-    C,
-    None
+    public int Id { get; protected set; }
+    public string GuildName { get; protected set; }
+
+    public Guild(int id)
+    {
+        Id = id;
+        GuildName = id.ToString();
+    }
+
 }

@@ -109,17 +109,15 @@ public class Entity
         X = t.x;
         Y = t.y;
         Money = startingMoney;
-
         this.type = type;
-
         Visibility = VisibilityLevel.NotVisible;
-
         InventoryItems = new List<Item>();
 
         CreateCharacterName();
 
         // TODO: better guild assigning
-        CurrentGuild = Utility.GetRandomEnum<Guild>();
+        CurrentGuild =
+            GameInitializer.Instance.CurrentGuildManager.GetRandomGuild();
 
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();

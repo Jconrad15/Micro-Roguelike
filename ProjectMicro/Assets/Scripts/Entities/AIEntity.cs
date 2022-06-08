@@ -14,7 +14,7 @@ public class AIEntity : Entity
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild faction, Tile t = null) 
+        string characterName, Guild guild, Tile t = null) 
         : base(t, type, money)
     {
         base.type = type;
@@ -22,7 +22,7 @@ public class AIEntity : Entity
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
-        CurrentGuild = faction;
+        CurrentGuild = guild;
         T = t;
     }
 
