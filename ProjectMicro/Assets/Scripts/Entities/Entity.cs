@@ -432,4 +432,6 @@ public class Entity
     {
         cbOnPurchaseFailedInventory -= callbackfunc;
     }
+
+
 }

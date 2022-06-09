@@ -34,6 +34,7 @@ public class AreaDataManager : MonoBehaviour
         playerWorldY = y;
     }
 
+
     public (int, int) GetPlayerWorldPosition()
     {
         return (playerWorldX, playerWorldY);
@@ -116,6 +117,18 @@ public class AreaDataManager : MonoBehaviour
         AllLocationData = loadedAreaData.allLocationData;
         SavePlayerWorldPosition(
             loadedAreaData.PlayerWorldX, loadedAreaData.PlayerWorldY);
+    }
+
+    public void RemoveEntityFromCurrentAreaData(Entity entity)
+    {
+        if (CurrentMapType == MapType.World)
+        {
+            WorldData.RemoveEntity(entity);
+        }
+        else
+        {
+            CurrentLocationData.RemoveEntity(entity);
+        }
     }
 
     public void RegisterOnCurrentMapTypeChange(

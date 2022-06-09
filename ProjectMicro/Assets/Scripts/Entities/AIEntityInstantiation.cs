@@ -70,6 +70,7 @@ public static class AIEntityInstantiation
             if (Utility.IsSameOrSubclass(typeof(Player), e.GetType()))
             {
                 e.ClearData();
+                // TODO change to areadata.instance.removeentity??
                 locationData.Entities.Remove(e);
                 continue;
             }

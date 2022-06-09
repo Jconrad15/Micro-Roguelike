@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class AIEntity : Entity
 {
+    protected Action<AIEntity> cbOnAIEntityRemoved;
+
     protected Path_AStar Pathway { get; set; }
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
@@ -97,6 +99,14 @@ public class AIEntity : Entity
         }
     }
 
+    public void RemoveFromAreaToBeFollower()
+    {
+        AreaDataManager.Instance.RemoveEntityFromCurrentAreaData(this);
+        cbOnAIEntityRemoved?.Invoke(this);
+        ClearData();
+        NullPathfinding();
+    }
+
     public void NullPathfinding()
     {
         Destination = null;
@@ -110,5 +120,15 @@ public class AIEntity : Entity
         Pathway = null;
         Destination = null;
         NextTile = null;
+    }
+
+    public void RegisterOnAIEntityRemoved(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityRemoved += callbackfunc;
+    }
+
+    public void UnregisterOnAIEntityRemoved(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityRemoved -= callbackfunc;
     }
 }

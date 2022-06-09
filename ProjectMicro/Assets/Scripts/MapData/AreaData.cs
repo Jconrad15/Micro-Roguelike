@@ -63,6 +63,12 @@ public class AreaData
         Entities.Add(e);
     }
 
+    public void RemoveEntity(Entity e)
+    {
+        if (e == null) { return; }
+        if (Entities.Contains(e)) { Entities.Remove(e); }
+    }
+
     public void AddFeature(Feature f)
     {
         Features.Add(f);

@@ -99,6 +99,10 @@ public class Player : Entity
         // Add follower
         Follower f = followerManager.AddFollower(entity);
         cbOnFollowerAdded?.Invoke(f);
+
+        // Remove entity from the world
+        AIEntity aiEntity = (AIEntity)entity;
+        aiEntity.RemoveFromAreaToBeFollower();
     }
 
     public void RegisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)

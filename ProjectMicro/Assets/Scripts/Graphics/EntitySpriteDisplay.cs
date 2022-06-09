@@ -43,6 +43,13 @@ public class EntitySpriteDisplay : MonoBehaviour
 
         entity.RegisterOnMove(OnEntityMove);
         entity.RegisterOnVisibilityChanged(OnVisiblityChanged);
+
+        // If entity is an AIEntity, register to on remove
+        if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
+        {
+            AIEntity aiEntity = (AIEntity)entity;
+            aiEntity.RegisterOnAIEntityRemoved(OnAIEntityRemoved);
+        }
     }
 
     private void CreateEntityGO(
@@ -174,5 +181,21 @@ public class EntitySpriteDisplay : MonoBehaviour
 
         // Clear dictionary
         placedEntities = new Dictionary<Entity, GameObject>();
+    }
+
+    private void OnAIEntityRemoved(AIEntity aiEntity)
+    {
+        if (aiEntity == null) 
+        {
+            Debug.Log("EntitySpriteDisplay: null aiEntity");
+            return; 
+        }
+
+        if (placedEntities.TryGetValue(aiEntity, out GameObject aiEntity_GO))
+        {
+            Destroy(aiEntity_GO);
+            placedEntities.Remove(aiEntity);
+            Debug.Log("Destroy aiEntity sprite GO");
+        }
     }
 }

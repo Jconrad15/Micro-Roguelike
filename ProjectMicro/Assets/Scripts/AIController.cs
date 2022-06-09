@@ -27,6 +27,8 @@ public class AIController : MonoBehaviour
         {
             Debug.LogError("New entity's tile is null");
         }
+
+        aiEntity.RegisterOnAIEntityRemoved(OnEntityRemoved);
     }
 
     private void OnAITurn()
@@ -55,5 +57,16 @@ public class AIController : MonoBehaviour
         }
 
         TurnController.Instance.NextTurn();
+    }
+
+    private void OnEntityRemoved(AIEntity aiEntity)
+    {
+        if (aiEntity == null) { return; }
+
+        if (aiEntities.Contains(aiEntity))
+        {
+            aiEntities.Remove(aiEntity);
+        }
+
     }
 }
