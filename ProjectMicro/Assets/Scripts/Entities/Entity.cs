@@ -16,12 +16,15 @@ public class SerializableEntity
     public EntityType type;
     public VisibilityLevel visibility;
     public Guild guild;
+    public int favor;
 }
 
 public class Entity
 {
     public int PlayerBondLevel { get; protected set; }
     public Guild CurrentGuild { get; protected set; }
+
+    public int Favor { get; protected set; }
 
     /// <summary>
     /// Helps indicate the type of entity
@@ -118,6 +121,9 @@ public class Entity
         // TODO: better guild assigning
         CurrentGuild =
             GameInitializer.Instance.CurrentGuildManager.GetRandomGuild();
+
+        // TODO: better favor system
+        Favor = 0;
 
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();

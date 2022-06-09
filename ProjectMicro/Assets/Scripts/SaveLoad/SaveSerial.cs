@@ -130,6 +130,7 @@ public class SaveSerial : MonoBehaviour
                     type = mapData[i].entity.type,
                     visibility = mapData[i].entity.Visibility,
                     guild = mapData[i].entity.CurrentGuild,
+                    favor = mapData[i].entity.Favor,
                 };
             }
 
@@ -314,7 +315,8 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.visibility,
                         serializableEntity.entityName,
                         serializableEntity.characterName,
-                        serializableEntity.guild);
+                        serializableEntity.guild,
+                        serializableEntity.favor);
                 }
             }
             // Recreate feature
