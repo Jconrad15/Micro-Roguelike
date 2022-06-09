@@ -161,8 +161,13 @@ public class DialogueUI : MonoBehaviour
         Button recruitButton =
             recruitContainer.GetComponentInChildren<Button>();
 
-        recruitButton.onClick.AddListener(
-            () => player.TryAddFollower(clickedEntity));
+        Debug.Log("ShowBecomeFollower");
+
+        // Clear listeners
+        recruitButton.onClick.RemoveAllListeners();
+        // Add new listener
+        recruitButton.onClick.AddListener(new UnityEngine.Events.UnityAction(
+            () => player.TryAddFollower(clickedEntity)));
 
         recruitContainer.SetActive(true);
     }

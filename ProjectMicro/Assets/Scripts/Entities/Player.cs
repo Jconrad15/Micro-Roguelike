@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class Player : Entity
@@ -90,17 +91,17 @@ public class Player : Entity
         return false;
     }
 
-    public bool TryAddFollower(Entity entity)
+    public void TryAddFollower(Entity entity)
     {
         // Check entity favor
-        if (entity.Favor < entity.BecomeFollowerThreshold) { return false; }
+        if (entity.Favor < entity.BecomeFollowerThreshold) { return; }
 
         // Add follower
         Follower f = followerManager.AddFollower(entity);
 
-        cbOnFollowerAdded?.Invoke(f);
+        Debug.Log("TryAddFollower");
 
-        return true;
+        cbOnFollowerAdded?.Invoke(f);
     }
 
     public void RegisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)
@@ -125,7 +126,7 @@ public class Player : Entity
 
     public void RegisterOnFollowerAdded(Action<Follower> callbackfunc)
     {
-        cbOnFollowerAdded+= callbackfunc;
+        cbOnFollowerAdded += callbackfunc;
     }
 
     public void UnregisterOnFollowerAdded(Action<Follower> callbackfunc)

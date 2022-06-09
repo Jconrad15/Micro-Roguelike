@@ -4176,7 +4176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -4296,7 +4296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followerArea: {fileID: 607836233}
   followerContainer: {fileID: 1841075812}
-  followerPrefab: {fileID: 0}
+  followerPrefab: {fileID: 8434385708850879739, guid: a4371e82e4f11224eaf378e71a4c5586, type: 3}
 --- !u!1 &1012846933
 GameObject:
   m_ObjectHideFlags: 0
