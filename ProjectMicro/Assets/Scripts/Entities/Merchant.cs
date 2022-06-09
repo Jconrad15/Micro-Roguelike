@@ -49,13 +49,14 @@ public class Merchant : AIEntity
     /// <param name="t"></param>
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, Guild guild, Tile t = null) : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        CurrentGuild = guild;
 
         if (t != null)
         {

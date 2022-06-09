@@ -81,6 +81,8 @@ public class DialogueUI : MonoBehaviour
         // Register to all merchants
         for (int i = 0; i < entities.Count; i++)
         {
+            if (entities[i] == null) { continue; }
+
             if (entities[i].GetType() == typeof(Merchant))
             {
                 entities[i].RegisterOnMerchantClicked(OnMerchantClicked);
@@ -105,6 +107,8 @@ public class DialogueUI : MonoBehaviour
         // Unregister to all merchants
         for (int i = 0; i < entities.Count; i++)
         {
+            if (entities[i] == null) { continue; }
+
             if (entities[i].GetType() == typeof(Merchant))
             {
                 entities[i].UnregisterOnMerchantClicked(OnMerchantClicked);
@@ -201,6 +205,18 @@ public class DialogueUI : MonoBehaviour
 
     private void UpdateShownGuilds(Entity clickedEntity)
     {
+        if (player.CurrentGuild == null)
+        {
+            Debug.LogWarning("no player guild");
+            return;
+        }
+
+        if (clickedEntity.CurrentGuild == null)
+        {
+            Debug.LogWarning("no ai guild");
+            return;
+        }
+
         playerGuildText.SetText(player.CurrentGuild.GuildName);
         aiGuildText.SetText(clickedEntity.CurrentGuild.GuildName);
     }

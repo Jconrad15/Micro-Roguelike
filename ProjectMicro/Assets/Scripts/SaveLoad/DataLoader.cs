@@ -18,7 +18,7 @@ public class DataLoader : MonoBehaviour
 
         Entity playerEntity = null;
         List<Entity> AIEntitiesToLoad = new List<Entity>();
-        // Load entities
+        // Group entities for loading
         for (int i = 0; i < areaData.Entities.Count; i++)
         {
             if (areaData.Entities[i].type == EntityType.Player)

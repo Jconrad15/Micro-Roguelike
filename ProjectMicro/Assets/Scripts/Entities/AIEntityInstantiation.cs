@@ -185,7 +185,8 @@ public static class AIEntityInstantiation
             Merchant merchant = new Merchant(
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
-                loadedEntity.EntityName, loadedEntity.CharacterName);
+                loadedEntity.EntityName, loadedEntity.CharacterName,
+                loadedEntity.CurrentGuild);
             merchant.SetTile(loadedEntity.T);
             loadedEntity.T.entity = merchant;
 

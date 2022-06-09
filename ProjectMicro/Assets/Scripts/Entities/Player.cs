@@ -48,7 +48,7 @@ public class Player : Entity
     /// <param name="t"></param>
     public Player(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild faction, Tile t = null)
+        string characterName, Guild guild, Tile t = null)
         : base(t, type, money)
     {
         base.type = type;
@@ -62,7 +62,7 @@ public class Player : Entity
         {
             T = t;
         }
-        CurrentGuild = faction;
+        CurrentGuild = guild;
         followerManager = new FollowerManager();
     }
 

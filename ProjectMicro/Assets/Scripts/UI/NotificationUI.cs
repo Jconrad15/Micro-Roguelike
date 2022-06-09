@@ -55,6 +55,8 @@ public class NotificationUI : MonoBehaviour
 
         foreach (Entity entity in entities)
         {
+            if (entity == null) { continue; }
+
             entity.RegisterOnPurchaseFailedInventory(OnPurchaseFailedInventory);
             entity.RegisterOnPurchaseFailedMoney(OnPurchaseFailedMoney);
         }
