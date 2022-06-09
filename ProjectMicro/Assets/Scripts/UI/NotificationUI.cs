@@ -18,6 +18,15 @@ public class NotificationUI : MonoBehaviour
 
         SaveSerial.Instance.RegisterOnDataLoaded(OnDataLoaded);
         SaveSerial.Instance.RegisterOnDataSaved(OnDataSaved);
+
+        WorldGenerator.Instance.RegisterOnWorldCreated(OnWorldCreated);
+    }
+
+    private void OnWorldCreated()
+    {
+        AreaDataManager.Instance
+            .RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        OnCurrentMapTypeChange(MapType.World);
     }
 
     private void Show()
@@ -38,6 +47,27 @@ public class NotificationUI : MonoBehaviour
     private void OnDataSaved()
     {
         SetText("Data Saved Successfully.");
+    }
+
+    private void OnCurrentMapTypeChange(MapType mapType)
+    {
+        List<Entity> entities = AreaData.GetEntitiesForCurrentType();
+
+        foreach (Entity entity in entities)
+        {
+            entity.RegisterOnPurchaseFailedInventory(OnPurchaseFailedInventory);
+            entity.RegisterOnPurchaseFailedMoney(OnPurchaseFailedMoney);
+        }
+    }
+
+    private void OnPurchaseFailedInventory()
+    {
+        SetText("Not enough inventory space.");
+    }
+
+    private void OnPurchaseFailedMoney()
+    {
+        SetText("Not enough money.");
     }
 
     private void SetText(string text)

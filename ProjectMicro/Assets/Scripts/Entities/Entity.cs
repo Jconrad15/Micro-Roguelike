@@ -91,6 +91,9 @@ public class Entity
     protected Action<Item> cbOnItemPurchased;
     protected Action<Item> cbOnItemSold;
 
+    protected Action cbOnPurchaseFailedMoney;
+    protected Action cbOnPurchaseFailedInventory;
+
     public int TurnsNotMovedStuck { get; protected set; } = 0;
 
     public void SetTile(Tile tile)
@@ -274,7 +277,16 @@ public class Entity
             // The player does not have enough money or space
             else
             {
-                Debug.Log("no money or no space");
+                if (adjustedItemCost > player.Money)
+                {
+                    Debug.Log("no money");
+                    cbOnPurchaseFailedMoney?.Invoke();
+                }
+                else
+                {
+                    Debug.Log("no space");
+                    cbOnPurchaseFailedInventory?.Invoke();
+                }
                 return false;
             }
         }
@@ -394,5 +406,25 @@ public class Entity
     public void UnregisterOnItemSold(Action<Item> callbackfunc)
     {
         cbOnItemSold -= callbackfunc;
+    }
+
+    public void RegisterOnPurchaseFailedMoney(Action callbackfunc)
+    {
+        cbOnPurchaseFailedMoney += callbackfunc;
+    }
+
+    public void UnregisterOnPurchaseFailedMoney(Action callbackfunc)
+    {
+        cbOnPurchaseFailedMoney -= callbackfunc;
+    }
+
+    public void RegisterOnPurchaseFailedInventory(Action callbackfunc)
+    {
+        cbOnPurchaseFailedInventory += callbackfunc;
+    }
+
+    public void UnregisterOnPurchaseFailedInventory(Action callbackfunc)
+    {
+        cbOnPurchaseFailedInventory -= callbackfunc;
     }
 }
