@@ -36,12 +36,10 @@ public class FollowerUI : MonoBehaviour
 
         player.RegisterOnFollowerAdded(OnFollowerAdded);
         isRegistered = true;
-        Debug.Log("RegisterOnFollowerAdded");
     }
 
     private void OnFollowerAdded(Follower f)
     {
-        Debug.Log("OnFollowerAdded");
         CreateFollower(f.Entity);
     }
 
@@ -50,8 +48,6 @@ public class FollowerUI : MonoBehaviour
         // Create followers
         GameObject followerGO = Instantiate(followerPrefab);
         followerGO.transform.SetParent(followerContainer.transform);
-
-        Debug.Log("Create Follower");
 
         FollowerPrefabUI followerPrefabUI =
             followerGO.GetComponent<FollowerPrefabUI>();

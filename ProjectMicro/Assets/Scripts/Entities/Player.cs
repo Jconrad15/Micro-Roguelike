@@ -98,9 +98,6 @@ public class Player : Entity
 
         // Add follower
         Follower f = followerManager.AddFollower(entity);
-
-        Debug.Log("TryAddFollower");
-
         cbOnFollowerAdded?.Invoke(f);
     }
 
