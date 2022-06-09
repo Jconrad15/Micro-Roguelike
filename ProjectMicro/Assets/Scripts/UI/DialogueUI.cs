@@ -27,6 +27,9 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI aiGuildText;
 
+    [SerializeField]
+    private TextMeshProUGUI favorText;
+
     private Player player;
 
     private GameObject[] createdPlayerItems;
@@ -124,7 +127,17 @@ public class DialogueUI : MonoBehaviour
         UpdateShownMoney(clickedEntity);
         UpdateTitle(clickedEntity);
         UpdateShownGuilds(clickedEntity);
+        UpdateShownFavor(clickedEntity);
         dialogueArea.SetActive(true);
+    }
+
+    private void UpdateShownFavor(Entity clickedEntity)
+    {
+        string text = "Favor: ";
+        if (clickedEntity.Favor > 0) { text += "+"; }
+        text += clickedEntity.Favor.ToString();
+
+        favorText.SetText(text);
     }
 
     private void UpdateTitle(Entity clickedEntity)
@@ -177,6 +190,7 @@ public class DialogueUI : MonoBehaviour
         UpdateShownMoney(clickedEntity);
         DestroyItems();
         UpdateTraderPlayerItems(clickedEntity);
+        UpdateShownFavor(clickedEntity);
     }
 
     private void UpdateShownMoney(Entity clickedEntity)

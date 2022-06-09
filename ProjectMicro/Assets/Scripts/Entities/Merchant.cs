@@ -19,12 +19,12 @@ public enum MerchantType
 
 public class Merchant : AIEntity
 {
-    private const float sellPreferedItemModifier = 0.2f;
+    private const float preferedItemModifier = 0.2f;
     private const float sellSameGuildModifier = 0.2f;
 
     protected int waitAtTileTurns;
     public MerchantType MType { get; protected set; }
-    protected MerchantTypeRef typeRef;
+    private MerchantTypeRef typeRef;
 
     public Merchant(
         Tile t, EntityType type,
@@ -110,6 +110,52 @@ public class Merchant : AIEntity
         }
     }
 
+    public void IsPreferredBuySell(Item itemInQuestion,
+        out bool isPreferredBuy, out bool isPreferredSell)
+    {
+        isPreferredBuy = isPreferredSell = false;
+
+        // Check if is preferred buy
+        isPreferredSell = IsPreferredSell(itemInQuestion, isPreferredSell);
+
+        // Check if is preferred sell
+        isPreferredBuy = IsPreferredBuy(itemInQuestion, isPreferredBuy);
+    }
+
+    private bool IsPreferredSell(Item itemInQuestion, bool isPreferredSell)
+    {
+        if (typeRef.preferredSell != null)
+        {
+            for (int i = 0; i < typeRef.preferredSell.Length; i++)
+            {
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredSell[i].itemName)
+                {
+                    isPreferredSell = true;
+                }
+            }
+        }
+
+        return isPreferredSell;
+    }
+
+    private bool IsPreferredBuy(Item itemInQuestion, bool isPreferredBuy)
+    {
+        if (typeRef.preferredBuy != null)
+        {
+            for (int i = 0; i < typeRef.preferredBuy.Length; i++)
+            {
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredBuy[i].itemName)
+                {
+                    isPreferredBuy = true;
+                }
+            }
+        }
+
+        return isPreferredBuy;
+    }
+
     public int GetAdjustedCost(
         Item itemInQuestion, Player player, bool isPlayerItem)
     {
@@ -125,37 +171,48 @@ public class Merchant : AIEntity
         }
         float modifier = 1f;
 
-        // If the merchant prefers to sell the item 
-        // adjust the cost down, since this is what the merchant always sells
-        // e.g., a woodcutter always has wood and sells it for less
-        if (typeRef.preferredSell != null)
+        IsPreferredBuySell(itemInQuestion,
+            out bool isPreferredBuy, out bool isPreferredSell);
+
+
+        if (isPlayerItem)
         {
-            for (int i = 0; i < typeRef.preferredSell.Length; i++)
+            if (isPreferredSell)
             {
-                if (itemInQuestion.itemName ==
-                    typeRef.preferredSell[i].itemName)
-                {
-                    modifier -= sellPreferedItemModifier;
-                    break;
-                }
+                // If the merchant prefers to sell the item 
+                // adjust the cost down, since this is what the merchant always sells
+                // e.g., a woodcutter always has wood and sells it for less
+                modifier -= (2 * preferedItemModifier);
+            }
+
+            if (isPreferredBuy)
+            {
+                // If the merchant prefers to buy the item
+                // adjust the cost up, since this is what the mechant wants
+                // e.g., a woodcutter needs saws, and buys them for more. 
+                modifier += preferedItemModifier;
+            }
+        }
+        else
+        {
+            if (isPreferredSell)
+            {
+                // If the merchant prefers to sell the item 
+                // adjust the cost down, since this is what the merchant always sells
+                // e.g., a woodcutter always has wood and sells it for less
+                modifier -= preferedItemModifier;
+            }
+
+            if (isPreferredBuy)
+            {
+                // If the merchant prefers to buy the item
+                // adjust the cost up, since this is what the mechant wants
+                // e.g., a woodcutter needs saws, and buys them for more. 
+                modifier += (2 * preferedItemModifier);
             }
         }
 
-        // If the merchant prefers to buy the item
-        // adjust the cost up, since this is what the mechant wants
-        // e.g., a woodcutter needs saws, and buys them for more. 
-        if (typeRef.preferredBuy != null)
-        {
-            for (int i = 0; i < typeRef.preferredBuy.Length; i++)
-            {
-                if (itemInQuestion.itemName ==
-                    typeRef.preferredBuy[i].itemName)
-                {
-                    modifier += sellPreferedItemModifier;
-                    break;
-                }
-            }
-        }
+
 
         // Adjust the modifier based on whether or not the merchant
         // is in the same guild as the player

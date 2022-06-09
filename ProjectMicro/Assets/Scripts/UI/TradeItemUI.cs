@@ -35,6 +35,37 @@ public class TradeItemUI : MonoBehaviour
         Merchant m = (Merchant)clickedEntity;
         int adjustedCost = m.GetAdjustedCost(item, player, isPlayerItem);
 
+        if (isPlayerItem)
+        {
+            if (adjustedCost > item.baseCost)
+            {
+                buttonText.color = Color.green;
+            }
+            else if (adjustedCost < item.baseCost)
+            {
+                buttonText.color = Color.red;
+            }
+            else
+            {
+                buttonText.color = Color.black;
+            }
+        }
+        else
+        {
+            if (adjustedCost > item.baseCost)
+            {
+                buttonText.color = Color.red;
+            }
+            else if (adjustedCost < item.baseCost)
+            {
+                buttonText.color = Color.green;
+            }
+            else
+            {
+                buttonText.color = Color.black;
+            }
+        }
+
         buttonText.SetText("$" + adjustedCost.ToString());
 
         // Setup the button

@@ -214,7 +214,7 @@ public class Entity
     }
 
     /// <summary>
-    /// Triggered when a clicked on trader is transacted with.
+    /// Triggered when a clicked on merchant is transacted with.
     /// </summary>
     /// <param name="itemToTransfer"></param>
     /// <param name="player"></param>
@@ -228,10 +228,13 @@ public class Entity
         int adjustedItemCost = m.GetAdjustedCost(
             itemToTransfer, player, isPlayerItem);
 
-        // Transfer to the trader if possible
+        m.IsPreferredBuySell(itemToTransfer,
+            out bool isPreferredBuy, out bool isPreferredSell);
+
+        // Transfer to the merchant if possible -- merchant is buying
         if (isPlayerItem)
         {
-            // If the trader has enough money and inventory space
+            // If the merchant has enough money and inventory space
             if (adjustedItemCost <= m.Money &&
                 InventoryItems.Count < InventorySize)
             {
@@ -239,7 +242,10 @@ public class Entity
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
 
                 // TODO: better favor
-                m.AddFavor(1);
+                if (isPreferredBuy)
+                {
+                    m.AddFavor(1);
+                }
                 return true;
             }
             // The trader does not have enough money or enough space
@@ -248,7 +254,7 @@ public class Entity
                 return false;
             }
         }
-        // Trasfer to the player if possible
+        // Transfer to the player if possible -- merchant is selling
         else
         {
             // If the player has enough money and inventory space
@@ -259,7 +265,10 @@ public class Entity
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
 
                 // TODO: better favor
-                m.AddFavor(1);
+                if (isPreferredSell)
+                {
+                    m.AddFavor(1);
+                }
                 return true;
             }
             // The player does not have enough money or space
