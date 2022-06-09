@@ -14,7 +14,8 @@ public class AIEntity : Entity
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild guild, int favor, Tile t = null) 
+        string characterName, Guild guild, int favor, 
+        int becomeFollowerThreshold, Tile t = null) 
         : base(t, type, money)
     {
         base.type = type;
@@ -25,6 +26,7 @@ public class AIEntity : Entity
         CurrentGuild = guild;
         Favor = favor;
         T = t;
+        BecomeFollowerThreshold = becomeFollowerThreshold;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;

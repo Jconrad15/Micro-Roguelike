@@ -7,6 +7,7 @@ public class Player : Entity
     private FollowerManager followerManager;
 
     private Action<PlayerLicense> cbOnPlayerLicenseChanged;
+    private Action<Follower> cbOnFollowerAdded;
 
     public enum PlayerLicense { Traveller, Merchant };
     private PlayerLicense license;
@@ -89,6 +90,19 @@ public class Player : Entity
         return false;
     }
 
+    public bool TryAddFollower(Entity entity)
+    {
+        // Check entity favor
+        if (entity.Favor < entity.BecomeFollowerThreshold) { return false; }
+
+        // Add follower
+        Follower f = followerManager.AddFollower(entity);
+
+        cbOnFollowerAdded?.Invoke(f);
+
+        return true;
+    }
+
     public void RegisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)
     {
         cbOnPlayerLicenseChanged += callbackfunc;
@@ -107,5 +121,15 @@ public class Player : Entity
     public void UnregisterOnMoneyChanged(Action<int> callbackfunc)
     {
         cbOnPlayerMoneyChanged -= callbackfunc;
+    }
+
+    public void RegisterOnFollowerAdded(Action<Follower> callbackfunc)
+    {
+        cbOnFollowerAdded+= callbackfunc;
+    }
+
+    public void UnregisterOnFollowerAdded(Action<Follower> callbackfunc)
+    {
+        cbOnFollowerAdded -= callbackfunc;
     }
 }

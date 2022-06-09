@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class DialogueUI : MonoBehaviour
@@ -30,6 +31,9 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI favorText;
 
+    [SerializeField]
+    private GameObject recruitContainer;
+
     private Player player;
 
     private GameObject[] createdPlayerItems;
@@ -53,6 +57,7 @@ public class DialogueUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         player = p;
+        player.RegisterOnFollowerAdded(OnFollowerAdded);
     }
 
     private void OnWorldCreated()
@@ -137,11 +142,44 @@ public class DialogueUI : MonoBehaviour
 
     private void UpdateShownFavor(Entity clickedEntity)
     {
+        int favor = clickedEntity.Favor;
         string text = "Favor: ";
-        if (clickedEntity.Favor > 0) { text += "+"; }
-        text += clickedEntity.Favor.ToString();
+        if (favor > 0) { text += "+"; }
+        text += favor.ToString();
 
         favorText.SetText(text);
+
+        // Check clickedEntity can become a follower
+        if (favor >= clickedEntity.BecomeFollowerThreshold)
+        {
+            ShowBecomeFollower(clickedEntity);
+        }
+    }
+
+    private void ShowBecomeFollower(Entity clickedEntity)
+    {
+        Button recruitButton =
+            recruitContainer.GetComponentInChildren<Button>();
+
+        recruitButton.onClick.AddListener(
+            () => player.TryAddFollower(clickedEntity));
+
+        recruitContainer.SetActive(true);
+    }
+
+    private void HideBecomeFollower()
+    {
+        Button recruitButton =
+            recruitContainer.GetComponentInChildren<Button>();
+
+        recruitButton.onClick.RemoveAllListeners();
+
+        recruitContainer.SetActive(false);
+    }
+
+    private void OnFollowerAdded(Follower f)
+    {
+        Hide();
     }
 
     private void UpdateTitle(Entity clickedEntity)
@@ -225,7 +263,7 @@ public class DialogueUI : MonoBehaviour
     {
         UIModality.Instance.IsDialogueOpen = false;
         DestroyItems();
-
+        HideBecomeFollower();
         dialogueArea.SetActive(false);
     }
 

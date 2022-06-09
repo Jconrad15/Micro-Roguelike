@@ -186,7 +186,7 @@ public static class AIEntityInstantiation
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
                 loadedEntity.EntityName, loadedEntity.CharacterName,
-                loadedEntity.CurrentGuild);
+                loadedEntity.CurrentGuild, loadedEntity.BecomeFollowerThreshold);
             merchant.SetTile(loadedEntity.T);
             loadedEntity.T.entity = merchant;
 

@@ -17,6 +17,7 @@ public class SerializableEntity
     public VisibilityLevel visibility;
     public Guild guild;
     public int favor;
+    public int becomeFollowerThreshold;
 }
 
 public class Entity
@@ -25,6 +26,7 @@ public class Entity
     public Guild CurrentGuild { get; protected set; }
 
     public int Favor { get; protected set; }
+    public int BecomeFollowerThreshold { get; protected set; }
 
     /// <summary>
     /// Helps indicate the type of entity
@@ -127,6 +129,9 @@ public class Entity
 
         // TODO: better favor system
         Favor = 0;
+
+        // TODO: better follower thresholds
+        BecomeFollowerThreshold = 1;
 
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();

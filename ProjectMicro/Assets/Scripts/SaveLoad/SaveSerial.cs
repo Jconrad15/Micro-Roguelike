@@ -131,6 +131,7 @@ public class SaveSerial : MonoBehaviour
                     visibility = mapData[i].entity.Visibility,
                     guild = mapData[i].entity.CurrentGuild,
                     favor = mapData[i].entity.Favor,
+                    becomeFollowerThreshold = mapData[i].entity.BecomeFollowerThreshold,
                 };
             }
 
@@ -316,7 +317,8 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.entityName,
                         serializableEntity.characterName,
                         serializableEntity.guild,
-                        serializableEntity.favor);
+                        serializableEntity.favor,
+                        serializableEntity.becomeFollowerThreshold);
                 }
             }
             // Recreate feature

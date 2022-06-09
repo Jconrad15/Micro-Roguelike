@@ -9,10 +9,15 @@ public class FollowerManager
         CurrentFollowers = new List<Follower>();
     }
 
-    public void AddFollower(Follower f)
+    public Follower AddFollower(Entity entity)
     {
-        if (f == null) { return; }
+        if (entity == null) { return null; }
+
+        Follower f = new Follower(entity);
+
         CurrentFollowers.Add(f);
+
+        return f;
     }
 
 }
