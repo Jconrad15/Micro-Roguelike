@@ -16,6 +16,7 @@ public class FollowerUI : MonoBehaviour
     private Player player;
 
     private List<GameObject> createdFollowers;
+    private bool isRegistered = false;
 
     private void OnEnable()
     {
@@ -26,11 +27,21 @@ public class FollowerUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         player = p;
+        RegisterToNewFollowers();
+    }
+
+    private void RegisterToNewFollowers()
+    {
+        if (isRegistered == true) { return; }
+
         player.RegisterOnFollowerAdded(OnFollowerAdded);
+        isRegistered = true;
+        Debug.Log("RegisterOnFollowerAdded");
     }
 
     private void OnFollowerAdded(Follower f)
     {
+        Debug.Log("OnFollowerAdded");
         CreateFollower(f.Entity);
     }
 
