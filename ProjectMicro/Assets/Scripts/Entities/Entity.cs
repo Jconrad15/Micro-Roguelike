@@ -208,6 +208,11 @@ public class Entity
         cbOnMove?.Invoke(this, startPos);
     }
 
+    protected void AddFavor(int amount)
+    {
+        Favor += amount;
+    }
+
     /// <summary>
     /// Triggered when a clicked on trader is transacted with.
     /// </summary>
@@ -232,6 +237,9 @@ public class Entity
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
+
+                // TODO: better favor
+                m.AddFavor(1);
                 return true;
             }
             // The trader does not have enough money or enough space
@@ -249,6 +257,9 @@ public class Entity
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
+
+                // TODO: better favor
+                m.AddFavor(1);
                 return true;
             }
             // The player does not have enough money or space
