@@ -4,6 +4,8 @@ public static class PlayerInstantiation
 {
     private static Action<Player> cbOnPlayerCreated;
 
+    private static int playerStartingMoney = 100;
+
     public static void TransitionPlayerToMap(
         Player player, int playerStartX, int playerStartY)
     {
@@ -46,7 +48,9 @@ public static class PlayerInstantiation
         }
 
         // Place the player at the tile, and the tile to the player
-        Player player = new Player(playerTile, EntityType.Player, 10);
+        Player player = new Player(
+            playerTile, EntityType.Player, playerStartingMoney);
+
         playerTile.entity = player;
 
         // Add player to entities list

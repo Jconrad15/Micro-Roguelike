@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Wheat
   m_EditorClassIdentifier: 
   itemName: Wheat
-  baseCost: 2
+  baseCost: 20
   category: 0

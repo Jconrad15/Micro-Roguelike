@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Timber
   m_EditorClassIdentifier: 
   itemName: Timber
-  baseCost: 2
+  baseCost: 20
   category: 0

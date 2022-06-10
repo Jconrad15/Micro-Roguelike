@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pottery
   m_EditorClassIdentifier: 
   itemName: Pottery
-  baseCost: 6
+  baseCost: 60
   category: 1

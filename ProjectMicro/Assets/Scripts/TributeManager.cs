@@ -58,11 +58,11 @@ public class TributeManager : MonoBehaviour
     {
         if (title == Player.PlayerLicense.Traveller)
         {
-            return 1;
+            return 5;
         }
         else
         {
-            return 2;
+            return 10;
         }
     }
 

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Clay
   m_EditorClassIdentifier: 
   itemName: Clay
-  baseCost: 3
+  baseCost: 30
   category: 0
