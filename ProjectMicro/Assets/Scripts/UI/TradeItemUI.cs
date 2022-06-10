@@ -7,6 +7,13 @@ using UnityEngine.UI;
 public class TradeItemUI : MonoBehaviour
 {
     [SerializeField]
+    private Color goodDealColor;
+    [SerializeField]
+    private Color badDealColor;
+    [SerializeField]
+    private Color baseColor;
+
+    [SerializeField]
     private TextMeshProUGUI itemNameText;
 
     [SerializeField]
@@ -39,30 +46,30 @@ public class TradeItemUI : MonoBehaviour
         {
             if (adjustedCost > item.baseCost)
             {
-                buttonText.color = Color.green;
+                buttonText.color = goodDealColor;
             }
             else if (adjustedCost < item.baseCost)
             {
-                buttonText.color = Color.red;
+                buttonText.color = badDealColor;
             }
             else
             {
-                buttonText.color = Color.black;
+                buttonText.color = baseColor;
             }
         }
         else
         {
             if (adjustedCost > item.baseCost)
             {
-                buttonText.color = Color.red;
+                buttonText.color = badDealColor;
             }
             else if (adjustedCost < item.baseCost)
             {
-                buttonText.color = Color.green;
+                buttonText.color = goodDealColor;
             }
             else
             {
-                buttonText.color = Color.black;
+                buttonText.color = baseColor;
             }
         }
 
