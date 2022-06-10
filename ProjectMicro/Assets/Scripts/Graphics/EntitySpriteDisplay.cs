@@ -76,8 +76,10 @@ public class EntitySpriteDisplay : MonoBehaviour
     private static int DetermineSprite(Entity entity)
     {
         int selectedSpriteIndex;
-        if (entity.type == EntityType.Player ||
-            entity.GetType() == typeof(Merchant))
+
+        // Merchants and players turn into boats in the water
+        if ((entity.type == EntityType.Player ||
+            entity.GetType() == typeof(Merchant)))
         {
             if (entity.T.Type == TileType.Water)
             {
@@ -187,7 +189,7 @@ public class EntitySpriteDisplay : MonoBehaviour
     {
         if (aiEntity == null) 
         {
-            Debug.Log("EntitySpriteDisplay: null aiEntity");
+            Debug.LogError("EntitySpriteDisplay: null aiEntity");
             return; 
         }
 
@@ -195,7 +197,6 @@ public class EntitySpriteDisplay : MonoBehaviour
         {
             Destroy(aiEntity_GO);
             placedEntities.Remove(aiEntity);
-            Debug.Log("Destroy aiEntity sprite GO");
         }
     }
 }

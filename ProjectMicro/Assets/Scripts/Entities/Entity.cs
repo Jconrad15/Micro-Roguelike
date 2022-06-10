@@ -284,12 +284,10 @@ public class Entity
             {
                 if (adjustedItemCost > player.Money)
                 {
-                    Debug.Log("no money");
                     cbOnPurchaseFailedMoney?.Invoke();
                 }
                 else
                 {
-                    Debug.Log("no space");
                     cbOnPurchaseFailedInventory?.Invoke();
                 }
                 return false;
