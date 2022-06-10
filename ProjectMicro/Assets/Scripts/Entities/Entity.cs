@@ -131,7 +131,7 @@ public class Entity
         Favor = 0;
 
         // TODO: better follower thresholds
-        BecomeFollowerThreshold = 1;
+        BecomeFollowerThreshold = 3;
 
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
@@ -244,7 +244,7 @@ public class Entity
         {
             // If the merchant has enough money and inventory space
             if (adjustedItemCost <= m.Money &&
-                InventoryItems.Count < InventorySize)
+                m.InventoryItems.Count < m.InventorySize)
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
@@ -267,7 +267,7 @@ public class Entity
         {
             // If the player has enough money and inventory space
             if (adjustedItemCost <= player.Money &&
-                player.InventoryItems.Count < InventorySize)
+                player.InventoryItems.Count < player.InventorySize)
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
