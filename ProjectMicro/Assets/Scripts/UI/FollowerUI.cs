@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class FollowerUI : MonoBehaviour
 {
@@ -18,10 +19,14 @@ public class FollowerUI : MonoBehaviour
     private List<GameObject> createdFollowers;
     private bool isRegistered = false;
 
+    SpriteDatabase spriteDatabase;
+
     private void OnEnable()
     {
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
         createdFollowers = new List<GameObject>();
+
+        spriteDatabase = FindObjectOfType<SpriteDatabase>();
     }
 
     private void OnPlayerCreated(Player p)
@@ -51,6 +56,12 @@ public class FollowerUI : MonoBehaviour
 
         FollowerPrefabUI followerPrefabUI =
             followerGO.GetComponent<FollowerPrefabUI>();
+
+        Image image = followerGO.GetComponentInChildren<Image>();
+
+        spriteDatabase.EntityDatabase
+            .TryGetValue(entity.EntityName, out Sprite[] s);
+        image.sprite = s[0];
 
         followerPrefabUI.Setup(entity);
 

@@ -14,10 +14,14 @@ public class FollowerManager
         if (entity == null) { return null; }
 
         Follower f = new Follower(entity);
-
         CurrentFollowers.Add(f);
 
         return f;
+    }
+
+    public void RemoveFollower(Entity entity)
+    {
+
     }
 
 }

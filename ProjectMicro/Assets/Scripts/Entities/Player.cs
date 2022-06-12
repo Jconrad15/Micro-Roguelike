@@ -98,6 +98,11 @@ public class Player : Entity
 
         // Add follower
         Follower f = followerManager.AddFollower(entity);
+
+        // Edit player to be better, due to follower
+        // TODO: better inventory size change
+        InventorySize += 2;
+
         cbOnFollowerAdded?.Invoke(f);
 
         // Remove entity from the world
