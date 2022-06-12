@@ -310,15 +310,7 @@ public class SaveSerial : MonoBehaviour
                 }
                 else
                 {
-                    e = new AIEntity(serializableEntity.type,
-                        serializableEntity.inventoryItems,
-                        serializableEntity.money,
-                        serializableEntity.visibility,
-                        serializableEntity.entityName,
-                        serializableEntity.characterName,
-                        serializableEntity.guild,
-                        serializableEntity.favor,
-                        serializableEntity.becomeFollowerThreshold);
+                    e = ReconstructAIEntity(serializableEntity);
                 }
             }
             // Recreate feature
@@ -368,6 +360,45 @@ public class SaveSerial : MonoBehaviour
             features);
 
         return reconstructedAreaData;
+    }
+
+    private static Entity ReconstructAIEntity(
+        SerializableEntity serializableEntity)
+    {
+        Entity e;
+
+        // TODO: Need a better way to convert loaded entity
+        // to specific type of ai entity
+        if (serializableEntity.entityName == "dog")
+        {
+            e = new Dog(
+                serializableEntity.type,
+                serializableEntity.inventoryItems,
+                serializableEntity.money,
+                serializableEntity.visibility,
+                serializableEntity.entityName,
+                serializableEntity.characterName);
+        }
+        else if (serializableEntity.entityName == "merchant")
+        {
+            e = new Merchant(
+                serializableEntity.type,
+                serializableEntity.inventoryItems,
+                serializableEntity.money,
+                serializableEntity.visibility,
+                serializableEntity.entityName,
+                serializableEntity.characterName,
+                serializableEntity.guild,
+                serializableEntity.becomeFollowerThreshold);
+        }
+        else
+        {
+            Debug.Log("Missing entity name of: " +
+                serializableEntity.entityName);
+            return null;
+        }
+
+        return e;
     }
 
     public void RegisterOnDataLoaded(Action<LoadedAreaData> callbackFunc)
