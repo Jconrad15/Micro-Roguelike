@@ -12,14 +12,19 @@ Tinker Thatcher Messenger service bookstore Weaponsmith Food Fish Market
 Fresh Produce Cartographer Stables University Hatter Bank Spice 
 Shipwrights Wineries*/
 
-public enum MerchantType {
-    WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer };
+public enum MerchantType 
+{
+    WoodCutter, Miner, Blacksmith, Traveller, Potter, Baker, Farmer
+};
+
 public class Merchant : AIEntity
 {
-    private const float sellModifier = 0.2f;
+    private const float preferedItemModifier = 0.2f;
+    private const float sellSameGuildModifier = 0.2f;
+
     protected int waitAtTileTurns;
     public MerchantType MType { get; protected set; }
-    protected MerchantTypeRef typeRef;
+    private MerchantTypeRef typeRef;
 
     public Merchant(
         Tile t, EntityType type,
@@ -32,16 +37,29 @@ public class Merchant : AIEntity
         CreateMerchantStartingInventory();
     }
 
-    // Constructor for loaded Merchant
+    /// <summary>
+    /// Constructor for loaded Merchant.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="inventoryItems"></param>
+    /// <param name="money"></param>
+    /// <param name="visibility"></param>
+    /// <param name="entityName"></param>
+    /// <param name="characterName"></param>
+    /// <param name="t"></param>
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, Guild guild, int becomeFollowerThresold,
+        Tile t = null)
+        : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        CurrentGuild = guild;
+        BecomeFollowerThreshold = becomeFollowerThresold;
 
         if (t != null)
         {
@@ -96,7 +114,54 @@ public class Merchant : AIEntity
         }
     }
 
-    public int GetAdjustedCost(Item itemInQuestion)
+    public void IsPreferredBuySell(Item itemInQuestion,
+        out bool isPreferredBuy, out bool isPreferredSell)
+    {
+        isPreferredBuy = isPreferredSell = false;
+
+        // Check if is preferred buy
+        isPreferredSell = IsPreferredSell(itemInQuestion, isPreferredSell);
+
+        // Check if is preferred sell
+        isPreferredBuy = IsPreferredBuy(itemInQuestion, isPreferredBuy);
+    }
+
+    private bool IsPreferredSell(Item itemInQuestion, bool isPreferredSell)
+    {
+        if (typeRef.preferredSell != null)
+        {
+            for (int i = 0; i < typeRef.preferredSell.Length; i++)
+            {
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredSell[i].itemName)
+                {
+                    isPreferredSell = true;
+                }
+            }
+        }
+
+        return isPreferredSell;
+    }
+
+    private bool IsPreferredBuy(Item itemInQuestion, bool isPreferredBuy)
+    {
+        if (typeRef.preferredBuy != null)
+        {
+            for (int i = 0; i < typeRef.preferredBuy.Length; i++)
+            {
+                if (itemInQuestion.itemName ==
+                    typeRef.preferredBuy[i].itemName)
+                {
+                    isPreferredBuy = true;
+                }
+            }
+        }
+
+        return isPreferredBuy;
+    }
+
+    public int GetAdjustedCost(
+        Item itemInQuestion, Player player, bool isPlayerItem)
     {
         if (itemInQuestion == null) 
         {
@@ -110,36 +175,54 @@ public class Merchant : AIEntity
         }
         float modifier = 1f;
 
-        // If the merchant prefers to sell the item 
-        // adjust the cost down, since this is what the merchant always sells
-        // e.g., a woodcutter always has wood and sells it for less
-        if (typeRef.preferredSell != null)
+        IsPreferredBuySell(itemInQuestion,
+            out bool isPreferredBuy, out bool isPreferredSell);
+
+
+        if (isPlayerItem)
         {
-            for (int i = 0; i < typeRef.preferredSell.Length; i++)
+            if (isPreferredSell)
             {
-                if (itemInQuestion.itemName ==
-                    typeRef.preferredSell[i].itemName)
-                {
-                    modifier -= sellModifier;
-                    break;
-                }
+                // If the merchant prefers to sell the item 
+                // adjust the cost down, since this is what the merchant always sells
+                // e.g., a woodcutter always has wood and sells it for less
+                modifier -= (2 * preferedItemModifier);
+            }
+
+            if (isPreferredBuy)
+            {
+                // If the merchant prefers to buy the item
+                // adjust the cost up, since this is what the mechant wants
+                // e.g., a woodcutter needs saws, and buys them for more. 
+                modifier += preferedItemModifier;
+            }
+        }
+        else
+        {
+            if (isPreferredSell)
+            {
+                // If the merchant prefers to sell the item 
+                // adjust the cost down, since this is what the merchant always sells
+                // e.g., a woodcutter always has wood and sells it for less
+                modifier -= preferedItemModifier;
+            }
+
+            if (isPreferredBuy)
+            {
+                // If the merchant prefers to buy the item
+                // adjust the cost up, since this is what the mechant wants
+                // e.g., a woodcutter needs saws, and buys them for more. 
+                modifier += (2 * preferedItemModifier);
             }
         }
 
-        // If the merchant prefers to buy the item
-        // adjust the cost up, since this is what the mechant wants
-        // e.g., a woodcutter needs saws, and buys them for more. 
-        if (typeRef.preferredBuy != null)
+
+
+        // Adjust the modifier based on whether or not the merchant
+        // is in the same guild as the player
+        if (player.CurrentGuild == CurrentGuild)
         {
-            for (int i = 0; i < typeRef.preferredBuy.Length; i++)
-            {
-                if (itemInQuestion.itemName ==
-                    typeRef.preferredBuy[i].itemName)
-                {
-                    modifier += sellModifier;
-                    break;
-                }
-            }
+            modifier -= sellSameGuildModifier;
         }
 
         // Return the base cost mutlipled by any modifier,

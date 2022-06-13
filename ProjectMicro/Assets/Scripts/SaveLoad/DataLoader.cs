@@ -10,39 +10,25 @@ public class DataLoader : MonoBehaviour
 
     protected static void OnDataLoaded(LoadedAreaData loadedAreaData)
     {
-        AreaData areaData;
-        if (loadedAreaData.MapType == MapType.World)
-        {
-            areaData = AreaDataManager.Instance.GetWorldData();
-        }
-        else
-        {
-            areaData = AreaDataManager.Instance.CurrentLocationData;
-        }
-
         ResetAllOldData();
-        AreaDataManager.Instance.SetCurrentMapType(loadedAreaData.MapType);
+        AreaDataManager.Instance.LoadAreaData(loadedAreaData);
 
-        areaData.Width = loadedAreaData.Width;
-        areaData.Height = loadedAreaData.Height;
-        areaData.MapData = loadedAreaData.MapData;
-
-        areaData.SetFeatureList(loadedAreaData.Features);
-        areaData.SetTileNeighbors();
+        // Load the things for the current area
+        AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
         Entity playerEntity = null;
         List<Entity> AIEntitiesToLoad = new List<Entity>();
-        // Load entities
-        for (int i = 0; i < loadedAreaData.Entities.Count; i++)
+        // Group entities for loading
+        for (int i = 0; i < areaData.Entities.Count; i++)
         {
-            if (loadedAreaData.Entities[i].type == EntityType.Player)
+            if (areaData.Entities[i].type == EntityType.Player)
             {
-                playerEntity = loadedAreaData.Entities[i];
+                playerEntity = areaData.Entities[i];
             }
             else
             {
                 // Determine which type of AIEntity is loaded
-                AIEntitiesToLoad.Add(loadedAreaData.Entities[i]);
+                AIEntitiesToLoad.Add(areaData.Entities[i]);
             }
         }
 
@@ -58,7 +44,7 @@ public class DataLoader : MonoBehaviour
 
         // Tell the GameInitializer that data is loaded
         GameInitializer.Instance.OnDataLoaded(
-            loadedAreaData.MapType, loadedAreaData.Seed);
+            loadedAreaData.CurrentMapType, loadedAreaData.Seed);
     }
 
     public static void ResetAllOldData()

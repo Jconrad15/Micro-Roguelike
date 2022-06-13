@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Tools
   m_EditorClassIdentifier: 
   itemName: Tools
-  baseCost: 10
+  baseCost: 100
   category: 1

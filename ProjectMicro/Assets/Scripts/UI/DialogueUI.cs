@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class DialogueUI : MonoBehaviour
@@ -22,6 +23,17 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private GameObject tradeItemPrefab;
 
+    [SerializeField]
+    private TextMeshProUGUI playerGuildText;
+    [SerializeField]
+    private TextMeshProUGUI aiGuildText;
+
+    [SerializeField]
+    private TextMeshProUGUI favorText;
+
+    [SerializeField]
+    private GameObject recruitContainer;
+
     private Player player;
 
     private GameObject[] createdPlayerItems;
@@ -29,9 +41,12 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        FindObjectOfType<LocationGenerator>().RegisterOnLocationCreated(OnLocationCreated);
-        FindObjectOfType<WorldGenerator>().RegisterOnWorldCreated(OnWorldCreated);
-        AreaDataManager.Instance.RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
+        FindObjectOfType<LocationGenerator>()
+            .RegisterOnLocationCreated(OnLocationCreated);
+        FindObjectOfType<WorldGenerator>()
+            .RegisterOnWorldCreated(OnWorldCreated);
+        AreaDataManager.Instance
+            .RegisterOnCurrentMapTypeChange(OnCurrentMapTypeChange);
 
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
 
@@ -42,6 +57,7 @@ public class DialogueUI : MonoBehaviour
     private void OnPlayerCreated(Player p)
     {
         player = p;
+        player.RegisterOnFollowerAdded(OnFollowerAdded);
     }
 
     private void OnWorldCreated()
@@ -70,6 +86,8 @@ public class DialogueUI : MonoBehaviour
         // Register to all merchants
         for (int i = 0; i < entities.Count; i++)
         {
+            if (entities[i] == null) { continue; }
+
             if (entities[i].GetType() == typeof(Merchant))
             {
                 entities[i].RegisterOnMerchantClicked(OnMerchantClicked);
@@ -94,6 +112,8 @@ public class DialogueUI : MonoBehaviour
         // Unregister to all merchants
         for (int i = 0; i < entities.Count; i++)
         {
+            if (entities[i] == null) { continue; }
+
             if (entities[i].GetType() == typeof(Merchant))
             {
                 entities[i].UnregisterOnMerchantClicked(OnMerchantClicked);
@@ -115,7 +135,54 @@ public class DialogueUI : MonoBehaviour
         // Show player and trader money
         UpdateShownMoney(clickedEntity);
         UpdateTitle(clickedEntity);
+        UpdateShownGuilds(clickedEntity);
+        UpdateShownFavor(clickedEntity);
         dialogueArea.SetActive(true);
+    }
+
+    private void UpdateShownFavor(Entity clickedEntity)
+    {
+        int favor = clickedEntity.Favor;
+        string text = "Favor: ";
+        if (favor > 0) { text += "+"; }
+        text += favor.ToString();
+
+        favorText.SetText(text);
+
+        // Check clickedEntity can become a follower
+        if (favor >= clickedEntity.BecomeFollowerThreshold)
+        {
+            ShowBecomeFollower(clickedEntity);
+        }
+    }
+
+    private void ShowBecomeFollower(Entity clickedEntity)
+    {
+        Button recruitButton =
+            recruitContainer.GetComponentInChildren<Button>();
+
+        // Clear listeners
+        recruitButton.onClick.RemoveAllListeners();
+        // Add new listener
+        recruitButton.onClick.AddListener(new UnityEngine.Events.UnityAction(
+            () => player.TryAddFollower(clickedEntity)));
+
+        recruitContainer.SetActive(true);
+    }
+
+    private void HideBecomeFollower()
+    {
+        Button recruitButton =
+            recruitContainer.GetComponentInChildren<Button>();
+
+        recruitButton.onClick.RemoveAllListeners();
+
+        recruitContainer.SetActive(false);
+    }
+
+    private void OnFollowerAdded(Follower f)
+    {
+        Hide();
     }
 
     private void UpdateTitle(Entity clickedEntity)
@@ -168,6 +235,7 @@ public class DialogueUI : MonoBehaviour
         UpdateShownMoney(clickedEntity);
         DestroyItems();
         UpdateTraderPlayerItems(clickedEntity);
+        UpdateShownFavor(clickedEntity);
     }
 
     private void UpdateShownMoney(Entity clickedEntity)
@@ -176,11 +244,29 @@ public class DialogueUI : MonoBehaviour
         merchantMoneyText.SetText("$" + clickedEntity.Money.ToString());
     }
 
+    private void UpdateShownGuilds(Entity clickedEntity)
+    {
+        if (player.CurrentGuild == null)
+        {
+            Debug.LogWarning("no player guild");
+            return;
+        }
+
+        if (clickedEntity.CurrentGuild == null)
+        {
+            Debug.LogWarning("no ai guild");
+            return;
+        }
+
+        playerGuildText.SetText(player.CurrentGuild.GuildName);
+        aiGuildText.SetText(clickedEntity.CurrentGuild.GuildName);
+    }
+
     public void Hide()
     {
         UIModality.Instance.IsDialogueOpen = false;
         DestroyItems();
-
+        HideBecomeFollower();
         dialogueArea.SetActive(false);
     }
 

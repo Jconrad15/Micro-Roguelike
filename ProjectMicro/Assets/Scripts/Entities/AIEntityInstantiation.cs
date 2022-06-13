@@ -7,6 +7,9 @@ public static class AIEntityInstantiation
 {
     private static Action<AIEntity> cbOnAIEntityCreated;
 
+    private static Vector2 lowerStartMoneyRange = new Vector2(50, 130);
+    private static Vector2 upperStartMoneyRange = new Vector2(200, 300);
+
     public static void CreateInitialWorldEntities(int seed)
     {
         Random.State oldState = Random.state;
@@ -24,9 +27,7 @@ public static class AIEntityInstantiation
             DetermineOpenLocation(worldData, out int x, out int y);
             if (x == int.MinValue || y == int.MinValue) { break; }
 
-            int merchantStartMoney = Random.value < 0.9 ?
-                Random.Range(5, 12) :
-                Random.Range(20, 30);
+            int merchantStartMoney = DetermineMerchantStartingMoney();
 
             Tile merchantTile = worldData.GetTile(x, y);
             Merchant merchant = new Merchant(
@@ -46,6 +47,20 @@ public static class AIEntityInstantiation
         cbOnAIEntityCreated?.Invoke(dog);
 
         Random.state = oldState;
+    }
+
+    private static int DetermineMerchantStartingMoney()
+    {
+        if (Random.value < 0.9)
+        {
+            return (int)Random.Range(
+                lowerStartMoneyRange.x, lowerStartMoneyRange.y);
+        }
+        else
+        {
+            return (int)Random.Range(
+                upperStartMoneyRange.x, upperStartMoneyRange.y);
+        }
     }
 
     public static void LoadLocationAIEntities(AreaData locationData)
@@ -70,6 +85,7 @@ public static class AIEntityInstantiation
             if (Utility.IsSameOrSubclass(typeof(Player), e.GetType()))
             {
                 e.ClearData();
+                // TODO change to areadata.instance.removeentity??
                 locationData.Entities.Remove(e);
                 continue;
             }
@@ -90,9 +106,7 @@ public static class AIEntityInstantiation
             DetermineOpenLocation(areaData, out int x, out int y);
             if (x == int.MinValue || y == int.MinValue) { break; }
 
-            int merchantStartMoney = Random.value < 0.9 ?
-                Random.Range(5, 12) :
-                Random.Range(20, 30);
+            int merchantStartMoney = DetermineMerchantStartingMoney();
 
             Tile merchantTile = areaData.GetTile(x, y);
             Merchant merchant = new Merchant(
@@ -185,7 +199,8 @@ public static class AIEntityInstantiation
             Merchant merchant = new Merchant(
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
-                loadedEntity.EntityName, loadedEntity.CharacterName);
+                loadedEntity.EntityName, loadedEntity.CharacterName,
+                loadedEntity.CurrentGuild, loadedEntity.BecomeFollowerThreshold);
             merchant.SetTile(loadedEntity.T);
             loadedEntity.T.entity = merchant;
 

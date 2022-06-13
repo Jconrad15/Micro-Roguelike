@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class Player : Entity
@@ -7,6 +8,7 @@ public class Player : Entity
     private FollowerManager followerManager;
 
     private Action<PlayerLicense> cbOnPlayerLicenseChanged;
+    private Action<Follower> cbOnFollowerAdded;
 
     public enum PlayerLicense { Traveller, Merchant };
     private PlayerLicense license;
@@ -20,7 +22,12 @@ public class Player : Entity
         }
     }
 
-    // Contructor for new player
+    /// <summary>
+    /// Contructor for new player.
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="type"></param>
+    /// <param name="startingMoney"></param>
     public Player(Tile t, EntityType type, int startingMoney)
         : base(t, type, startingMoney)
     {
@@ -31,10 +38,20 @@ public class Player : Entity
         followerManager = new FollowerManager();
     }
 
-    // Constructor for loaded player
+    /// <summary>
+    /// Constructor for loaded player.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="inventoryItems"></param>
+    /// <param name="money"></param>
+    /// <param name="visibility"></param>
+    /// <param name="entityName"></param>
+    /// <param name="characterName"></param>
+    /// <param name="t"></param>
     public Player(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, Guild guild, Tile t = null)
+        : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -47,7 +64,7 @@ public class Player : Entity
         {
             T = t;
         }
-
+        CurrentGuild = guild;
         followerManager = new FollowerManager();
     }
 
@@ -74,6 +91,25 @@ public class Player : Entity
         return false;
     }
 
+    public void TryAddFollower(Entity entity)
+    {
+        // Check entity favor
+        if (entity.Favor < entity.BecomeFollowerThreshold) { return; }
+
+        // Add follower
+        Follower f = followerManager.AddFollower(entity);
+
+        // Edit player to be better, due to follower
+        // TODO: better inventory size change
+        InventorySize += 2;
+
+        cbOnFollowerAdded?.Invoke(f);
+
+        // Remove entity from the world
+        AIEntity aiEntity = (AIEntity)entity;
+        aiEntity.RemoveFromAreaToBeFollower();
+    }
+
     public void RegisterOnLicenseChanged(Action<PlayerLicense> callbackfunc)
     {
         cbOnPlayerLicenseChanged += callbackfunc;
@@ -92,5 +128,15 @@ public class Player : Entity
     public void UnregisterOnMoneyChanged(Action<int> callbackfunc)
     {
         cbOnPlayerMoneyChanged -= callbackfunc;
+    }
+
+    public void RegisterOnFollowerAdded(Action<Follower> callbackfunc)
+    {
+        cbOnFollowerAdded += callbackfunc;
+    }
+
+    public void UnregisterOnFollowerAdded(Action<Follower> callbackfunc)
+    {
+        cbOnFollowerAdded -= callbackfunc;
     }
 }

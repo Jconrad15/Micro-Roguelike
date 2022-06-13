@@ -14,7 +14,7 @@ public class LicensePurchaser : MonoBehaviour
 
     private Player player;
 
-    private readonly int titleCost = 20;
+    private readonly int titleCost = 250;
 
     void Start()
     {

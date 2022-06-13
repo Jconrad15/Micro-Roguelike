@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Ore
   m_EditorClassIdentifier: 
   itemName: Ore
-  baseCost: 2
+  baseCost: 20
   category: 0

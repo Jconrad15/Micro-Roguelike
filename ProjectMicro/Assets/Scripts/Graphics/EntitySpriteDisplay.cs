@@ -43,6 +43,13 @@ public class EntitySpriteDisplay : MonoBehaviour
 
         entity.RegisterOnMove(OnEntityMove);
         entity.RegisterOnVisibilityChanged(OnVisiblityChanged);
+
+        // If entity is an AIEntity, register to on remove
+        if (Utility.IsSameOrSubclass(typeof(AIEntity), entity.GetType()))
+        {
+            AIEntity aiEntity = (AIEntity)entity;
+            aiEntity.RegisterOnAIEntityRemoved(OnAIEntityRemoved);
+        }
     }
 
     private void CreateEntityGO(
@@ -69,8 +76,10 @@ public class EntitySpriteDisplay : MonoBehaviour
     private static int DetermineSprite(Entity entity)
     {
         int selectedSpriteIndex;
-        if (entity.type == EntityType.Player ||
-            entity.GetType() == typeof(Merchant))
+
+        // Merchants and players turn into boats in the water
+        if ((entity.type == EntityType.Player ||
+            entity.GetType() == typeof(Merchant)))
         {
             if (entity.T.Type == TileType.Water)
             {
@@ -174,5 +183,20 @@ public class EntitySpriteDisplay : MonoBehaviour
 
         // Clear dictionary
         placedEntities = new Dictionary<Entity, GameObject>();
+    }
+
+    private void OnAIEntityRemoved(AIEntity aiEntity)
+    {
+        if (aiEntity == null) 
+        {
+            Debug.LogError("EntitySpriteDisplay: null aiEntity");
+            return; 
+        }
+
+        if (placedEntities.TryGetValue(aiEntity, out GameObject aiEntity_GO))
+        {
+            Destroy(aiEntity_GO);
+            placedEntities.Remove(aiEntity);
+        }
     }
 }

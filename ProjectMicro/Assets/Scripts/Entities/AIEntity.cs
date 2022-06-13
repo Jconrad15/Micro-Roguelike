@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class AIEntity : Entity
 {
+    protected Action<AIEntity> cbOnAIEntityRemoved;
+
     protected Path_AStar Pathway { get; set; }
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
@@ -14,14 +16,19 @@ public class AIEntity : Entity
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, Guild guild, int favor, 
+        int becomeFollowerThreshold, Tile t = null) 
+        : base(t, type, money)
     {
         base.type = type;
         InventoryItems = inventoryItems;
         Visibility = visibility;
         EntityName = entityName;
         CharacterName = characterName;
+        CurrentGuild = guild;
+        Favor = favor;
         T = t;
+        BecomeFollowerThreshold = becomeFollowerThreshold;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;
@@ -92,6 +99,14 @@ public class AIEntity : Entity
         }
     }
 
+    public void RemoveFromAreaToBeFollower()
+    {
+        AreaDataManager.Instance.RemoveEntityFromCurrentAreaData(this);
+        cbOnAIEntityRemoved?.Invoke(this);
+        ClearData();
+        NullPathfinding();
+    }
+
     public void NullPathfinding()
     {
         Destination = null;
@@ -105,5 +120,15 @@ public class AIEntity : Entity
         Pathway = null;
         Destination = null;
         NextTile = null;
+    }
+
+    public void RegisterOnAIEntityRemoved(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityRemoved += callbackfunc;
+    }
+
+    public void UnregisterOnAIEntityRemoved(Action<AIEntity> callbackfunc)
+    {
+        cbOnAIEntityRemoved -= callbackfunc;
     }
 }

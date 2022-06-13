@@ -11,6 +11,8 @@ public class GameInitializer : MonoBehaviour
     [SerializeField]
     private int worldHeight = 100;
 
+    public GuildManager CurrentGuildManager { get; private set; }
+
     public static GameInitializer Instance { get; private set; }
     private void Awake()
     {
@@ -42,6 +44,9 @@ public class GameInitializer : MonoBehaviour
 
         // Otherwise, normal world generation process
         Seed = Random.Range(-10000, 10000);
+        
+        CurrentGuildManager = new GuildManager(Seed);
+        
         WorldGenerator.Instance.StartGeneration(worldWidth, worldHeight);
     }
 

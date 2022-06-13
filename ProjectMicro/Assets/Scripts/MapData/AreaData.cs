@@ -1,10 +1,46 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = UnityEngine.Random;
+
+[Serializable]
+public class SerializableAreaData
+{
+    public bool isWorld;
+    public SerializableTile[] mapData;
+    public int width;
+    public int height;
+}
 
 public class AreaData
 {
+    /// <summary>
+    /// Loaded area data from memory constructor.
+    /// </summary>
+    /// <param name="isWorld"></param>
+    /// <param name="mapData"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="entities"></param>
+    /// <param name="features"></param>
+    public AreaData(bool isWorld, Tile[] mapData, int width, int height,
+        List<Entity> entities, List<Feature> features)
+    {
+        IsWorld = isWorld;
+        MapData = mapData;
+        Width = width;
+        Height = height;
+        Entities = entities;
+        Features = features;
+        TileGraph = null;
+
+        SetTileNeighbors();
+    }
+
+    /// <summary>
+    /// Basic empty constructor.
+    /// </summary>
+    public AreaData() {}
+
     public bool IsWorld { get; private set; }
 
     public Tile[] MapData { get; set; }
@@ -25,6 +61,12 @@ public class AreaData
     public void AddEntity(Entity e)
     {
         Entities.Add(e);
+    }
+
+    public void RemoveEntity(Entity e)
+    {
+        if (e == null) { return; }
+        if (Entities.Contains(e)) { Entities.Remove(e); }
     }
 
     public void AddFeature(Feature f)

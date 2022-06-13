@@ -15,10 +15,19 @@ public class SerializableEntity
     public int money;
     public EntityType type;
     public VisibilityLevel visibility;
+    public Guild guild;
+    public int favor;
+    public int becomeFollowerThreshold;
 }
 
 public class Entity
 {
+    public int PlayerBondLevel { get; protected set; }
+    public Guild CurrentGuild { get; protected set; }
+
+    public int Favor { get; protected set; }
+    public int BecomeFollowerThreshold { get; protected set; }
+
     /// <summary>
     /// Helps indicate the type of entity
     /// </summary>
@@ -84,6 +93,9 @@ public class Entity
     protected Action<Item> cbOnItemPurchased;
     protected Action<Item> cbOnItemSold;
 
+    protected Action cbOnPurchaseFailedMoney;
+    protected Action cbOnPurchaseFailedInventory;
+
     public int TurnsNotMovedStuck { get; protected set; } = 0;
 
     public void SetTile(Tile tile)
@@ -105,14 +117,21 @@ public class Entity
         X = t.x;
         Y = t.y;
         Money = startingMoney;
-
         this.type = type;
-
         Visibility = VisibilityLevel.NotVisible;
-
         InventoryItems = new List<Item>();
 
         CreateCharacterName();
+
+        // TODO: better guild assigning
+        CurrentGuild =
+            GameInitializer.Instance.CurrentGuildManager.GetRandomGuild();
+
+        // TODO: better favor system
+        Favor = 0;
+
+        // TODO: better follower thresholds
+        BecomeFollowerThreshold = 3;
 
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
@@ -197,8 +216,13 @@ public class Entity
         cbOnMove?.Invoke(this, startPos);
     }
 
+    protected void AddFavor(int amount)
+    {
+        Favor += amount;
+    }
+
     /// <summary>
-    /// Triggered when a clicked on trader is transacted with.
+    /// Triggered when a clicked on merchant is transacted with.
     /// </summary>
     /// <param name="itemToTransfer"></param>
     /// <param name="player"></param>
@@ -209,17 +233,27 @@ public class Entity
         Entity clickedEntity, bool isPlayerItem)
     {
         Merchant m = (Merchant)clickedEntity;
-        int adjustedItemCost = m.GetAdjustedCost(itemToTransfer);
+        int adjustedItemCost = m.GetAdjustedCost(
+            itemToTransfer, player, isPlayerItem);
 
-        // Transfer to the trader if possible
+        m.IsPreferredBuySell(itemToTransfer,
+            out bool isPreferredBuy, out bool isPreferredSell);
+
+        // Transfer to the merchant if possible -- merchant is buying
         if (isPlayerItem)
         {
-            // If the trader has enough money and inventory space
+            // If the merchant has enough money and inventory space
             if (adjustedItemCost <= m.Money &&
-                InventoryItems.Count < InventorySize)
+                m.InventoryItems.Count < m.InventorySize)
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
+
+                // TODO: better favor
+                if (isPreferredBuy)
+                {
+                    m.AddFavor(1);
+                }
                 return true;
             }
             // The trader does not have enough money or enough space
@@ -228,21 +262,34 @@ public class Entity
                 return false;
             }
         }
-        // Trasfer to the player if possible
+        // Transfer to the player if possible -- merchant is selling
         else
         {
             // If the player has enough money and inventory space
             if (adjustedItemCost <= player.Money &&
-                player.InventoryItems.Count < InventorySize)
+                player.InventoryItems.Count < player.InventorySize)
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
+
+                // TODO: better favor
+                if (isPreferredSell)
+                {
+                    m.AddFavor(1);
+                }
                 return true;
             }
             // The player does not have enough money or space
             else
             {
-                Debug.Log("no money or no space");
+                if (adjustedItemCost > player.Money)
+                {
+                    cbOnPurchaseFailedMoney?.Invoke();
+                }
+                else
+                {
+                    cbOnPurchaseFailedInventory?.Invoke();
+                }
                 return false;
             }
         }
@@ -363,4 +410,26 @@ public class Entity
     {
         cbOnItemSold -= callbackfunc;
     }
+
+    public void RegisterOnPurchaseFailedMoney(Action callbackfunc)
+    {
+        cbOnPurchaseFailedMoney += callbackfunc;
+    }
+
+    public void UnregisterOnPurchaseFailedMoney(Action callbackfunc)
+    {
+        cbOnPurchaseFailedMoney -= callbackfunc;
+    }
+
+    public void RegisterOnPurchaseFailedInventory(Action callbackfunc)
+    {
+        cbOnPurchaseFailedInventory += callbackfunc;
+    }
+
+    public void UnregisterOnPurchaseFailedInventory(Action callbackfunc)
+    {
+        cbOnPurchaseFailedInventory -= callbackfunc;
+    }
+
+
 }
