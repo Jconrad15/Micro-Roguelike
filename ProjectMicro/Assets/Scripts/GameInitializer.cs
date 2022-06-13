@@ -38,10 +38,16 @@ public class GameInitializer : MonoBehaviour
             if (SceneBus.Instance.IsLoadGame)
             {
                 SaveSerial.Instance.ButtonToLoadGame();
+                FindObjectOfType<GameSetupUI>().Hide();
                 return;
             }
         }
+        FindObjectOfType<GameSetupUI>().Show();
 
+    }
+
+    public void InitializeGame()
+    {
         // Otherwise, normal world generation process
         Seed = Random.Range(-10000, 10000);
         
@@ -50,10 +56,14 @@ public class GameInitializer : MonoBehaviour
         WorldGenerator.Instance.StartGeneration(worldWidth, worldHeight);
     }
 
-    public void OnDataLoaded(MapType loadedMapType, int loadedSeed)
+    public void LoadGuildManager(int loadedSeed)
     {
         Seed = loadedSeed;
+        CurrentGuildManager = new GuildManager(Seed);
+    }
 
+    public void OnDataLoaded(MapType loadedMapType)
+    {
         if (loadedMapType == MapType.World)
         {
             WorldGenerator.Instance.OnDataLoaded();
@@ -63,7 +73,5 @@ public class GameInitializer : MonoBehaviour
             LocationGenerator.Instance.OnDataLoaded();
         }
     }
-
-
 
 }

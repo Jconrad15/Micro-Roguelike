@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour
     private readonly float minSize = 5f;
     private readonly float maxSize = 100f;
 
+    private Vector3 initialPosition = new Vector3(50, 50, -10);
+
     private void OnEnable()
     {
         PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
@@ -24,6 +26,8 @@ public class CameraController : MonoBehaviour
             .RegisterOnLocationCreated(SnapToPlayer);
         FindObjectOfType<WorldGenerator>()
             .RegisterOnWorldCreated(SnapToPlayer);
+
+        transform.position = initialPosition;
     }
 
     private void Update()
