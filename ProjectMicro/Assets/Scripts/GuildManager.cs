@@ -16,7 +16,7 @@ public class GuildManager
 
         for (int i = 0; i < guildCount; i++)
         {
-            guilds[i] = new Guild(i);
+            guilds[i] = new Guild(i, seed + i);
         }
 
         Random.state = oldState;

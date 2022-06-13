@@ -7,6 +7,8 @@ public class GameSetupUI : MonoBehaviour
     [SerializeField]
     private GameObject gameSetupUIArea;
 
+    private string currentName;
+
     public void Show()
     {
         gameSetupUIArea.SetActive(true);
@@ -21,6 +23,11 @@ public class GameSetupUI : MonoBehaviour
     {
         GameInitializer.Instance.InitializeGame();
         Hide();
+    }
+
+    public void InputCharacterName(string characterName)
+    {
+        currentName = characterName;
     }
 
 }
