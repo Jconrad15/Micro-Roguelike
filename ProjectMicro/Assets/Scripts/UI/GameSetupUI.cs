@@ -79,6 +79,8 @@ public class GameSetupUI : MonoBehaviour
 
         int seed = System.BitConverter.ToInt32(hashed, 0);
         this.seed = seed;
+
+        CreateGuilds();
     }
 
     public void RandomSeedButton()
