@@ -131,7 +131,7 @@ public class GameSetupUI : MonoBehaviour
 
     private void SetupValues()
     {
-        money = 10;
+        money = 100;
         UpdateMoneyTextDisplay();
 
         seed = Random.Range(-10000, 10000);

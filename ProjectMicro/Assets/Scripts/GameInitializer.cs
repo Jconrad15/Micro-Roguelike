@@ -45,6 +45,12 @@ public class GameInitializer : MonoBehaviour
         FindObjectOfType<GameSetupUI>().Show();
     }
 
+    /// <summary>
+    /// Initilizes game when player hits start button
+    /// </summary>
+    /// <param name="createdPlayer"></param>
+    /// <param name="seed"></param>
+    /// <param name="createdGuildManager"></param>
     public void InitializeGame(
         Player createdPlayer, int seed, GuildManager createdGuildManager)
     {
