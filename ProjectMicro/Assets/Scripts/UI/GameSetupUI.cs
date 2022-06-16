@@ -94,7 +94,8 @@ public class GameSetupUI : MonoBehaviour
 
     public void RandomNameButton()
     {
-        characterName = "RandomName";
+        characterName = NameGenerator.GenerateName();
+
         // display seed in input box
         nameInputField.text = characterName;
     }
@@ -147,7 +148,6 @@ public class GameSetupUI : MonoBehaviour
     public void SelectedGuild(Guild selectedGuild)
     {
         guild = selectedGuild;
-        Debug.Log("CurrentSelectedGuild is " + guild.GuildName);
     }
 
     private void UpdateGuildManagerDisplay()

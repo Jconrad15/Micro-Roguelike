@@ -39,6 +39,8 @@ public class GuildToggleGroupUI : MonoBehaviour
             guildGOs.Add(guildGO);
         }
 
+        // Start by selecting the last one
+        SelectGuild(guilds[guilds.Length - 1]);
     }
 
     private void ClearAll()
