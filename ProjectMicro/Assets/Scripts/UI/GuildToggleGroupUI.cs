@@ -12,8 +12,9 @@ public class GuildToggleGroupUI : MonoBehaviour
     private List<GameObject> guildGOs = new List<GameObject>();
 
     private ToggleGroup guildToggleGroup;
-
     private GameSetupUI gameSetupUI;
+
+    private List<GuildPrefabUI> guildPrefabUIs = new List<GuildPrefabUI>();
 
     private void OnEnable()
     {
@@ -25,31 +26,22 @@ public class GuildToggleGroupUI : MonoBehaviour
         this.gameSetupUI = gameSetupUI;
         ClearAll();
 
-        List<Toggle> toggles = new List<Toggle>();
+        Toggle[] toggles = new Toggle[guilds.Length];
 
-        foreach (Guild guild in guilds)
+        for (int i = 0; i < guilds.Length; i++)
         {
             Debug.Log("CreateGuild");
             // Show each guild
             Instantiate(guildPrefab, gameObject.transform);
 
-            Toggle t =
-                guildPrefab.GetComponent<GuildPrefabUI>().SetGuild(guild);
+            GuildPrefabUI guildPrefabUI =
+                guildPrefab.GetComponent<GuildPrefabUI>();
+            
+            Toggle toggle = guildPrefabUI.SetGuild(guilds[i], SelectGuild);
 
-            t.group = guildToggleGroup;
-            toggles.Add(t);
-        }
+            toggle.group = guildToggleGroup;
 
-        guildToggleGroup.SetAllTogglesOff();
-
-        foreach (Toggle toggle in toggles)
-        {
-            guildToggleGroup.RegisterToggle(toggle);
-            toggle.onValueChanged.AddListener(
-                delegate
-                {
-                    // TODO this registration
-                });
+            guildPrefabUIs.Add(guildPrefabUI);
         }
 
     }
@@ -64,9 +56,19 @@ public class GuildToggleGroupUI : MonoBehaviour
         guildGOs.Clear();
     }
 
-    private void SelectGuild(Guild selectedGuild)
+    public void SelectGuild(Guild selectedGuild)
     {
+        Debug.Log("SelectGuild");
         gameSetupUI.SelectedGuild(selectedGuild);
+    }
+
+    private void OnDestroy()
+    {
+        foreach(GuildPrefabUI guildPrefabUI in guildPrefabUIs)
+        {
+            guildPrefabUI.UnregisterOnGuildSelected(SelectGuild);
+        }
+        guildPrefabUIs.Clear();
     }
 
 }
