@@ -1,17 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameSetupUI : MonoBehaviour
 {
     [SerializeField]
     private GameObject gameSetupUIArea;
 
-    private string currentName;
+    [SerializeField]
+    private TextMeshProUGUI moneyText;
 
+    [SerializeField]
+    private TMP_InputField seedInputField;
+    [SerializeField]
+    private TMP_InputField nameInputField;
+
+    [SerializeField]
+    private GuildToggleGroupUI guildPrefabUI;
+
+    private string characterName;
+    private int money;
+    private List<Item> inventoryItems;
+    private Guild guild;
+    private int seed;
+
+    private GuildManager currentGuildManager;
+
+    /// <summary>
+    /// Shows the player game setup screen.
+    /// </summary>
     public void Show()
     {
         gameSetupUIArea.SetActive(true);
+
+        // Show initial values
+        SetupValues();
     }
 
     public void Hide()
@@ -21,13 +45,110 @@ public class GameSetupUI : MonoBehaviour
 
     public void StartButton()
     {
-        GameInitializer.Instance.InitializeGame();
+        if (TryCreatePlayerFromInputs(out Player createdPlayer) == false)
+        {
+            return;
+        }
+
+        GameInitializer.Instance.InitializeGame(
+            createdPlayer, seed, currentGuildManager);
+        
         Hide();
     }
 
+    /// <summary>
+    /// Input from name UI input field.
+    /// </summary>
+    /// <param name="characterName"></param>
     public void InputCharacterName(string characterName)
     {
-        currentName = characterName;
+        this.characterName = characterName;
     }
 
+    /// <summary>
+    /// Input from seed UI input field. Converts string to int
+    /// </summary>
+    /// <param name="seedText"></param>
+    public void InputSeed(string seedText)
+    {
+        System.Security.Cryptography.MD5 md5Hasher =
+            System.Security.Cryptography.MD5.Create();
+
+        byte[] hashed = md5Hasher.ComputeHash(
+            System.Text.Encoding.UTF8.GetBytes(seedText));
+
+        int seed = System.BitConverter.ToInt32(hashed, 0);
+        this.seed = seed;
+    }
+
+    public void RandomSeedButton()
+    {
+        seed = Random.Range(-1000000, 1000000);
+        // display seed in input box
+        seedInputField.text = seed.ToString();
+    }
+
+    public void RandomNameButton()
+    {
+        characterName = "RandomName";
+        // display seed in input box
+        nameInputField.text = characterName;
+    }
+
+    private bool TryCreatePlayerFromInputs(out Player p)
+    {
+        p = null;
+
+        if (inventoryItems == null ||
+            characterName == null ||
+            guild == null)
+        {
+            Debug.Log("Incomplete character");
+            return false;
+        }
+
+        p = new Player(
+            EntityType.Player,
+            inventoryItems,
+            money,
+            VisibilityLevel.Visible,
+            "player",
+            characterName,
+            guild);
+
+        return true;
+    }
+
+    private void SetupValues()
+    {
+        money = 10;
+        UpdateMoneyTextDisplay();
+
+        seed = Random.Range(-10000, 10000);
+        UpdateSeedTextDisplay();
+
+        currentGuildManager = new GuildManager(seed);
+        UpdateGuildManagerDisplay();
+    }
+
+    public void SelectedGuild(Guild selectedGuild)
+    {
+        guild = selectedGuild;
+        Debug.Log("CurrentSelectedGuild is " + guild.GuildName);
+    }
+
+    private void UpdateGuildManagerDisplay()
+    {
+        guildPrefabUI.DisplayGuilds(currentGuildManager.guilds, this);
+    }
+
+    private void UpdateSeedTextDisplay()
+    {
+        seedInputField.text = seed.ToString();
+    }
+
+    private void UpdateMoneyTextDisplay()
+    {
+        moneyText.SetText("$" + money.ToString());
+    }
 }

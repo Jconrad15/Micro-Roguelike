@@ -43,17 +43,18 @@ public class GameInitializer : MonoBehaviour
             }
         }
         FindObjectOfType<GameSetupUI>().Show();
-
     }
 
-    public void InitializeGame()
+    public void InitializeGame(
+        Player createdPlayer, int seed, GuildManager createdGuildManager)
     {
-        // Otherwise, normal world generation process
-        Seed = Random.Range(-10000, 10000);
-        
-        CurrentGuildManager = new GuildManager(Seed);
-        
-        WorldGenerator.Instance.StartGeneration(worldWidth, worldHeight);
+        Seed = seed;
+
+        CurrentGuildManager = createdGuildManager;
+
+        // normal world generation process
+        WorldGenerator.Instance.StartGeneration(
+            createdPlayer, worldWidth, worldHeight);
     }
 
     public void LoadGuildManager(int loadedSeed)

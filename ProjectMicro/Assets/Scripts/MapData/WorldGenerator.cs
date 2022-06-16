@@ -30,15 +30,16 @@ public class WorldGenerator : MonoBehaviour
             .RegisterOnPlayerGoToExitTile(OnPlayerGoToExitTile);
     }
 
-    public void StartGeneration(int worldWidth, int worldHeight)
+    public void StartGeneration(
+        Player createdPlayer, int worldWidth, int worldHeight)
     {
         this.worldHeight = worldHeight;
         this.worldWidth = worldWidth;
 
-        StartGenerateWorld();
+        StartGenerateWorld(createdPlayer);
     }
 
-    private void StartGenerateWorld()
+    private void StartGenerateWorld(Player createdPlayer)
     {
         int seed = GameInitializer.Instance.Seed;
 
@@ -54,7 +55,9 @@ public class WorldGenerator : MonoBehaviour
 
         AreaDataManager.Instance.SetWorldData(CreateWorldMapData(seed));
 
-        PlayerInstantiation.CreatePlayer(startPlayerWorldX, startPlayerWorldY);
+        PlayerInstantiation.CreatePlayer(
+            createdPlayer, startPlayerWorldX, startPlayerWorldY);
+
         AIEntityInstantiation.CreateInitialWorldEntities(seed);
 
         Random.state = oldState;
