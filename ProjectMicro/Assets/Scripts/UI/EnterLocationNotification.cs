@@ -18,6 +18,9 @@ public class EnterLocationNotification : MonoBehaviour
 
     void Update()
     {
+        // Return if area data not yet created
+        if (AreaDataManager.Instance == null) { return; }
+
         // Only update if in world
         if (AreaDataManager.Instance.CurrentMapType != MapType.World)
         {

@@ -12,6 +12,7 @@ public class DataLoader : MonoBehaviour
     {
         ResetAllOldData();
         AreaDataManager.Instance.LoadAreaData(loadedAreaData);
+        GameInitializer.Instance.LoadGuildManager(loadedAreaData.Seed);
 
         // Load the things for the current area
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
@@ -38,13 +39,13 @@ public class DataLoader : MonoBehaviour
             AIEntityInstantiation.LoadEntity(AIEntitiesToLoad[i]);
         }
 
-        PlayerInstantiation.LoadPlayer(playerEntity);
-
         areaData.GenerateTileGraph();
+
+        PlayerInstantiation.LoadPlayer(playerEntity);
 
         // Tell the GameInitializer that data is loaded
         GameInitializer.Instance.OnDataLoaded(
-            loadedAreaData.CurrentMapType, loadedAreaData.Seed);
+            loadedAreaData.CurrentMapType);
     }
 
     public static void ResetAllOldData()

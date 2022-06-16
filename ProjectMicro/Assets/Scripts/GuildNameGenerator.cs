@@ -19,8 +19,11 @@ public static class GuildNameGenerator
         guildNamePart2 = TextAssetParser.Parse(guildNamePart2TA);
     }
 
-    public static string GenerateName()
+    public static string GenerateName(int seed = 0)
     {
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         if (guildNamePart1 == null || guildNamePart2 == null)
         {
             LoadData();
@@ -31,6 +34,8 @@ public static class GuildNameGenerator
 
         string selectedPart2 =
             SelectFromStringArray.RandomSelect(guildNamePart2);
+
+        Random.state = oldState;
 
         return selectedpart1 + " " + selectedPart2;
     }

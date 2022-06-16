@@ -22,6 +22,7 @@ public class Player : Entity
         }
     }
 
+    /*    
     /// <summary>
     /// Contructor for new player.
     /// </summary>
@@ -34,6 +35,27 @@ public class Player : Entity
         EntityName = "player";
         License = PlayerLicense.Traveller;
         Money = startingMoney;
+
+        followerManager = new FollowerManager();
+    }
+    */
+
+    /// <summary>
+    /// Constructor for player created in game setup.
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="type"></param>
+    /// <param name="startingMoney"></param>
+    /// <param name="p"></param>
+    public Player(Tile t, EntityType type, int startingMoney, Player p)
+    : base(t, type, startingMoney)
+    {
+        EntityName = p.EntityName;
+        License = PlayerLicense.Traveller;
+        Money = p.Money;
+        InventoryItems = p.InventoryItems;
+        CharacterName = p.CharacterName;
+        CurrentGuild = p.CurrentGuild;
 
         followerManager = new FollowerManager();
     }

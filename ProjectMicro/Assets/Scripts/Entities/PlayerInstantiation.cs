@@ -32,8 +32,11 @@ public static class PlayerInstantiation
         cbOnPlayerCreated?.Invoke(player);
     }
 
-    public static void CreatePlayer(int playerStartX, int playerStartY)
+    public static void CreatePlayer(
+        Player createdPlayer, int playerStartX, int playerStartY)
     {
+
+
         // Get the tile at the location
         Tile playerTile;
         if (AreaDataManager.Instance.CurrentMapType == MapType.Location) 
@@ -49,7 +52,8 @@ public static class PlayerInstantiation
 
         // Place the player at the tile, and the tile to the player
         Player player = new Player(
-            playerTile, EntityType.Player, playerStartingMoney);
+            playerTile, EntityType.Player,
+            playerStartingMoney, createdPlayer);
 
         playerTile.entity = player;
 
