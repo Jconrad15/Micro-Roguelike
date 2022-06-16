@@ -5,9 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class GuildPrefabUI : MonoBehaviour, IPointerUpHandler
+public class GuildPrefabUI : MonoBehaviour
 {
-    private Action<Guild> cbOnGuildSelected;
 
     [SerializeField]
     private TextMeshProUGUI guildNameText;
@@ -16,32 +15,22 @@ public class GuildPrefabUI : MonoBehaviour, IPointerUpHandler
 
     private Guild guild;
 
-    public Toggle SetGuild(Guild guild, Action<Guild> callbackfunc)
+    public Toggle Setup(Guild guild, GuildToggleGroupUI guildToggleGroupUI)
     {
         this.guild = guild;
         // Set guild info
         guildNameText.SetText(guild.GuildName);
 
-        RegisterOnGuildSelected(callbackfunc);
+        guildToggle.onValueChanged.AddListener(
+            (bool isSelected) =>
+            {
+                if (isSelected)
+                {
+                    guildToggleGroupUI.SelectGuild(guild);
+                }
+            });
+
         return guildToggle;
     }
     
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-    {
-        Debug.Log("OnMouseUp");
-        cbOnGuildSelected?.Invoke(guild);
-    }
-
-    public void RegisterOnGuildSelected(Action<Guild> callbackfunc)
-    {
-        cbOnGuildSelected += callbackfunc;
-
-        Delegate[] test = cbOnGuildSelected.GetInvocationList();
-        Debug.Log(test.Length);
-    }
-
-    public void UnregisterOnGuildSelected(Action<Guild> callbackfunc)
-    {
-        cbOnGuildSelected -= callbackfunc;
-    }
 }

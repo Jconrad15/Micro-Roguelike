@@ -14,8 +14,6 @@ public class GuildToggleGroupUI : MonoBehaviour
     private ToggleGroup guildToggleGroup;
     private GameSetupUI gameSetupUI;
 
-    private List<GuildPrefabUI> guildPrefabUIs = new List<GuildPrefabUI>();
-
     private void OnEnable()
     {
         guildToggleGroup = GetComponent<ToggleGroup>();
@@ -26,22 +24,19 @@ public class GuildToggleGroupUI : MonoBehaviour
         this.gameSetupUI = gameSetupUI;
         ClearAll();
 
-        Toggle[] toggles = new Toggle[guilds.Length];
-
         for (int i = 0; i < guilds.Length; i++)
         {
-            Debug.Log("CreateGuild");
             // Show each guild
-            Instantiate(guildPrefab, gameObject.transform);
+            GameObject guildGO =
+                Instantiate(guildPrefab, gameObject.transform);
 
             GuildPrefabUI guildPrefabUI =
-                guildPrefab.GetComponent<GuildPrefabUI>();
+                guildGO.GetComponent<GuildPrefabUI>();
             
-            Toggle toggle = guildPrefabUI.SetGuild(guilds[i], SelectGuild);
-
+            Toggle toggle = guildPrefabUI.Setup(guilds[i], this);
             toggle.group = guildToggleGroup;
 
-            guildPrefabUIs.Add(guildPrefabUI);
+            guildGOs.Add(guildGO);
         }
 
     }
@@ -58,17 +53,7 @@ public class GuildToggleGroupUI : MonoBehaviour
 
     public void SelectGuild(Guild selectedGuild)
     {
-        Debug.Log("SelectGuild");
         gameSetupUI.SelectedGuild(selectedGuild);
-    }
-
-    private void OnDestroy()
-    {
-        foreach(GuildPrefabUI guildPrefabUI in guildPrefabUIs)
-        {
-            guildPrefabUI.UnregisterOnGuildSelected(SelectGuild);
-        }
-        guildPrefabUIs.Clear();
     }
 
 }

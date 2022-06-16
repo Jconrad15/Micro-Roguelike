@@ -86,6 +86,8 @@ public class GameSetupUI : MonoBehaviour
         seed = Random.Range(-1000000, 1000000);
         // display seed in input box
         seedInputField.text = seed.ToString();
+
+        CreateGuilds();
     }
 
     public void RandomNameButton()
@@ -99,12 +101,17 @@ public class GameSetupUI : MonoBehaviour
     {
         p = null;
 
-        if (inventoryItems == null ||
-            characterName == null ||
+        if (characterName == null ||
             guild == null)
         {
             Debug.Log("Incomplete character");
             return false;
+        }
+
+        // Create blank inventory list if no starting items
+        if (inventoryItems == null)
+        {
+            inventoryItems = new List<Item>();
         }
 
         p = new Player(
@@ -126,7 +133,11 @@ public class GameSetupUI : MonoBehaviour
 
         seed = Random.Range(-10000, 10000);
         UpdateSeedTextDisplay();
+        CreateGuilds();
+    }
 
+    private void CreateGuilds()
+    {
         currentGuildManager = new GuildManager(seed);
         UpdateGuildManagerDisplay();
     }
