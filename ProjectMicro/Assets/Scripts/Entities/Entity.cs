@@ -18,11 +18,13 @@ public class SerializableEntity
     public Guild guild;
     public int favor;
     public int becomeFollowerThreshold;
+    public List<Attribute> attributes;
 }
 
 public class Entity
 {
-    public int PlayerBondLevel { get; protected set; }
+    public List<Attribute> Attributes { get; protected set; }
+
     public Guild CurrentGuild { get; protected set; }
 
     public int Favor { get; protected set; }
@@ -110,7 +112,9 @@ public class Entity
     /// <param name="t"></param>
     /// <param name="type"></param>
     /// <param name="startingMoney"></param>
-    public Entity(Tile t, EntityType type, int startingMoney)
+    public Entity(
+        Tile t, EntityType type, int startingMoney,
+        List<Attribute> attributes)
     {
         if (t == null) { return; }
         T = t;
@@ -120,6 +124,8 @@ public class Entity
         this.type = type;
         Visibility = VisibilityLevel.NotVisible;
         InventoryItems = new List<Item>();
+
+        Attributes = attributes;
 
         CreateCharacterName();
 

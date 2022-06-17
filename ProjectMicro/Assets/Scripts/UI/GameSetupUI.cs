@@ -24,6 +24,7 @@ public class GameSetupUI : MonoBehaviour
     private List<Item> inventoryItems;
     private Guild guild;
     private int seed;
+    private List<Attribute> attributes;
 
     private GuildManager currentGuildManager;
 
@@ -117,6 +118,12 @@ public class GameSetupUI : MonoBehaviour
             inventoryItems = new List<Item>();
         }
 
+        // Create blank attribute list if no attributes
+        if (attributes == null)
+        {
+            attributes = new List<Attribute>();
+        }
+
         p = new Player(
             EntityType.Player,
             inventoryItems,
@@ -124,7 +131,8 @@ public class GameSetupUI : MonoBehaviour
             VisibilityLevel.Visible,
             "player",
             characterName,
-            guild);
+            guild,
+            attributes);
 
         return true;
     }

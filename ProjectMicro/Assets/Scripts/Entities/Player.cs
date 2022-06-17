@@ -47,8 +47,10 @@ public class Player : Entity
     /// <param name="type"></param>
     /// <param name="startingMoney"></param>
     /// <param name="p"></param>
-    public Player(Tile t, EntityType type, int startingMoney, Player p)
-    : base(t, type, startingMoney)
+    public Player(
+        Tile t, EntityType type, int startingMoney, 
+        Player p, List<Attribute> attributes)
+    : base(t, type, startingMoney, attributes)
     {
         EntityName = p.EntityName;
         License = PlayerLicense.Traveller;
@@ -56,6 +58,8 @@ public class Player : Entity
         InventoryItems = p.InventoryItems;
         CharacterName = p.CharacterName;
         CurrentGuild = p.CurrentGuild;
+
+        Attributes = attributes; 
 
         followerManager = new FollowerManager();
     }
@@ -72,8 +76,9 @@ public class Player : Entity
     /// <param name="t"></param>
     public Player(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild guild, Tile t = null)
-        : base(t, type, money)
+        string characterName, Guild guild, List<Attribute> attributes,
+        Tile t = null)
+        : base(t, type, money, attributes)
     {
         base.type = type;
         InventoryItems = inventoryItems;

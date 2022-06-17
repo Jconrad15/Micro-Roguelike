@@ -132,6 +132,7 @@ public class SaveSerial : MonoBehaviour
                     guild = mapData[i].entity.CurrentGuild,
                     favor = mapData[i].entity.Favor,
                     becomeFollowerThreshold = mapData[i].entity.BecomeFollowerThreshold,
+                    attributes = mapData[i].entity.Attributes,
                 };
             }
 
@@ -306,7 +307,8 @@ public class SaveSerial : MonoBehaviour
                         serializableEntity.visibility,
                         serializableEntity.entityName,
                         serializableEntity.characterName,
-                        serializableEntity.guild);
+                        serializableEntity.guild,
+                        serializableEntity.attributes);
                 }
                 else
                 {
@@ -377,7 +379,8 @@ public class SaveSerial : MonoBehaviour
                 serializableEntity.money,
                 serializableEntity.visibility,
                 serializableEntity.entityName,
-                serializableEntity.characterName);
+                serializableEntity.characterName,
+                serializableEntity.attributes);
         }
         else if (serializableEntity.entityName == "merchant")
         {
@@ -389,7 +392,8 @@ public class SaveSerial : MonoBehaviour
                 serializableEntity.entityName,
                 serializableEntity.characterName,
                 serializableEntity.guild,
-                serializableEntity.becomeFollowerThreshold);
+                serializableEntity.becomeFollowerThreshold,
+                serializableEntity.attributes);
         }
         else
         {

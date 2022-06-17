@@ -10,15 +10,18 @@ public class AIEntity : Entity
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
 
-    public AIEntity(Tile t, EntityType type, int startingMoney)
-        : base(t, type, startingMoney) { }
+    public AIEntity(
+        Tile t, EntityType type,
+        int startingMoney, List<Attribute> attributes)
+        : base(t, type, startingMoney, attributes) { }
 
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Guild guild, int favor, 
-        int becomeFollowerThreshold, Tile t = null) 
-        : base(t, type, money)
+        int becomeFollowerThreshold, List<Attribute> attributes,
+        Tile t = null) 
+        : base(t, type, money, attributes)
     {
         base.type = type;
         InventoryItems = inventoryItems;

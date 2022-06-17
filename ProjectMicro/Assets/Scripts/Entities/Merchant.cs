@@ -28,8 +28,9 @@ public class Merchant : AIEntity
 
     public Merchant(
         Tile t, EntityType type,
-        MerchantType merchantType, int startingMoney)
-        : base(t, type, startingMoney)
+        MerchantType merchantType, int startingMoney,
+        List<Attribute> attributes)
+        : base(t, type, startingMoney, attributes)
     {
         EntityName = "merchant";
         MType = merchantType;
@@ -50,8 +51,8 @@ public class Merchant : AIEntity
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Guild guild, int becomeFollowerThresold,
-        Tile t = null)
-        : base(t, type, money)
+        List<Attribute> attributes, Tile t = null)
+        : base(t, type, money, attributes)
     {
         base.type = type;
         InventoryItems = inventoryItems;

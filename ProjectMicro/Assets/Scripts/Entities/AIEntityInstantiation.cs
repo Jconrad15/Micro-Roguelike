@@ -29,12 +29,15 @@ public static class AIEntityInstantiation
 
             int merchantStartMoney = DetermineMerchantStartingMoney();
 
+            List<Attribute> attributes = DetermineMerchantStartingAttributes();
+
             Tile merchantTile = worldData.GetTile(x, y);
             Merchant merchant = new Merchant(
                 merchantTile,
                 EntityType.AI,
                 MerchantType.Traveller,
-                merchantStartMoney);
+                merchantStartMoney,
+                attributes);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
@@ -42,7 +45,7 @@ public static class AIEntityInstantiation
 
         // Also create a dog to wander around
         Tile dogTile = worldData.GetTile(1, 1);
-        Dog dog = new Dog(dogTile, EntityType.AI, 0);
+        Dog dog = new Dog(dogTile, EntityType.AI, 0, null);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
@@ -108,12 +111,15 @@ public static class AIEntityInstantiation
 
             int merchantStartMoney = DetermineMerchantStartingMoney();
 
+            List<Attribute> attributes = DetermineMerchantStartingAttributes();
+
             Tile merchantTile = areaData.GetTile(x, y);
             Merchant merchant = new Merchant(
                 merchantTile,
                 EntityType.AI,
                 Utility.GetRandomEnum<MerchantType>(),
-                merchantStartMoney);
+                merchantStartMoney,
+                attributes);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
@@ -121,11 +127,18 @@ public static class AIEntityInstantiation
 
         // Also generate a dog
         Tile dogTile = areaData.GetTile(1, 1);
-        Dog dog = new Dog(dogTile, EntityType.AI, 0);
+        Dog dog = new Dog(dogTile, EntityType.AI, 0, null);
         dogTile.entity = dog;
         cbOnAIEntityCreated?.Invoke(dog);
 
         Random.state = oldState;
+    }
+
+    private static List<Attribute> DetermineMerchantStartingAttributes()
+    {
+        // TODO: determine starting attributes
+
+        return null;
     }
 
     private static void DetermineOpenLocation(
@@ -187,7 +200,8 @@ public static class AIEntityInstantiation
             Dog dog = new Dog(
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
-                loadedEntity.EntityName, loadedEntity.CharacterName);
+                loadedEntity.EntityName, loadedEntity.CharacterName,
+                loadedEntity.Attributes);
             dog.SetTile(loadedEntity.T);
             loadedEntity.T.entity = dog;
 
@@ -200,7 +214,9 @@ public static class AIEntityInstantiation
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
                 loadedEntity.EntityName, loadedEntity.CharacterName,
-                loadedEntity.CurrentGuild, loadedEntity.BecomeFollowerThreshold);
+                loadedEntity.CurrentGuild,
+                loadedEntity.BecomeFollowerThreshold,
+                loadedEntity.Attributes);
             merchant.SetTile(loadedEntity.T);
             loadedEntity.T.entity = merchant;
 
