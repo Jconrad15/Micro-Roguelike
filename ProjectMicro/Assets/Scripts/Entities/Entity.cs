@@ -66,7 +66,6 @@ public class Entity
 
     public List<Item> InventoryItems { get; protected set; }
 
-
     protected Action<int> cbOnPlayerMoneyChanged;
     private int money;
     public int Money 
@@ -227,7 +226,7 @@ public class Entity
 
     protected void Move(Tile destination)
     {
-        Vector2 startPos = new Vector2 (X, Y);
+        Vector2 startPos = new Vector2(X, Y);
 
         // Remove self from current tile
         T.entity = null;
@@ -455,6 +454,5 @@ public class Entity
     {
         cbOnPurchaseFailedInventory -= callbackfunc;
     }
-
 
 }

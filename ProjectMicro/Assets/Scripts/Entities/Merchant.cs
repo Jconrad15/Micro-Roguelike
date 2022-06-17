@@ -19,9 +19,6 @@ public enum MerchantType
 
 public class Merchant : AIEntity
 {
-    private const float preferedItemModifier = 0.2f;
-    private const float sellSameGuildModifier = 0.2f;
-
     protected int waitAtTileTurns;
     public MerchantType MType { get; protected set; }
     private MerchantTypeRef typeRef;
@@ -188,7 +185,7 @@ public class Merchant : AIEntity
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= (2 * preferedItemModifier);
+                modifier -= (2 * stats.PreferedItemCostModifier);
             }
 
             if (isPreferredBuy)
@@ -196,7 +193,7 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += preferedItemModifier;
+                modifier += stats.PreferedItemCostModifier;
             }
         }
         else
@@ -206,7 +203,7 @@ public class Merchant : AIEntity
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= preferedItemModifier;
+                modifier -= stats.PreferedItemCostModifier;
             }
 
             if (isPreferredBuy)
@@ -214,17 +211,15 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += (2 * preferedItemModifier);
+                modifier += (2 * stats.PreferedItemCostModifier);
             }
         }
-
-
 
         // Adjust the modifier based on whether or not the merchant
         // is in the same guild as the player
         if (player.CurrentGuild == CurrentGuild)
         {
-            modifier -= sellSameGuildModifier;
+            modifier -= stats.SellSameGuildCostModifier;
         }
 
         // Return the base cost mutlipled by any modifier,

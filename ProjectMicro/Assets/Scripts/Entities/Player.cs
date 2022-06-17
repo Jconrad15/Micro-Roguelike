@@ -21,24 +21,6 @@ public class Player : Entity
         }
     }
 
-    /*    
-    /// <summary>
-    /// Contructor for new player.
-    /// </summary>
-    /// <param name="t"></param>
-    /// <param name="type"></param>
-    /// <param name="startingMoney"></param>
-    public Player(Tile t, EntityType type, int startingMoney)
-        : base(t, type, startingMoney)
-    {
-        EntityName = "player";
-        License = PlayerLicense.Traveller;
-        Money = startingMoney;
-
-        followerManager = new FollowerManager();
-    }
-    */
-
     /// <summary>
     /// Constructor for player created in game setup.
     /// </summary>
@@ -59,7 +41,6 @@ public class Player : Entity
         CurrentGuild = p.CurrentGuild;
 
         followerManager = new FollowerManager();
-
     }
 
     /// <summary>

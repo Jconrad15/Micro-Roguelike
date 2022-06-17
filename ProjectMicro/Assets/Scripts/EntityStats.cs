@@ -12,6 +12,8 @@ public class EntityStats
         FavorGainRate = 1;
         InventorySize = 10;
         BecomeFollowerThreshold = 3;
+        PreferedItemCostModifier = 0.2f;
+        SellSameGuildCostModifier = 0.2f;
     }
 
     public float FavorGainRate { get; private set; }
@@ -28,4 +30,17 @@ public class EntityStats
     {
         BecomeFollowerThreshold = bft;
     }
+
+    public float PreferedItemCostModifier { get; private set; }
+    public void SetPreferedItemCostModifier(float picm)
+    {
+        PreferedItemCostModifier = picm;
+    }
+
+    public float SellSameGuildCostModifier { get; private set; }
+    public void SetSellSameGuildCostModifier(float ssgcm)
+    {
+        SellSameGuildCostModifier = ssgcm;
+    }
+
 }
