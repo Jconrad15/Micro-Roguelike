@@ -12,16 +12,16 @@ public class AIEntity : Entity
 
     public AIEntity(
         Tile t, EntityType type,
-        int startingMoney, List<Attribute> attributes)
-        : base(t, type, startingMoney, attributes) { }
+        int startingMoney, List<Trait> traits)
+        : base(t, type, startingMoney, traits) { }
 
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Guild guild, int favor, 
-        int becomeFollowerThreshold, List<Attribute> attributes,
+        int becomeFollowerThreshold, List<Trait> traits,
         Tile t = null) 
-        : base(t, type, money, attributes)
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -32,6 +32,8 @@ public class AIEntity : Entity
         Favor = favor;
         T = t;
         BecomeFollowerThreshold = becomeFollowerThreshold;
+
+        Traits = traits;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;

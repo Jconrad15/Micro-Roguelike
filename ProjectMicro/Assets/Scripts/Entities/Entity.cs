@@ -18,12 +18,21 @@ public class SerializableEntity
     public Guild guild;
     public int favor;
     public int becomeFollowerThreshold;
-    public List<Attribute> attributes;
+    public List<Trait> traits;
 }
 
 public class Entity
 {
-    public List<Attribute> Attributes { get; protected set; }
+    private List<Trait> traits;
+    public List<Trait> Traits 
+    {
+        get => traits;
+        protected set
+        {
+            traits = value;
+            ApplyTraits();
+        }
+    }
 
     public Guild CurrentGuild { get; protected set; }
 
@@ -56,6 +65,10 @@ public class Entity
 
     public List<Item> InventoryItems { get; protected set; }
     public int InventorySize { get; protected set; } = 10;
+    public void EditInventorySize(int inventorySizeDelta)
+    {
+        InventorySize += inventorySizeDelta;
+    }
 
     protected Action<int> cbOnPlayerMoneyChanged;
     private int money;
@@ -114,7 +127,7 @@ public class Entity
     /// <param name="startingMoney"></param>
     public Entity(
         Tile t, EntityType type, int startingMoney,
-        List<Attribute> attributes)
+        List<Trait> traits)
     {
         if (t == null) { return; }
         T = t;
@@ -125,7 +138,9 @@ public class Entity
         Visibility = VisibilityLevel.NotVisible;
         InventoryItems = new List<Item>();
 
-        Attributes = attributes;
+        // Apply traits
+        Traits = traits;
+        ApplyTraits();
 
         CreateCharacterName();
 
@@ -142,6 +157,17 @@ public class Entity
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
         areaData.AddEntity(this);
+    }
+
+    private void ApplyTraits()
+    {
+        if (Traits == null) { return; }
+        if (Traits.Count == 0) { return; }
+
+        foreach (Trait trait in Traits)
+        {
+            trait.ApplyTrait(this);
+        }
     }
 
     public void PlayerClickOnPlayer()

@@ -53,7 +53,7 @@ public static class PlayerInstantiation
         Player player = new Player(
             playerTile, EntityType.Player,
             playerStartingMoney, createdPlayer,
-            createdPlayer.Attributes);
+            createdPlayer.Traits);
 
         playerTile.entity = player;
 
@@ -86,7 +86,7 @@ public static class PlayerInstantiation
             EntityType.Player, entityToLoad.InventoryItems,
             entityToLoad.Money, entityToLoad.Visibility,
             entityToLoad.EntityName, entityToLoad.CharacterName,
-            entityToLoad.CurrentGuild, entityToLoad.Attributes,
+            entityToLoad.CurrentGuild, entityToLoad.Traits,
             playerTile);
 
         playerTile.entity = player;

@@ -6,8 +6,8 @@ public class Donkey : Animal
 {
     public Donkey(
         Tile t, EntityType type, int startingMoney,
-        List<Attribute> attributes)
-        : base(t, type, startingMoney, attributes)
+        List<Trait> traits)
+        : base(t, type, startingMoney, traits)
     {
         EntityName = "donkey";
     }
@@ -15,9 +15,9 @@ public class Donkey : Animal
     // Constructor for loaded Donkey
     public Donkey(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, List<Attribute> attributes, 
+        string characterName, List<Trait> traits, 
         Tile t = null)
-        : base(t, type, money, attributes)
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;

@@ -6,8 +6,8 @@ public class Animal : AIEntity
 {
     public Animal(
         Tile t, EntityType type, int startingMoney,
-        List<Attribute> attributes)
-        : base(t, type, startingMoney, attributes) 
+        List<Trait> traits)
+        : base(t, type, startingMoney, traits) 
     {
         EntityName = "animal";
     }

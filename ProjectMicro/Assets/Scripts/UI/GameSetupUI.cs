@@ -24,7 +24,7 @@ public class GameSetupUI : MonoBehaviour
     private List<Item> inventoryItems;
     private Guild guild;
     private int seed;
-    private List<Attribute> attributes;
+    private List<Trait> traits;
 
     private GuildManager currentGuildManager;
 
@@ -103,6 +103,13 @@ public class GameSetupUI : MonoBehaviour
 
     private bool TryCreatePlayerFromInputs(out Player p)
     {
+        // TODO: CHANGE THIS
+        // FOR NOW, JUST GIVE PLAYER trait OF STRONG
+        traits = new List<Trait>
+        {
+            new Strong()
+        };
+
         p = null;
 
         if (characterName == null ||
@@ -118,10 +125,10 @@ public class GameSetupUI : MonoBehaviour
             inventoryItems = new List<Item>();
         }
 
-        // Create blank attribute list if no attributes
-        if (attributes == null)
+        // Create blank trait list if no traits
+        if (traits == null)
         {
-            attributes = new List<Attribute>();
+            traits = new List<Trait>();
         }
 
         p = new Player(
@@ -132,7 +139,7 @@ public class GameSetupUI : MonoBehaviour
             "player",
             characterName,
             guild,
-            attributes);
+            traits);
 
         return true;
     }

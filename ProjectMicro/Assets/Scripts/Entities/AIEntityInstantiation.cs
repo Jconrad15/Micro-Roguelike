@@ -29,7 +29,7 @@ public static class AIEntityInstantiation
 
             int merchantStartMoney = DetermineMerchantStartingMoney();
 
-            List<Attribute> attributes = DetermineMerchantStartingAttributes();
+            List<Trait> traits = DetermineMerchantStartingtraits();
 
             Tile merchantTile = worldData.GetTile(x, y);
             Merchant merchant = new Merchant(
@@ -37,7 +37,7 @@ public static class AIEntityInstantiation
                 EntityType.AI,
                 MerchantType.Traveller,
                 merchantStartMoney,
-                attributes);
+                traits);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
@@ -111,7 +111,7 @@ public static class AIEntityInstantiation
 
             int merchantStartMoney = DetermineMerchantStartingMoney();
 
-            List<Attribute> attributes = DetermineMerchantStartingAttributes();
+            List<Trait> traits = DetermineMerchantStartingtraits();
 
             Tile merchantTile = areaData.GetTile(x, y);
             Merchant merchant = new Merchant(
@@ -119,7 +119,7 @@ public static class AIEntityInstantiation
                 EntityType.AI,
                 Utility.GetRandomEnum<MerchantType>(),
                 merchantStartMoney,
-                attributes);
+                traits);
 
             merchantTile.entity = merchant;
             cbOnAIEntityCreated?.Invoke(merchant);
@@ -134,9 +134,9 @@ public static class AIEntityInstantiation
         Random.state = oldState;
     }
 
-    private static List<Attribute> DetermineMerchantStartingAttributes()
+    private static List<Trait> DetermineMerchantStartingtraits()
     {
-        // TODO: determine starting attributes
+        // TODO: determine starting traits
 
         return null;
     }
@@ -201,7 +201,7 @@ public static class AIEntityInstantiation
                 loadedEntity.type, loadedEntity.InventoryItems,
                 loadedEntity.Money, loadedEntity.Visibility,
                 loadedEntity.EntityName, loadedEntity.CharacterName,
-                loadedEntity.Attributes);
+                loadedEntity.Traits);
             dog.SetTile(loadedEntity.T);
             loadedEntity.T.entity = dog;
 
@@ -216,7 +216,7 @@ public static class AIEntityInstantiation
                 loadedEntity.EntityName, loadedEntity.CharacterName,
                 loadedEntity.CurrentGuild,
                 loadedEntity.BecomeFollowerThreshold,
-                loadedEntity.Attributes);
+                loadedEntity.Traits);
             merchant.SetTile(loadedEntity.T);
             loadedEntity.T.entity = merchant;
 
