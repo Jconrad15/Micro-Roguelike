@@ -162,12 +162,12 @@ public class Merchant : AIEntity
     public int GetAdjustedCost(
         Item itemInQuestion, Player player, bool isPlayerItem)
     {
-        if (itemInQuestion == null) 
+        if (itemInQuestion == null)
         {
             Debug.LogError("Trying to get adjusted cost of null item");
             return int.MaxValue;
         }
-        if (typeRef == null) 
+        if (typeRef == null)
         {
             Debug.LogError("No merchant typeRef.");
             return int.MaxValue; 
