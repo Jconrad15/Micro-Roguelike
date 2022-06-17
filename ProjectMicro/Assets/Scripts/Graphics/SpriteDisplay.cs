@@ -34,12 +34,12 @@ public class SpriteDisplay : MonoBehaviour
     {
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
 
-        // Create the sprite database if it does not yet exist
+/*        // Create the sprite database if it does not yet exist
         if (spriteDatabase.TileDatabase == null ||
             spriteDatabase.EntityDatabase == null)
         {
             spriteDatabase.CreateDatabases();
-        }
+        }*/
 
         // Loop through all tiles in the mapData by x,y
         for (int x = 0; x < areaData.Width; x++)

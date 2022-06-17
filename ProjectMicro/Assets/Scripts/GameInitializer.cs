@@ -29,6 +29,7 @@ public class GameInitializer : MonoBehaviour
     private void Start()
     {
         ItemDatabase.CreateDatabase();
+        FindObjectOfType<SpriteDatabase>().CreateDatabases();
 
         AreaDataManager.Instance.Initiate(worldWidth, worldHeight);
 

@@ -13,9 +13,7 @@ public abstract class Trait
 
     public abstract int Cost { get; }
     public abstract string TraitName { get; }
-
+    public abstract string Description { get; }
     public abstract void ApplyTrait(Entity entity);
-
-
 
 }
