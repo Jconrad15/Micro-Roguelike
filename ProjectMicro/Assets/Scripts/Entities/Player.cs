@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class Player : Entity
@@ -61,7 +60,6 @@ public class Player : Entity
 
         followerManager = new FollowerManager();
 
-        Traits = traits;
     }
 
     /// <summary>
@@ -123,14 +121,14 @@ public class Player : Entity
     public void TryAddFollower(Entity entity)
     {
         // Check entity favor
-        if (entity.Favor < entity.BecomeFollowerThreshold) { return; }
+        if (entity.Favor < entity.stats.BecomeFollowerThreshold) { return; }
 
         // Add follower
         Follower f = followerManager.AddFollower(entity);
 
         // Edit player to be better, due to follower
         // TODO: better inventory size change
-        InventorySize += 2;
+        stats.AdjustInventorySize(2);
 
         cbOnFollowerAdded?.Invoke(f);
 

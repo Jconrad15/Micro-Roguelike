@@ -16,15 +16,17 @@ public class SerializableEntity
     public EntityType type;
     public VisibilityLevel visibility;
     public Guild guild;
-    public int favor;
-    public int becomeFollowerThreshold;
+    public float favor;
     public List<Trait> traits;
+    public EntityStats stats;
 }
 
 public class Entity
 {
+    public EntityStats stats = new EntityStats();
+
     private List<Trait> traits;
-    public List<Trait> Traits 
+    public List<Trait> Traits
     {
         get => traits;
         protected set
@@ -36,8 +38,7 @@ public class Entity
 
     public Guild CurrentGuild { get; protected set; }
 
-    public int Favor { get; protected set; }
-    public int BecomeFollowerThreshold { get; protected set; }
+    public float Favor { get; protected set; }
 
     /// <summary>
     /// Helps indicate the type of entity
@@ -64,11 +65,7 @@ public class Entity
     }
 
     public List<Item> InventoryItems { get; protected set; }
-    public int InventorySize { get; protected set; } = 10;
-    public void EditInventorySize(int inventorySizeDelta)
-    {
-        InventorySize += inventorySizeDelta;
-    }
+
 
     protected Action<int> cbOnPlayerMoneyChanged;
     private int money;
@@ -138,10 +135,6 @@ public class Entity
         Visibility = VisibilityLevel.NotVisible;
         InventoryItems = new List<Item>();
 
-        // Apply traits
-        Traits = traits;
-        ApplyTraits();
-
         CreateCharacterName();
 
         // TODO: better guild assigning
@@ -151,12 +144,12 @@ public class Entity
         // TODO: better favor system
         Favor = 0;
 
-        // TODO: better follower thresholds
-        BecomeFollowerThreshold = 3;
-
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
         areaData.AddEntity(this);
+
+        // Apply traits
+        Traits = traits;
     }
 
     private void ApplyTraits()
@@ -250,7 +243,7 @@ public class Entity
 
     protected void AddFavor(int amount)
     {
-        Favor += amount;
+        Favor += (int)(amount * stats.FavorGainRate);
     }
 
     /// <summary>
@@ -276,7 +269,7 @@ public class Entity
         {
             // If the merchant has enough money and inventory space
             if (adjustedItemCost <= m.Money &&
-                m.InventoryItems.Count < m.InventorySize)
+                m.InventoryItems.Count < m.stats.InventorySize)
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
@@ -299,7 +292,7 @@ public class Entity
         {
             // If the player has enough money and inventory space
             if (adjustedItemCost <= player.Money &&
-                player.InventoryItems.Count < player.InventorySize)
+                player.InventoryItems.Count < player.stats.InventorySize)
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);

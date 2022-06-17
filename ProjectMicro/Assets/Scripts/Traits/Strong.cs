@@ -1,7 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Strong : Trait
 {
     private readonly int inventorySizeAdjustment = 1;
@@ -14,6 +15,6 @@ public class Strong : Trait
 
     public override void ApplyTrait(Entity entity)
     {
-        entity.EditInventorySize(inventorySizeAdjustment);
+        entity.stats.AdjustInventorySize(inventorySizeAdjustment);
     }
 }

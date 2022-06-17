@@ -19,7 +19,7 @@ public class AIEntity : Entity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Guild guild, int favor, 
-        int becomeFollowerThreshold, List<Trait> traits,
+        List<Trait> traits, EntityStats stats,
         Tile t = null) 
         : base(t, type, money, traits)
     {
@@ -31,9 +31,9 @@ public class AIEntity : Entity
         CurrentGuild = guild;
         Favor = favor;
         T = t;
-        BecomeFollowerThreshold = becomeFollowerThreshold;
 
         Traits = traits;
+        this.stats = stats;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;

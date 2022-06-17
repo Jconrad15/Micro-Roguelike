@@ -50,8 +50,8 @@ public class Merchant : AIEntity
     /// <param name="t"></param>
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild guild, int becomeFollowerThresold,
-        List<Trait> traits, Tile t = null)
+        string characterName, Guild guild, float favor, List<Trait> traits,
+        EntityStats stats, Tile t = null)
         : base(t, type, money, traits)
     {
         base.type = type;
@@ -60,7 +60,8 @@ public class Merchant : AIEntity
         EntityName = entityName;
         CharacterName = characterName;
         CurrentGuild = guild;
-        BecomeFollowerThreshold = becomeFollowerThresold;
+        Favor = favor;
+        this.stats = stats;
 
         if (t != null)
         {

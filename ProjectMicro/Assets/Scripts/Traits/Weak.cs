@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
+[Serializable]
 public class Weak : Trait
 {
     private readonly int inventorySizeAdjustment = -1;
@@ -14,6 +13,6 @@ public class Weak : Trait
 
     public override void ApplyTrait(Entity entity)
     {
-        entity.EditInventorySize(inventorySizeAdjustment);
+        entity.stats.AdjustInventorySize(inventorySizeAdjustment);
     }
 }
