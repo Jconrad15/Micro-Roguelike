@@ -27,7 +27,7 @@ public class TurnController : MonoBehaviour
         }
     }
 
-    void Start()
+    public void StartTurnSystem()
     {
         StartPlayerTurn();
     }
