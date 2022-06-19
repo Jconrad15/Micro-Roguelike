@@ -8,3 +8,10 @@ Mariners
 Council
 Traders
 Cartel
+Express
+Trades
+Company
+Band
+Tribe
+Clan
+Syndicate
