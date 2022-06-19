@@ -9,15 +9,43 @@ public class EntityStats
     /// </summary>
     public EntityStats()
     {
-        FavorGainRate = 1;
+        FavorInfluenceModifier = 0;
+        FavorResistanceModifier = 0;
+
         InventorySize = 10;
         BecomeFollowerThreshold = 3;
-        PreferedItemCostModifier = 0.2f;
-        SellSameGuildCostModifier = 0.2f;
+
+        BuyingPreferedSellCostModifier = -0.2f;
+        BuyingPreferedBuyCostModifier = 0.1f;
+
+        SellingPreferedSellCostModifier = -0.2f;
+        SellingPreferedBuyCostModifier = 0.1f;
+
+        SellSameGuildCostModifier = 0.1f;
+
+        SellSkillModifier = 0;
+        BuySkillModifier = 0;
+
+        VisibilityDistance = 8;
     }
 
-    public float FavorGainRate { get; private set; }
-    public void SetFavorGainRate(float fgr) => FavorGainRate = fgr;
+    public float VisibilityDistance { get;private set; }
+    public void AdjustVisibilityDistance(float visionDistanceDelta)
+    {
+        VisibilityDistance += visionDistanceDelta;
+    }
+
+    public float FavorInfluenceModifier { get; private set; }
+    public void SetFavorInfluenceModifier(float value)
+    {
+        FavorInfluenceModifier = value;
+    }
+
+    public float FavorResistanceModifier { get; private set; }
+    public void SetFavorResistanceModifier(float value)
+    {
+        FavorResistanceModifier = value;
+    }
 
     public int InventorySize { get; private set; }
     public void AdjustInventorySize(int inventorySizeDelta)
@@ -26,21 +54,57 @@ public class EntityStats
     }
 
     public float BecomeFollowerThreshold { get; private set; }
-    public void SetBecomeFollowerThreshold(float bft)
+    public void SetBecomeFollowerThreshold(float newValue)
     {
-        BecomeFollowerThreshold = bft;
+        BecomeFollowerThreshold = newValue;
     }
 
-    public float PreferedItemCostModifier { get; private set; }
-    public void SetPreferedItemCostModifier(float picm)
+    public float BuyingPreferedSellCostModifier { get; private set; }
+    public void SetBuyingPreferedSellCostModifier(float newValue)
     {
-        PreferedItemCostModifier = picm;
+        BuyingPreferedSellCostModifier = newValue;
+    }
+
+    public float BuyingPreferedBuyCostModifier { get; private set; }
+    public void SetBuyingPreferedBuyCostModifier(float newValue)
+    {
+        BuyingPreferedBuyCostModifier = newValue;
+    }
+
+    public float SellingPreferedSellCostModifier { get; private set; }
+    public void SetSellingPreferedSellCostModifier(float newValue)
+    {
+        SellingPreferedSellCostModifier = newValue;
+    }
+
+    public float SellingPreferedBuyCostModifier { get; private set; }
+    public void SetSellingPreferedBuyCostModifier(float newValue)
+    {
+        SellingPreferedBuyCostModifier = newValue;
+    }
+
+    /// <summary>
+    /// Positive for good at selling.
+    /// </summary>
+    public float SellSkillModifier { get; private set; }
+    public void SetSellSkillModifier(float newValue)
+    {
+        SellSkillModifier = newValue;
+    }
+
+    /// <summary>
+    /// Negative for good at buying
+    /// </summary>
+    public float BuySkillModifier { get; private set; }
+    public void SetBuySkillModifier(float newValue)
+    {
+        BuySkillModifier = newValue;
     }
 
     public float SellSameGuildCostModifier { get; private set; }
-    public void SetSellSameGuildCostModifier(float ssgcm)
+    public void SetSellSameGuildCostModifier(float newValue)
     {
-        SellSameGuildCostModifier = ssgcm;
+        SellSameGuildCostModifier = newValue;
     }
 
 }

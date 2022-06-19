@@ -6,6 +6,8 @@ public static class TraitGenerator
 {
     private static readonly Trait strong = new Strong();
     private static readonly Trait weak = new Weak();
+    private static readonly Trait caravanDriver = new CaravanDriver();
+    private static readonly Trait nearsighted = new Nearsighted();
 
     public static List<Trait> GenerateTraits(int traitSeed)
     {
@@ -14,17 +16,38 @@ public static class TraitGenerator
 
         List<Trait> traits = new List<Trait>();
 
-        if (Random.value > 0.5f)
+        // While no traits
+        while (traits.Count == 0)
         {
-            traits.Add(strong);
-        }
-        else
-        {
-            traits.Add(weak);
+            SelectTraits(traits);
         }
 
         Random.state = oldState;
         return traits;
     }
 
+    private static void SelectTraits(List<Trait> traits)
+    {
+        if (Random.value > 0.8)
+        {
+            if (Random.value > 0.5f)
+            {
+                traits.Add(strong);
+            }
+            else
+            {
+                traits.Add(weak);
+            }
+        }
+
+        if (Random.value > 0.8f)
+        {
+            traits.Add(nearsighted);
+        }
+
+        if (Random.value > 0.8f)
+        {
+            traits.Add(caravanDriver);
+        }
+    }
 }

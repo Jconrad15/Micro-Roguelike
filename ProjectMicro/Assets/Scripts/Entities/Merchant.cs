@@ -180,12 +180,13 @@ public class Merchant : AIEntity
 
         if (isPlayerItem)
         {
+            // This is the player's item
             if (isPreferredSell)
             {
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= (2 * stats.PreferedItemCostModifier);
+                modifier += stats.BuyingPreferedSellCostModifier;
             }
 
             if (isPreferredBuy)
@@ -193,17 +194,22 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += stats.PreferedItemCostModifier;
+                modifier += stats.BuyingPreferedBuyCostModifier;
             }
+
+            // Modify based on skill
+            modifier += stats.BuySkillModifier;
+            modifier += player.stats.SellSkillModifier;
         }
         else
         {
+            // This is the merchant's item
             if (isPreferredSell)
             {
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= stats.PreferedItemCostModifier;
+                modifier += stats.SellingPreferedSellCostModifier;
             }
 
             if (isPreferredBuy)
@@ -211,8 +217,12 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += (2 * stats.PreferedItemCostModifier);
+                modifier += stats.SellingPreferedBuyCostModifier;
             }
+
+            // Modify based on skill
+            modifier += player.stats.BuySkillModifier;
+            modifier += stats.SellSkillModifier;
         }
 
         // Adjust the modifier based on whether or not the merchant

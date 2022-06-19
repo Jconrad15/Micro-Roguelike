@@ -15,11 +15,6 @@ public class TraitSelectionManagerUI : MonoBehaviour
 
     private List<Trait> traits = new List<Trait>();
 
-/*    private void Start()
-    {
-        selectionPoints = 5;
-    }*/
-
     public List<Trait> GetTraits()
     {
         // Create blank trait list if no traits

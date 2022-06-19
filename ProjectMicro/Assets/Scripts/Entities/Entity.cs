@@ -240,9 +240,11 @@ public class Entity
         cbOnMove?.Invoke(this, startPos);
     }
 
-    protected void AddFavor(int amount)
+    protected void AddFavor(float favorInfluenceModifier)
     {
-        Favor += (int)(amount * stats.FavorGainRate);
+        Favor += (int)(1 *
+            stats.FavorResistanceModifier *
+            favorInfluenceModifier);
     }
 
     /// <summary>
@@ -276,7 +278,7 @@ public class Entity
                 // TODO: better favor
                 if (isPreferredBuy)
                 {
-                    m.AddFavor(1);
+                    m.AddFavor(player.stats.FavorInfluenceModifier);
                 }
                 return true;
             }
@@ -299,7 +301,7 @@ public class Entity
                 // TODO: better favor
                 if (isPreferredSell)
                 {
-                    m.AddFavor(1);
+                    m.AddFavor(player.stats.FavorInfluenceModifier);
                 }
                 return true;
             }
