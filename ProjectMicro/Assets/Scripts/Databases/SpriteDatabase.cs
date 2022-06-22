@@ -10,6 +10,8 @@ public class SpriteDatabase : MonoBehaviour
     { get; protected set; }
     public Dictionary<FeatureType, Sprite[]> FeatureDatabase
     { get; protected set; }
+    public Dictionary<string, Sprite> TraitDatabase
+    { get; protected set; }
 
     public void CreateDatabases()
     {
@@ -45,7 +47,7 @@ public class SpriteDatabase : MonoBehaviour
                 entityreferences[i].sprites);
         }
 
-        // Create entity database
+        // Create feature database
         FeatureTypeSpriteRef[] featureTypeSpriteRef=
             Resources.LoadAll("ScriptableObjects/Features",
             typeof(FeatureTypeSpriteRef))
@@ -58,6 +60,21 @@ public class SpriteDatabase : MonoBehaviour
             FeatureDatabase.Add(
                 featureTypeSpriteRef[i].featureType,
                 featureTypeSpriteRef[i].sprites);
+        }
+
+        // Create trait database
+        TraitSpriteRef[] traitSpriteRef =
+            Resources.LoadAll("ScriptableObjects/Traits",
+            typeof(TraitSpriteRef))
+            .Cast<TraitSpriteRef>().ToArray();
+
+        TraitDatabase = new Dictionary<string, Sprite>();
+        // Create the database
+        for (int i = 0; i < traitSpriteRef.Length; i++)
+        {
+            TraitDatabase.Add(
+                traitSpriteRef[i].traitName,
+                traitSpriteRef[i].sprite);
         }
     }
 }

@@ -16,17 +16,29 @@ public class SerializableEntity
     public EntityType type;
     public VisibilityLevel visibility;
     public Guild guild;
-    public int favor;
-    public int becomeFollowerThreshold;
+    public float favor;
+    public List<Trait> traits;
+    public EntityStats stats;
 }
 
 public class Entity
 {
-    public int PlayerBondLevel { get; protected set; }
+    public EntityStats stats = new EntityStats();
+
+    private List<Trait> traits;
+    public List<Trait> Traits
+    {
+        get => traits;
+        protected set
+        {
+            traits = value;
+            ApplyTraits();
+        }
+    }
+
     public Guild CurrentGuild { get; protected set; }
 
-    public int Favor { get; protected set; }
-    public int BecomeFollowerThreshold { get; protected set; }
+    public float Favor { get; protected set; }
 
     /// <summary>
     /// Helps indicate the type of entity
@@ -53,7 +65,6 @@ public class Entity
     }
 
     public List<Item> InventoryItems { get; protected set; }
-    public int InventorySize { get; protected set; } = 10;
 
     protected Action<int> cbOnPlayerMoneyChanged;
     private int money;
@@ -110,7 +121,9 @@ public class Entity
     /// <param name="t"></param>
     /// <param name="type"></param>
     /// <param name="startingMoney"></param>
-    public Entity(Tile t, EntityType type, int startingMoney)
+    public Entity(
+        Tile t, EntityType type, int startingMoney,
+        List<Trait> traits)
     {
         if (t == null) { return; }
         T = t;
@@ -130,12 +143,23 @@ public class Entity
         // TODO: better favor system
         Favor = 0;
 
-        // TODO: better follower thresholds
-        BecomeFollowerThreshold = 3;
-
         // Add self to entity list
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
         areaData.AddEntity(this);
+
+        // Apply traits
+        Traits = traits;
+    }
+
+    private void ApplyTraits()
+    {
+        if (Traits == null) { return; }
+        if (Traits.Count == 0) { return; }
+
+        foreach (Trait trait in Traits)
+        {
+            trait.ApplyTrait(this);
+        }
     }
 
     public void PlayerClickOnPlayer()
@@ -202,7 +226,7 @@ public class Entity
 
     protected void Move(Tile destination)
     {
-        Vector2 startPos = new Vector2 (X, Y);
+        Vector2 startPos = new Vector2(X, Y);
 
         // Remove self from current tile
         T.entity = null;
@@ -216,9 +240,11 @@ public class Entity
         cbOnMove?.Invoke(this, startPos);
     }
 
-    protected void AddFavor(int amount)
+    protected void AddFavor(float favorInfluenceModifier)
     {
-        Favor += amount;
+        Favor += (int)(1 *
+            stats.FavorResistanceModifier *
+            favorInfluenceModifier);
     }
 
     /// <summary>
@@ -244,7 +270,7 @@ public class Entity
         {
             // If the merchant has enough money and inventory space
             if (adjustedItemCost <= m.Money &&
-                m.InventoryItems.Count < m.InventorySize)
+                m.InventoryItems.Count < m.stats.InventorySize)
             {
                 m.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 player.RemoveSoldItem(itemToTransfer, adjustedItemCost);
@@ -252,7 +278,7 @@ public class Entity
                 // TODO: better favor
                 if (isPreferredBuy)
                 {
-                    m.AddFavor(1);
+                    m.AddFavor(player.stats.FavorInfluenceModifier);
                 }
                 return true;
             }
@@ -267,7 +293,7 @@ public class Entity
         {
             // If the player has enough money and inventory space
             if (adjustedItemCost <= player.Money &&
-                player.InventoryItems.Count < player.InventorySize)
+                player.InventoryItems.Count < player.stats.InventorySize)
             {
                 player.AddPurchasedItem(itemToTransfer, adjustedItemCost);
                 m.RemoveSoldItem(itemToTransfer, adjustedItemCost);
@@ -275,7 +301,7 @@ public class Entity
                 // TODO: better favor
                 if (isPreferredSell)
                 {
-                    m.AddFavor(1);
+                    m.AddFavor(player.stats.FavorInfluenceModifier);
                 }
                 return true;
             }
@@ -430,6 +456,5 @@ public class Entity
     {
         cbOnPurchaseFailedInventory -= callbackfunc;
     }
-
 
 }

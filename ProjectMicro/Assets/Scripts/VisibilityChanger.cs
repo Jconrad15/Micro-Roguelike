@@ -4,8 +4,6 @@ using UnityEngine;
 
 public static class VisibilityChanger
 {
-    private static int visibilityDistance = 8;
-
     public static void UpdateTileVisibility(Player player)
     {
         Tile[] mapData = AreaData.GetMapDataForCurrentType();
@@ -15,7 +13,8 @@ public static class VisibilityChanger
             Tile t = mapData[i];
             if (Vector2.Distance(
                 new Vector2(t.x, t.y),
-                new Vector2(player.X, player.Y)) < visibilityDistance)
+                new Vector2(player.X, player.Y)) 
+                < player.stats.VisibilityDistance)
             {
                 t.Visibility = VisibilityLevel.Visible;
             }
@@ -43,7 +42,8 @@ public static class VisibilityChanger
 
             if (Vector2.Distance(
                 new Vector2(e.X, e.Y),
-                new Vector2(player.X, player.Y)) < visibilityDistance)
+                new Vector2(player.X, player.Y)) 
+                < player.stats.VisibilityDistance)
             {
                 e.Visibility = VisibilityLevel.Visible;
             }
@@ -68,7 +68,8 @@ public static class VisibilityChanger
 
             if (Vector2.Distance(
                 new Vector2(f.T.x, f.T.y),
-                new Vector2(player.X, player.Y)) < visibilityDistance)
+                new Vector2(player.X, player.Y)) 
+                < player.stats.VisibilityDistance)
             {
                 f.Visibility = VisibilityLevel.Visible;
             }

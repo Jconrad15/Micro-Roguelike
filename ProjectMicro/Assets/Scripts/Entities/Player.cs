@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class Player : Entity
@@ -22,24 +21,6 @@ public class Player : Entity
         }
     }
 
-    /*    
-    /// <summary>
-    /// Contructor for new player.
-    /// </summary>
-    /// <param name="t"></param>
-    /// <param name="type"></param>
-    /// <param name="startingMoney"></param>
-    public Player(Tile t, EntityType type, int startingMoney)
-        : base(t, type, startingMoney)
-    {
-        EntityName = "player";
-        License = PlayerLicense.Traveller;
-        Money = startingMoney;
-
-        followerManager = new FollowerManager();
-    }
-    */
-
     /// <summary>
     /// Constructor for player created in game setup.
     /// </summary>
@@ -47,8 +28,10 @@ public class Player : Entity
     /// <param name="type"></param>
     /// <param name="startingMoney"></param>
     /// <param name="p"></param>
-    public Player(Tile t, EntityType type, int startingMoney, Player p)
-    : base(t, type, startingMoney)
+    public Player(
+        Tile t, EntityType type, int startingMoney, 
+        Player p, List<Trait> traits)
+    : base(t, type, startingMoney, traits)
     {
         EntityName = p.EntityName;
         License = PlayerLicense.Traveller;
@@ -72,8 +55,9 @@ public class Player : Entity
     /// <param name="t"></param>
     public Player(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild guild, Tile t = null)
-        : base(t, type, money)
+        string characterName, Guild guild, List<Trait> traits,
+        Tile t = null)
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -88,6 +72,8 @@ public class Player : Entity
         }
         CurrentGuild = guild;
         followerManager = new FollowerManager();
+
+        Traits = traits;
     }
 
     public bool TryPurchaseTitle(int cost)
@@ -116,14 +102,14 @@ public class Player : Entity
     public void TryAddFollower(Entity entity)
     {
         // Check entity favor
-        if (entity.Favor < entity.BecomeFollowerThreshold) { return; }
+        if (entity.Favor < entity.stats.BecomeFollowerThreshold) { return; }
 
         // Add follower
         Follower f = followerManager.AddFollower(entity);
 
         // Edit player to be better, due to follower
         // TODO: better inventory size change
-        InventorySize += 2;
+        stats.AdjustInventorySize(2);
 
         cbOnFollowerAdded?.Invoke(f);
 

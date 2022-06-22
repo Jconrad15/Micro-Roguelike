@@ -77,7 +77,7 @@ public class InventoryUI : MonoBehaviour
         inventorySpaceText.SetText(
             player.InventoryItems.Count.ToString() +
             " / " + 
-            player.InventorySize.ToString());
+            player.stats.InventorySize.ToString());
     }
 
     private void UpdateMoneyText()

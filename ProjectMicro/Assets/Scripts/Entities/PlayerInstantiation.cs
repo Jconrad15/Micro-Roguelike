@@ -36,7 +36,6 @@ public static class PlayerInstantiation
         Player createdPlayer, int playerStartX, int playerStartY)
     {
 
-
         // Get the tile at the location
         Tile playerTile;
         if (AreaDataManager.Instance.CurrentMapType == MapType.Location) 
@@ -53,7 +52,8 @@ public static class PlayerInstantiation
         // Place the player at the tile, and the tile to the player
         Player player = new Player(
             playerTile, EntityType.Player,
-            playerStartingMoney, createdPlayer);
+            playerStartingMoney, createdPlayer,
+            createdPlayer.Traits);
 
         playerTile.entity = player;
 
@@ -86,7 +86,8 @@ public static class PlayerInstantiation
             EntityType.Player, entityToLoad.InventoryItems,
             entityToLoad.Money, entityToLoad.Visibility,
             entityToLoad.EntityName, entityToLoad.CharacterName,
-            entityToLoad.CurrentGuild, playerTile);
+            entityToLoad.CurrentGuild, entityToLoad.Traits,
+            playerTile);
 
         playerTile.entity = player;
                 AreaData.GetAreaDataForCurrentType().AddEntity(player);

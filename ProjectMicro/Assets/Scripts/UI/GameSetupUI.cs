@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -19,11 +18,15 @@ public class GameSetupUI : MonoBehaviour
     [SerializeField]
     private GuildToggleGroupUI guildPrefabUI;
 
+    [SerializeField]
+    private TraitSelectionManagerUI traitSelectionManagerUI;
+
     private string characterName;
     private int money;
     private List<Item> inventoryItems;
     private Guild guild;
     private int seed;
+    private List<Trait> traits;
 
     private GuildManager currentGuildManager;
 
@@ -63,6 +66,8 @@ public class GameSetupUI : MonoBehaviour
     public void InputCharacterName(string characterName)
     {
         this.characterName = characterName;
+
+        CreateTraits();
     }
 
     /// <summary>
@@ -98,6 +103,8 @@ public class GameSetupUI : MonoBehaviour
 
         // display seed in input box
         nameInputField.text = characterName;
+
+        CreateTraits();
     }
 
     private bool TryCreatePlayerFromInputs(out Player p)
@@ -117,6 +124,9 @@ public class GameSetupUI : MonoBehaviour
             inventoryItems = new List<Item>();
         }
 
+        // Get player selected traits
+        traits = traitSelectionManagerUI.GetTraits();
+
         p = new Player(
             EntityType.Player,
             inventoryItems,
@@ -124,7 +134,8 @@ public class GameSetupUI : MonoBehaviour
             VisibilityLevel.Visible,
             "player",
             characterName,
-            guild);
+            guild,
+            traits);
 
         return true;
     }
@@ -136,13 +147,30 @@ public class GameSetupUI : MonoBehaviour
 
         seed = Random.Range(-10000, 10000);
         UpdateSeedTextDisplay();
+
         CreateGuilds();
+
+        RandomNameButton();
     }
 
     private void CreateGuilds()
     {
         currentGuildManager = new GuildManager(seed);
         UpdateGuildManagerDisplay();
+    }
+
+    private void CreateTraits()
+    {
+        System.Security.Cryptography.MD5 md5Hasher =
+            System.Security.Cryptography.MD5.Create();
+
+        byte[] hashed = md5Hasher.ComputeHash(
+            System.Text.Encoding.UTF8.GetBytes(characterName));
+
+        int traitSeed = System.BitConverter.ToInt32(hashed, 0);
+
+        traits = traitSelectionManagerUI.GenerateTraits(traitSeed);
+        UpdateTraitDisplay();
     }
 
     public void SelectedGuild(Guild selectedGuild)
@@ -153,6 +181,11 @@ public class GameSetupUI : MonoBehaviour
     private void UpdateGuildManagerDisplay()
     {
         guildPrefabUI.DisplayGuilds(currentGuildManager.guilds, this);
+    }
+
+    private void UpdateTraitDisplay()
+    {
+        traitSelectionManagerUI.Display();
     }
 
     private void UpdateSeedTextDisplay()

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Dog : Animal
 {
-    public Dog(Tile t, EntityType type, int startingMoney)
-        : base(t, type, startingMoney)
+    public Dog(
+        Tile t, EntityType type, int startingMoney,
+        List<Trait> traits)
+        : base(t, type, startingMoney, traits)
     {
         EntityName = "dog";
     }
@@ -13,7 +15,9 @@ public class Dog : Animal
     // Constructor for loaded Dog
     public Dog(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Tile t = null) : base(t, type, money)
+        string characterName, List<Trait> traits,
+        Tile t = null)
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;

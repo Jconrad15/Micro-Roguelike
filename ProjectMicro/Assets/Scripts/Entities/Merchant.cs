@@ -19,17 +19,15 @@ public enum MerchantType
 
 public class Merchant : AIEntity
 {
-    private const float preferedItemModifier = 0.2f;
-    private const float sellSameGuildModifier = 0.2f;
-
     protected int waitAtTileTurns;
     public MerchantType MType { get; protected set; }
     private MerchantTypeRef typeRef;
 
     public Merchant(
         Tile t, EntityType type,
-        MerchantType merchantType, int startingMoney)
-        : base(t, type, startingMoney)
+        MerchantType merchantType, int startingMoney,
+        List<Trait> traits)
+        : base(t, type, startingMoney, traits)
     {
         EntityName = "merchant";
         MType = merchantType;
@@ -49,9 +47,9 @@ public class Merchant : AIEntity
     /// <param name="t"></param>
     public Merchant(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
-        string characterName, Guild guild, int becomeFollowerThresold,
-        Tile t = null)
-        : base(t, type, money)
+        string characterName, Guild guild, float favor, List<Trait> traits,
+        EntityStats stats, Tile t = null)
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -59,7 +57,8 @@ public class Merchant : AIEntity
         EntityName = entityName;
         CharacterName = characterName;
         CurrentGuild = guild;
-        BecomeFollowerThreshold = becomeFollowerThresold;
+        Favor = favor;
+        this.stats = stats;
 
         if (t != null)
         {
@@ -163,12 +162,12 @@ public class Merchant : AIEntity
     public int GetAdjustedCost(
         Item itemInQuestion, Player player, bool isPlayerItem)
     {
-        if (itemInQuestion == null) 
+        if (itemInQuestion == null)
         {
             Debug.LogError("Trying to get adjusted cost of null item");
             return int.MaxValue;
         }
-        if (typeRef == null) 
+        if (typeRef == null)
         {
             Debug.LogError("No merchant typeRef.");
             return int.MaxValue; 
@@ -181,12 +180,13 @@ public class Merchant : AIEntity
 
         if (isPlayerItem)
         {
+            // This is the player's item
             if (isPreferredSell)
             {
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= (2 * preferedItemModifier);
+                modifier += stats.BuyingPreferedSellCostModifier;
             }
 
             if (isPreferredBuy)
@@ -194,17 +194,22 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += preferedItemModifier;
+                modifier += stats.BuyingPreferedBuyCostModifier;
             }
+
+            // Modify based on skill
+            modifier += stats.BuySkillModifier;
+            modifier += player.stats.SellSkillModifier;
         }
         else
         {
+            // This is the merchant's item
             if (isPreferredSell)
             {
                 // If the merchant prefers to sell the item 
                 // adjust the cost down, since this is what the merchant always sells
                 // e.g., a woodcutter always has wood and sells it for less
-                modifier -= preferedItemModifier;
+                modifier += stats.SellingPreferedSellCostModifier;
             }
 
             if (isPreferredBuy)
@@ -212,17 +217,19 @@ public class Merchant : AIEntity
                 // If the merchant prefers to buy the item
                 // adjust the cost up, since this is what the mechant wants
                 // e.g., a woodcutter needs saws, and buys them for more. 
-                modifier += (2 * preferedItemModifier);
+                modifier += stats.SellingPreferedBuyCostModifier;
             }
+
+            // Modify based on skill
+            modifier += player.stats.BuySkillModifier;
+            modifier += stats.SellSkillModifier;
         }
-
-
 
         // Adjust the modifier based on whether or not the merchant
         // is in the same guild as the player
         if (player.CurrentGuild == CurrentGuild)
         {
-            modifier -= sellSameGuildModifier;
+            modifier -= stats.SellSameGuildCostModifier;
         }
 
         // Return the base cost mutlipled by any modifier,

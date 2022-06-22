@@ -29,6 +29,7 @@ public class GameInitializer : MonoBehaviour
     private void Start()
     {
         ItemDatabase.CreateDatabase();
+        FindObjectOfType<SpriteDatabase>().CreateDatabases();
 
         AreaDataManager.Instance.Initiate(worldWidth, worldHeight);
 
@@ -39,6 +40,7 @@ public class GameInitializer : MonoBehaviour
             {
                 SaveSerial.Instance.ButtonToLoadGame();
                 FindObjectOfType<GameSetupUI>().Hide();
+                TurnController.Instance.StartTurnSystem();
                 return;
             }
         }
@@ -61,6 +63,8 @@ public class GameInitializer : MonoBehaviour
         // normal world generation process
         WorldGenerator.Instance.StartGeneration(
             createdPlayer, worldWidth, worldHeight);
+
+        TurnController.Instance.StartTurnSystem();
     }
 
     public void LoadGuildManager(int loadedSeed)

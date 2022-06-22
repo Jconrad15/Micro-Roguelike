@@ -10,15 +10,18 @@ public class AIEntity : Entity
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
 
-    public AIEntity(Tile t, EntityType type, int startingMoney)
-        : base(t, type, startingMoney) { }
+    public AIEntity(
+        Tile t, EntityType type,
+        int startingMoney, List<Trait> traits)
+        : base(t, type, startingMoney, traits) { }
 
     // Constructor for loaded AIEntity
     public AIEntity(EntityType type, List<Item> inventoryItems,
         int money, VisibilityLevel visibility, string entityName,
         string characterName, Guild guild, int favor, 
-        int becomeFollowerThreshold, Tile t = null) 
-        : base(t, type, money)
+        List<Trait> traits, EntityStats stats,
+        Tile t = null) 
+        : base(t, type, money, traits)
     {
         base.type = type;
         InventoryItems = inventoryItems;
@@ -28,7 +31,9 @@ public class AIEntity : Entity
         CurrentGuild = guild;
         Favor = favor;
         T = t;
-        BecomeFollowerThreshold = becomeFollowerThreshold;
+
+        Traits = traits;
+        this.stats = stats;
     }
 
     protected readonly int maxTurnsNotMovedStuck = 5;

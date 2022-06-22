@@ -142,7 +142,7 @@ public class DialogueUI : MonoBehaviour
 
     private void UpdateShownFavor(Entity clickedEntity)
     {
-        int favor = clickedEntity.Favor;
+        float favor = clickedEntity.Favor;
         string text = "Favor: ";
         if (favor > 0) { text += "+"; }
         text += favor.ToString();
@@ -150,7 +150,7 @@ public class DialogueUI : MonoBehaviour
         favorText.SetText(text);
 
         // Check clickedEntity can become a follower
-        if (favor >= clickedEntity.BecomeFollowerThreshold)
+        if (favor >= clickedEntity.stats.BecomeFollowerThreshold)
         {
             ShowBecomeFollower(clickedEntity);
         }
