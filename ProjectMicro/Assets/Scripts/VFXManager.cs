@@ -11,7 +11,10 @@ public class VFXManager : MonoBehaviour
 
     private Tile[] mapData;
 
-    void OnEnable()
+    private float shuffleTimerThreshold = 10f;
+    private float timer = 0f;
+
+    private void OnEnable()
     {
         FindObjectOfType<WorldGenerator>()
             .RegisterOnWorldCreated(OnAreaCreated);
@@ -27,6 +30,18 @@ public class VFXManager : MonoBehaviour
         ClearAll();
         mapData = AreaData.GetMapDataForCurrentType();
         PlaceVFX();
+    }
+
+    private void Update()
+    {
+        if (timer >= shuffleTimerThreshold)
+        {
+            ShuffleVFX();
+            timer = 0;
+            return;
+        }
+
+        timer += Time.deltaTime;
     }
 
     private void PlaceVFX()
@@ -64,14 +79,48 @@ public class VFXManager : MonoBehaviour
                     spawnedVFX.Add(newVFX);
 
                     newVFX.transform.position = pos;
-
-
-
                     isSelected = true;
                 }
             }
         }
+    }
 
+    private void ShuffleVFX()
+    {
+        if (spawnedVFX.Count == 0) { return; }
+
+        int[] selectedTileIndices = new int[spawnedVFX.Count];
+
+        for (int i = 0; i < spawnedVFX.Count; i++)
+        {
+            bool isSelected = false;
+            while (isSelected == false)
+            {
+                int selectedIndex = Random.Range(0, mapData.Length);
+
+                // Check if selected index is in selected tiles array
+                if (System.Array.IndexOf(
+                    selectedTileIndices, selectedIndex) == -1)
+                {
+                    // Is not included
+                    selectedTileIndices[i] = selectedIndex;
+
+                    // Get vector position
+                    Vector3 pos = new Vector3(
+                        mapData[selectedIndex].x,
+                        mapData[selectedIndex].y,
+                        0);
+
+                    // Move gameobject
+                    GameObject newVFX = spawnedVFX[i];
+                    newVFX.name = "Dust " + i.ToString();
+                    newVFX.transform.SetParent(transform);
+
+                    newVFX.transform.position = pos;
+                    isSelected = true;
+                }
+            }
+        }
     }
 
     private void ClearAll()
