@@ -136,7 +136,23 @@ public class TileSpriteDisplay : MonoBehaviour
                     if (isNeighborWater[3])
                     {
                         //NESW
-                        selectedSpriteIndex = 4;
+                        // Water is on all sides of the tile,
+                        // can select between different options
+                        // Randomly choose sprite
+                        Random.State oldState = Random.state;
+                        Random.InitState(
+                            GameInitializer.Instance.Seed + tile.x + tile.y);
+
+                        if (Random.value > 0.5f)
+                        {
+                            selectedSpriteIndex = 4;
+                        }
+                        else
+                        {
+                            selectedSpriteIndex = 16;
+                        }
+
+                        Random.state = oldState;
                     }
                     else
                     {
