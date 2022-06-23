@@ -15,3 +15,4 @@ MonoBehaviour:
   tileType: 3
   sprites:
   - {fileID: 21300000, guid: a8b12136b6933f74490a4fe47971fb02, type: 3}
+  - {fileID: 21300000, guid: e8437f65d6f00c04198cae1903050ecf, type: 3}
