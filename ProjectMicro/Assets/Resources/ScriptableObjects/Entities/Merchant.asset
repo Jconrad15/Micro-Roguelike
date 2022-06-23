@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: merchant
   sprites:
-  - {fileID: 21300000, guid: 1e6ba221c98fd484487ca33837b521d2, type: 3}
-  - {fileID: 21300000, guid: 47596f7d16dc48849abb9b0896331b28, type: 3}
+  - {fileID: 21300000, guid: b1213682e353d7245948052bbbdf0b80, type: 3}
+  - {fileID: 21300000, guid: f45dfb9ba6d603a4d85cbeda6172b3b4, type: 3}
