@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class SpriteDisplay : MonoBehaviour
 {
-    private SpriteDatabase spriteDatabase;
     private TileSpriteDisplay tileSpriteDisplay;
     private FeatureSpriteDisplay featureSpriteDisplay;
     private EntitySpriteDisplay entitySpriteDisplay;
@@ -20,7 +19,6 @@ public class SpriteDisplay : MonoBehaviour
             .RegisterOnWorldCreated(DisplayInitialMap);
         FindObjectOfType<LocationGenerator>()
             .RegisterOnLocationCreated(DisplayInitialMap);
-        spriteDatabase = FindObjectOfType<SpriteDatabase>();
     }
 
     private void GetSpriteDisplayComponents()
@@ -33,13 +31,6 @@ public class SpriteDisplay : MonoBehaviour
     private void DisplayInitialMap()
     {
         AreaData areaData = AreaData.GetAreaDataForCurrentType();
-
-/*        // Create the sprite database if it does not yet exist
-        if (spriteDatabase.TileDatabase == null ||
-            spriteDatabase.EntityDatabase == null)
-        {
-            spriteDatabase.CreateDatabases();
-        }*/
 
         // Loop through all tiles in the mapData by x,y
         for (int x = 0; x < areaData.Width; x++)

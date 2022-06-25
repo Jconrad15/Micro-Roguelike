@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: player
   sprites:
-  - {fileID: 21300000, guid: 4e3e6b250ea087f4aae2ab416572a24b, type: 3}
-  - {fileID: 21300000, guid: 0f991a4a330a17a43aa1a5805154ba53, type: 3}
+  - {fileID: 21300000, guid: 67b1efc2c83ba2c4b9f452522325e672, type: 3}
+  - {fileID: 21300000, guid: 035906af367402c408415f8f3bb2e293, type: 3}

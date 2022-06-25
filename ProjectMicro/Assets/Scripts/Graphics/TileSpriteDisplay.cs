@@ -51,15 +51,12 @@ public class TileSpriteDisplay : MonoBehaviour
     out GameObject tile_GO, out SpriteRenderer sr)
     {
         // Determine which sprite from the tileDatabase to use
-        int selectedSpriteIndex = DetermineSprite(tile);
+        int selectedSpriteIndex = DetermineSprite(tile, s);
 
         tile_GO = Instantiate(tilePrefab, tilesContainer.transform);
         tile_GO.transform.position = new Vector2(x, y);
         sr = tile_GO.GetComponent<SpriteRenderer>();
-        if (selectedSpriteIndex == -1)
-        {
-            Debug.LogError("Why was no sprite index selected?");
-        }
+
         sr.sprite = s[selectedSpriteIndex];
     }
 
@@ -77,191 +74,225 @@ public class TileSpriteDisplay : MonoBehaviour
         }
     }
 
-    private static int DetermineSprite(Tile tile)
+    private static int DetermineSprite(Tile tile, Sprite[] s)
     {
-        int selectedSpriteIndex = -1;
+        int selectedSpriteIndex = 0;
         // Determine which sprite to use
+
+        // Return 0 if there is only 1 sprite available
+        if (s.Length == 1) { return selectedSpriteIndex; }
         
         if (tile.Type == TileType.Water)
         {
-            // WATER SPRITE ORDER DETERMINED BY SCRIPTABLE OBJECT
+            selectedSpriteIndex = DetermineWaterSprite(tile);
+        }
+        else
+        {
+            // Randomly choose sprite
+            Random.State oldState = Random.state;
+            Random.InitState(
+                GameInitializer.Instance.Seed + tile.x + tile.y);
 
-            // Need to check neighbor types to place water
-            bool[] isNeighborWater = new bool[4];
-            for (int i = 0; i < 4; i++)
+            selectedSpriteIndex = Random.Range(0, s.Length);
+
+            Random.state = oldState;
+        }
+
+        return selectedSpriteIndex;
+    }
+
+    private static int DetermineWaterSprite(Tile tile)
+    {
+        int selectedSpriteIndex;
+        // WATER SPRITE ORDER DETERMINED BY SCRIPTABLE OBJECT
+
+        // Need to check neighbor types to place water
+        bool[] isNeighborWater = new bool[4];
+        for (int i = 0; i < 4; i++)
+        {
+            if (tile.neighbors[i] != null)
             {
-                if (tile.neighbors[i] != null)
+                if (tile.neighbors[i].Type == TileType.Water)
                 {
-                    if (tile.neighbors[i].Type == TileType.Water)
-                    {
-                        isNeighborWater[i] = true;
-                    }
+                    isNeighborWater[i] = true;
                 }
             }
+        }
 
-            // If water to north, then selectedSpriteIndex must be:
-            // 3,4,5,6,7,8,9,13
-            if (isNeighborWater[0])
+        // If water to north, then selectedSpriteIndex must be:
+        // 3,4,5,6,7,8,9,13
+        if (isNeighborWater[0])
+        {
+            // If water to East, then selectedSpriteIndex must be:
+            // 3,4,6,7
+            if (isNeighborWater[1])
             {
-                // If water to East, then selectedSpriteIndex must be:
-                // 3,4,6,7
-                if (isNeighborWater[1])
+                // If water to South, then selectedSpriteIndex must be:
+                // 3,4
+                if (isNeighborWater[2])
                 {
-                    // If water to South, then selectedSpriteIndex must be:
-                    // 3,4
-                    if (isNeighborWater[2])
+                    // If water to West, then selectedSpriteIndex must be:
+                    // 4
+                    if (isNeighborWater[3])
                     {
-                        // If water to West, then selectedSpriteIndex must be:
-                        // 4
-                        if (isNeighborWater[3])
+                        //NESW
+                        // Water is on all sides of the tile,
+                        // can select between different options
+                        // Randomly choose sprite
+                        Random.State oldState = Random.state;
+                        Random.InitState(
+                            GameInitializer.Instance.Seed + tile.x + tile.y);
+
+                        if (Random.value > 0.5f)
                         {
-                            //NESW
                             selectedSpriteIndex = 4;
                         }
                         else
                         {
-                            //NES
-                            selectedSpriteIndex = 3;
+                            selectedSpriteIndex = 16;
                         }
+
+                        Random.state = oldState;
                     }
                     else
                     {
-                        // N,E, not S
-                        // If water to West, then selectedSpriteIndex must be:
-                        // 6,7
-                        if (isNeighborWater[3])
-                        {
-                            //NEW
-                            selectedSpriteIndex = 7;
-                        }
-                        else
-                        {
-                            //NE
-                            selectedSpriteIndex = 6;
-                        }
+                        //NES
+                        selectedSpriteIndex = 3;
                     }
                 }
                 else
                 {
-                    // N, not E
-                    // If water to South, then selectedSpriteIndex must be:
-                    // 5,13
-                    if (isNeighborWater[2])
+                    // N,E, not S
+                    // If water to West, then selectedSpriteIndex must be:
+                    // 6,7
+                    if (isNeighborWater[3])
                     {
-                        // If water to West, then selectedSpriteIndex must be:
-                        // 5
-                        if (isNeighborWater[3])
-                        {
-                            //NSW
-                            selectedSpriteIndex = 5;
-                        }
-                        else
-                        {
-                            //NS
-                            selectedSpriteIndex = 13;
-                        }
+                        //NEW
+                        selectedSpriteIndex = 7;
                     }
                     else
                     {
-                        // N, not E, not S
-                        // If water to West, then selectedSpriteIndex must be:
-                        // 8
-                        if (isNeighborWater[3])
-                        {
-                            //NW
-                            selectedSpriteIndex = 8;
-                        }
-                        else
-                        {
-                            //N
-                            selectedSpriteIndex = 9;
-                        }
+                        //NE
+                        selectedSpriteIndex = 6;
                     }
                 }
             }
             else
             {
-                // Not N
-                // If water to East, then selectedSpriteIndex must be:
-                // 0,1,10,14
-                if (isNeighborWater[1])
+                // N, not E
+                // If water to South, then selectedSpriteIndex must be:
+                // 5,13
+                if (isNeighborWater[2])
                 {
-                    // Not N, E,
-                    // If water to South, then selectedSpriteIndex must be:
-                    // 0,1
-                    if (isNeighborWater[2])
+                    // If water to West, then selectedSpriteIndex must be:
+                    // 5
+                    if (isNeighborWater[3])
                     {
-                        // Not N, E, S
-                        // If water to West, then selectedSPriteINdex must be:
-                        // 1
-                        if (isNeighborWater[3])
-                        {
-                            // ESW
-                            selectedSpriteIndex = 1;
-                        }
-                        else
-                        {
-                            // ES
-                            selectedSpriteIndex = 0;
-                        }
+                        //NSW
+                        selectedSpriteIndex = 5;
                     }
                     else
                     {
-                        // Not N, E, Not S
-                        // If water to West, then selectedSpriteIndex must be:
-                        // 14
-                        if (isNeighborWater[3])
-                        {
-                            //EW
-                            selectedSpriteIndex = 14;
-                        }
-                        else
-                        {
-                            //E
-                            selectedSpriteIndex = 10;
-                        }
+                        //NS
+                        selectedSpriteIndex = 13;
                     }
                 }
                 else
                 {
-                    // Not N, not E
-                    // If water to South, then the selectedSpriteIndex must be:
-                    // 2, 11
-                    if (isNeighborWater[2])
+                    // N, not E, not S
+                    // If water to West, then selectedSpriteIndex must be:
+                    // 8
+                    if (isNeighborWater[3])
                     {
-                        //If water to West, then selectedSpriteINdex must be:
-                        // 2
-                        if (isNeighborWater[3])
-                        {
-                            //SW
-                            selectedSpriteIndex = 2;
-                        }
-                        else
-                        {
-                            //S
-                            selectedSpriteIndex = 11;
-                        }
+                        //NW
+                        selectedSpriteIndex = 8;
                     }
                     else
                     {
-                        //Not N, Not E, Not S
-                        if (isNeighborWater[3])
-                        {
-                            // W
-                            selectedSpriteIndex = 12;
-                        }
-                        else
-                        {
-                            // No surrounding water
-                            selectedSpriteIndex = 15;
-                        }
+                        //N
+                        selectedSpriteIndex = 9;
                     }
                 }
             }
         }
         else
         {
-            selectedSpriteIndex = 0;
+            // Not N
+            // If water to East, then selectedSpriteIndex must be:
+            // 0,1,10,14
+            if (isNeighborWater[1])
+            {
+                // Not N, E,
+                // If water to South, then selectedSpriteIndex must be:
+                // 0,1
+                if (isNeighborWater[2])
+                {
+                    // Not N, E, S
+                    // If water to West, then selectedSPriteINdex must be:
+                    // 1
+                    if (isNeighborWater[3])
+                    {
+                        // ESW
+                        selectedSpriteIndex = 1;
+                    }
+                    else
+                    {
+                        // ES
+                        selectedSpriteIndex = 0;
+                    }
+                }
+                else
+                {
+                    // Not N, E, Not S
+                    // If water to West, then selectedSpriteIndex must be:
+                    // 14
+                    if (isNeighborWater[3])
+                    {
+                        //EW
+                        selectedSpriteIndex = 14;
+                    }
+                    else
+                    {
+                        //E
+                        selectedSpriteIndex = 10;
+                    }
+                }
+            }
+            else
+            {
+                // Not N, not E
+                // If water to South, then the selectedSpriteIndex must be:
+                // 2, 11
+                if (isNeighborWater[2])
+                {
+                    //If water to West, then selectedSpriteINdex must be:
+                    // 2
+                    if (isNeighborWater[3])
+                    {
+                        //SW
+                        selectedSpriteIndex = 2;
+                    }
+                    else
+                    {
+                        //S
+                        selectedSpriteIndex = 11;
+                    }
+                }
+                else
+                {
+                    //Not N, Not E, Not S
+                    if (isNeighborWater[3])
+                    {
+                        // W
+                        selectedSpriteIndex = 12;
+                    }
+                    else
+                    {
+                        // No surrounding water
+                        selectedSpriteIndex = 15;
+                    }
+                }
+            }
         }
 
         return selectedSpriteIndex;

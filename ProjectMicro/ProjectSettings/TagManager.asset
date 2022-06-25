@@ -44,6 +44,9 @@ TagManager:
   - name: Tiles
     uniqueID: 3096779353
     locked: 0
+  - name: Effects
+    uniqueID: 2316841899
+    locked: 0
   - name: Features
     uniqueID: 3394555263
     locked: 0

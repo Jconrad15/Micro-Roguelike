@@ -72,7 +72,8 @@ public class FeatureSpriteDisplay : MonoBehaviour
                 {
                     if (feature.T.neighbors[i].TileFeature != null)
                     {
-                        if (feature.T.neighbors[i].TileFeature.type == FeatureType.Wall)
+                        if (feature.T.neighbors[i].TileFeature.type
+                            == FeatureType.Wall)
                         {
                             isNeighborWall[i] = true;
                         }
@@ -80,144 +81,157 @@ public class FeatureSpriteDisplay : MonoBehaviour
                 }
             }
 
-            // If wall to north, then selectedSpriteIndex must be:
-            // 2, 3, 4, 5, 7, 8
             if (isNeighborWall[0])
             {
-                // If wall to East, then selectedSpriteIndex must be:
-                // 2, 7
+                // Wall to north
+
                 if (isNeighborWall[1])
                 {
-                    // If wall to South, then selectedSpriteIndex must be:
-                    // 7
+                    // Wall to north and east
+
                     if (isNeighborWall[2])
                     {
-                        selectedSpriteIndex = 7;
-                    }
-                    else
-                    {
-                        selectedSpriteIndex = 2;
-                    }
-                }
-                else
-                {
-                    // If wall to South, then selectedSpriteIndex must be:
-                    // 3, 4, 8
-                    if (isNeighborWall[2])
-                    {
-                        // If wall to West, then selectedSpriteIndex must be:
-                        // 8
+                        // Wall to north, east, and south
+                        
                         if (isNeighborWall[3])
                         {
-                            selectedSpriteIndex = 8;
+                            // Wall to north, east, south, and west
+                            selectedSpriteIndex = 7;
                         }
                         else
                         {
-                            // Need to determine between two types of north-south walls
-                            // Check what type of wall is to the north
-                            bool isDetermined = false;
-                            Tile currentTile = feature.T;
-                            while (isDetermined == false)
-                            {
-                                Tile[] neighborNeighbors =
-                                    currentTile.neighbors[0].neighbors;
-
-                                // Check northern neighbor's eastern neighbor
-                                if (neighborNeighbors[1].TileFeature != null)
-                                {
-                                    if (neighborNeighbors[1].TileFeature.type == FeatureType.Wall ||
-                                        neighborNeighbors[1].TileFeature.type == FeatureType.Door)
-                                    {
-                                        selectedSpriteIndex = 3;
-                                        isDetermined = true;
-                                        continue;
-                                    }
-                                }
-                                // Check northern neighbor's western neighbor
-                                else if (neighborNeighbors[3].TileFeature != null)
-                                {
-                                    if (neighborNeighbors[3].TileFeature.type == FeatureType.Wall ||
-                                        neighborNeighbors[3].TileFeature.type == FeatureType.Door)
-                                    {
-                                        selectedSpriteIndex = 4;
-                                        isDetermined = true;
-                                        continue;
-                                    }
-                                }
-                                else if (currentTile.neighbors[0].TileFeature != null)
-                                {
-                                    // if northern tile is not a wall, then set this 
-                                    // tile to be east west wall
-                                    if (currentTile.neighbors[0].TileFeature.type != FeatureType.Wall ||
-                                        currentTile.neighbors[0].TileFeature.type != FeatureType.Door)
-                                    {
-                                        selectedSpriteIndex = 1;
-                                        isDetermined = true;
-                                        continue;
-                                    }
-                                }
-
-                                // Need to look north again using the
-                                // northern neighbor as the staring point
-
-                                // TODO: make better decision
-                                // also check for null
-                                if (neighborNeighbors[0] == null)
-                                {
-                                    // just select 3
-                                    selectedSpriteIndex = 3;
-                                }
-
-                                currentTile = currentTile.neighbors[0];
-                            }
+                            // Wall to north, east, south, no wall to west
+                            selectedSpriteIndex = 4;
                         }
                     }
                     else
                     {
-                        // If wall to West, then selectedSpriteIndex must be:
-                        // 5
+                        // Wall to north and east, no wall to south
+
                         if (isNeighborWall[3])
                         {
+                            // Wall to north, east, west, no wall south
                             selectedSpriteIndex = 5;
                         }
                         else
                         {
+                            // Wall to north, east, no wall south and west
+                            selectedSpriteIndex = 1;
+                        }
+                    }
+                }
+                else
+                {
+                    // Wall to north, no wall to east
+                    
+                    if (isNeighborWall[2])
+                    {
+                        // Wall to north and south, no wall to east
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall to north, south, west, no wall east
+                            selectedSpriteIndex = 6;
+                        }
+                        else
+                        {
+                            // Wall to north and south, no wall east, west
+                            selectedSpriteIndex = 3;
+                        }
+                    }
+                    else
+                    {
+                        // Wall to north, no wall to east or south
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall to north, west, no wall east, south
                             selectedSpriteIndex = 2;
+                        }
+                        else
+                        {
+                            // Wall to north, no wall to east, south, west
+                            selectedSpriteIndex = 0;
                         }
                     }
                 }
             }
             else
             {
-                // If wall to East, then selectedSpriteIndex must be:
-                // 0, 1
+                // No wall to north
+
                 if (isNeighborWall[1])
                 {
-                    // If wall to South, then selectedSpriteIndex must be:
-                    // 0
+                    // Wall east, no wall to north
+
                     if (isNeighborWall[2])
                     {
-                        selectedSpriteIndex = 0;
+                        // Wall to east, and south, no wall to north
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall east, south, and west, no wall to north
+                            selectedSpriteIndex = 11;
+                        }
+                        else
+                        {
+                            // Wall east, south, no wall to north, west
+                            selectedSpriteIndex = 9;
+                        }
                     }
                     else
                     {
-                        selectedSpriteIndex = 1;
+                        // Wall to east, no wall to north, south
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall to east, west, no wall north south
+                            selectedSpriteIndex = 10;
+                        }
+                        else
+                        {
+                            // Wall to east, no wall north, south and west
+                            selectedSpriteIndex = 8;
+                        }
                     }
                 }
                 else
                 {
-                    // If wall to South, then the selectedSpriteIndex must be:
-                    // 6
+                    // No wall to north, east
+
                     if (isNeighborWall[2])
                     {
-                        selectedSpriteIndex = 6;
+                        // Wall tosouth, no wall to north east
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall to south, west, no wall north east
+                            selectedSpriteIndex = 13;
+                        }
+                        else
+                        {
+                            // Wall to south, no wall north, east, west
+                            selectedSpriteIndex = 12;
+                        }
                     }
                     else
                     {
-                        selectedSpriteIndex = 1;
+                        // No wall to north east or south
+
+                        if (isNeighborWall[3])
+                        {
+                            // Wall to west, no wall north, east, south
+                            selectedSpriteIndex = 14;
+                        }
+                        else
+                        {
+                            // No wall to north, east, south, west
+                            selectedSpriteIndex = 15;
+                        }
                     }
                 }
             }
+
         }
 
         return selectedSpriteIndex;

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileType: 2
   sprites:
-  - {fileID: 21300000, guid: 6b660e2f27f16b445a7afa3658a03d8a, type: 3}
+  - {fileID: 21300000, guid: d8b64a36182ef644a8703a191382a4ad, type: 3}
+  - {fileID: 21300000, guid: eb77467d325a5a24bb128ca6376125da, type: 3}
