@@ -34,4 +34,23 @@ public static class Utility
                || potentialDescendant == potentialBase;
     }
 
+    /// <summary>
+    /// Shuffle array values.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="rng"></param>
+    /// <param name="array"></param>
+    public static void ShuffleArray<T>(T[] array)
+    {
+        var rng = new System.Random();
+        int n = array.Length;
+        while (n > 1)
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+
 }
