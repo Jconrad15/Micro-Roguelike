@@ -845,7 +845,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.AnimationCurve, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"frames":[{"time":0.0041656494140625,"value":0.11084365844726563,"inTangent":-0.002429691608995199,"outTangent":-0.002429691608995199,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":0.979156494140625,"value":0.1084747314453125,"inTangent":-0.3837004601955414,"outTangent":-0.3837004601955414,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
+      m_SerializableObject: '{"frames":[{"time":0.0041656494140625,"value":0.003849029541015625,"inTangent":0.594160795211792,"outTangent":0.594160795211792,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false},{"time":0.995819091796875,"value":-0.0046844482421875,"inTangent":-0.5905616283416748,"outTangent":-0.5905616283416748,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
     m_Space: 2147483647
   m_Property:
     name: Size
@@ -879,7 +879,7 @@ MonoBehaviour:
   attribute: color
   Composition: 0
   AlphaComposition: 0
-  SampleMode: 2
+  SampleMode: 0
   Mode: 1
   ColorMode: 1
   channels: 6
@@ -908,7 +908,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Gradient, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"colorKeys":[{"color":{"r":0.5960784554481506,"g":0.529411792755127,"b":0.37254902720451357,"a":1.0},"time":0.0},{"color":{"r":0.5960784554481506,"g":0.529411792755127,"b":0.37254902720451357,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":0.0,"time":0.0},{"alpha":1.0,"time":0.10000763088464737},{"alpha":1.0,"time":0.800000011920929},{"alpha":0.0,"time":1.0}],"gradientMode":0}'
+      m_SerializableObject: '{"colorKeys":[{"color":{"r":0.5960784554481506,"g":0.529411792755127,"b":0.37254902720451357,"a":1.0},"time":0.0},{"color":{"r":0.5960784554481506,"g":0.529411792755127,"b":0.37254902720451357,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":0.0,"time":0.0},{"alpha":1.0,"time":0.330006867647171},{"alpha":1.0,"time":0.6599984765052795},{"alpha":0.0,"time":1.0}],"gradientMode":0}'
     m_Space: 2147483647
   m_Property:
     name: Color
