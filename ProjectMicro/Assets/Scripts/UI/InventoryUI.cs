@@ -24,12 +24,18 @@ public class InventoryUI : MonoBehaviour
 
     private List<GameObject> inventoryItems = new List<GameObject>();
 
+    private Animator animator;
+
     // Start is called before the first frame update
     private void OnEnable()
     {
+        animator = GetComponentInChildren<Animator>();
+
         playerController = FindObjectOfType<PlayerController>();
-        playerController.RegisterOnInventoryToggled(OnInventoryToggled);
-        PlayerInstantiation.RegisterOnPlayerCreated(OnPlayerCreated);
+        playerController.RegisterOnInventoryToggled(
+            OnInventoryToggled);
+        PlayerInstantiation.RegisterOnPlayerCreated(
+            OnPlayerCreated);
 
         // Start hidden
         Hide();
@@ -65,11 +71,14 @@ public class InventoryUI : MonoBehaviour
 
     public void Show()
     {
+        StopAllCoroutines();
         inventoryArea.SetActive(true);
         CreateUIItems();
         UpdateMoneyText();
         UpdateTributeText();
         UpdateInventorySpaceText();
+
+        animator.SetTrigger("Show");
     }
 
     private void UpdateInventorySpaceText()
@@ -138,7 +147,8 @@ public class InventoryUI : MonoBehaviour
 
     public void Hide()
     {
-        inventoryArea.SetActive(false);
+        StopAllCoroutines();
+        animator.SetTrigger("Hide");
         foreach (GameObject item in inventoryItems)
         {
             if (item != null)
@@ -147,6 +157,13 @@ public class InventoryUI : MonoBehaviour
             }
         }
         inventoryItems.Clear();
+        StartCoroutine(HideOvertime());
+    }
+
+    private IEnumerator HideOvertime()
+    {
+        yield return new WaitForSeconds(0.6f);
+        inventoryArea.SetActive(false);
     }
 
     private void RefreshInventoryItems()

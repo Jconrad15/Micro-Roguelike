@@ -18,10 +18,18 @@ public class LicensePurchaser : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<PlayerController>().GetPlayer();
+        PlayerInstantiation.RegisterOnPlayerCreated(
+            OnPlayerCreated);
+    }
+
+    private void OnPlayerCreated(Player p)
+    {
+        player = p;
         player.RegisterOnLicenseChanged(OnPlayerLicenseChanged);
+
         SetLicenses();
     }
+
 
     private void OnEnable()
     {
